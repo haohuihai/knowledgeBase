@@ -36,6 +36,8 @@ fi
 cp -a '../docs/dist/.' .
 ls -la
 
+
+
 # 把所有的文件添加到git
 git add -A
 git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"
