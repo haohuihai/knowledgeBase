@@ -39,11 +39,11 @@ module.exports = {
                 children: [
                   {
                     title: "CSS1",
-                    path: "../pages/前端/CSS/CSS1",
+                    path: "../pages/Front/CSS/CSS1",
                   },
                   {
                     title: "CSS2",
-                    path: "../pages/前端/CSS/CSS2",
+                    path: "../pages/Front/CSS/CSS2",
                   },
                 ],
               },
@@ -53,31 +53,31 @@ module.exports = {
                 children: [
                   {
                     title: "阶段一",
-                    path: "../pages/前端/JS/阶段一",
+                    path: "../pages/Front/JS/First",
                   },
                   {
                     title: "阶段二",
-                    path: "../pages/前端/JS/阶段二",
+                    path: "../pages/Front/JS/Second",
                   },
                   {
                     title: "阶段三",
-                    path: "../pages/前端/JS/阶段三",
+                    path: "../pages/Front/JS/Third",
                   },
                   {
                     title: "阶段四",
-                    path: "../pages/前端/JS/阶段四",
+                    path: "../pages/Front/JS/Fourth",
                   },
                 ],
               },
               {
                 title: "TypeScript",
                 collapsable: true,
-                path: "../pages/前端/TS/ts",
+                path: "../pages/Front/TS/ts",
               },
             ],
           },
           { title: "Node相关", path: "../pages/Node/aaa" },
-          { title: "Python", path: "../pages/Python/python基础" },
+          { title: "Python", path: "../pages/Python/pythonBase" },
         ],
       },
       {
@@ -86,7 +86,7 @@ module.exports = {
         children: [
           {
             title: "umi",
-            path: "../pages/构建工具/umi/优化",
+            path: "../pages/umi/base",
           },
         ],
       },
@@ -96,63 +96,12 @@ module.exports = {
         children: [
           {
             title: "react",
-            path: "../pages/框架/react/一些问题",
+            path: "../pages/Framework/react/base",
           },
           {
             title: "vue",
-            path: "../pages/框架/vue/一些问题",
+            path: "../pages/Framework/vue/base",
           },
-        ],
-      },
-      {
-        title: "部署", // 标题
-        collapsable: true, // 下级列表不可折叠
-        children: [
-          // 下级列表
-          {
-            title: "前端杂记",
-            collapsable: true,
-            children: [
-              {
-                title: "CSS",
-                collapsable: true,
-                children: [
-                  {
-                    title: "CSS1",
-                    path: "../pages/前端/CSS/CSS1",
-                  },
-                  {
-                    title: "CSS2",
-                    path: "../pages/前端/CSS/CSS2",
-                  },
-                ],
-              },
-              {
-                title: "JavaScript",
-                collapsable: true,
-                children: [
-                  {
-                    title: "阶段一",
-                    path: "../pages/前端/JS/阶段一",
-                  },
-                  {
-                    title: "阶段二",
-                    path: "../pages/前端/JS/阶段二",
-                  },
-                  {
-                    title: "阶段三",
-                    path: "../pages/前端/JS/阶段三",
-                  },
-                  {
-                    title: "阶段四",
-                    path: "../pages/前端/JS/阶段四",
-                  },
-                ],
-              },
-            ],
-          },
-          { title: "Node相关", path: "../pages/Node/aaa" },
-          { title: "Python", path: "../pages/Python/python基础" },
         ],
       },
     ],
@@ -160,7 +109,7 @@ module.exports = {
       // 指定网页head图标
       [
         "link",
-        { rel: "shortcut icon", type: "image/x-icon", href: `/favicon.ico` },
+        { rel: "shortcut icon", type: "image/x-icon", href: `` },
       ],
     ],
   },
