@@ -11,7 +11,7 @@ module.exports = {
     sidebarDepth: 0,
     nav: [
       // 头部导航
-      { text: "官网", link: "http://101.132.124.188" },
+      { text: "官网", link: "http://www.haohuihai.top" },
       { text: "谷粒学院", link: "http://www.gulixueyuan.com/" },
       {
         text: "学习路线",
@@ -100,7 +100,7 @@ module.exports = {
           },
           {
             title: "vue",
-            path: "../pages/Framework/vue/base",
+            path: "../pages/Framework/vue/vue3Base",
           },
         ],
       },
