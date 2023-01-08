@@ -1,3 +1,499 @@
+# Docker基本知识
+
+https://zhuanlan.zhihu.com/p/553214340
+
+https://yeasy.gitbook.io/docker_practice/ci
+
+https://haicoder.net/docker/docker-course.html
+
+docker简要总结：
+
+**为什么会有docke**
+
+使用docker之前：前端项目在开发的时候用的node版本，还有其他版本是一种，而测试和运维使用的这些版本又是另一个，我们又不会将这些配置给测试人员，只是提交的源代码，这样导致从开发，测试，运维，可能使用的是不同的版本，导致项目出现问题
+
+使用docker之后：我将项目配置、node版本都打包到一个镜像里面，把这个镜像当作一个包，里面包含了开发时的所有配置，当测试开始测试的时候，我们只需要将这个包给测试人员，他们使用Docker引擎将这个镜像跑起来，能够使用到和我们完全相同的配置的项目；运维人员也是同样的；
+可以将这个镜像在任何地方进行使用
+
+
+
+例如：一份centos7.iso  每个人的电脑安装了VMware，centos7.ios是一个linux的镜像，可以运行在不同平台的电脑上；
+
+在docker里面，多个docker运行同一个镜像，其结果都是相同的；即一次环境，处处运行
+
+**解决了运行环境和配置问题的软件容器，方便做持续集成并有助于整体发布的容器虚拟化技术**
+
+**容器与虚拟机的比较**
+
+
+
+**Docker是什么？**
+
+
+
+Docker能做什么？
+
+**官网在哪？**
+
+docker.com：docker的官网
+
+dockerhub.com： 安装docker镜像的仓库
+
+**Docker安装**
+
+docker依赖于已存在并运行的linux内核环境
+
+如果其他系统想部署Docker就必须安装一个虚拟的Linux环境
+
+centos7的安装，Linux内核版本为3.8以上，系统为64位
+
+在windows上部署Docker的方法是先安装一个虚拟机，并在安装Linux系统的虚拟机中运行Docker
+
+查看自己的内核：
+
+```shell
+cat /etc/redhat-release
+```
+
+uname命令用于打印当前系统的相关信息（内核版本，硬件架构，主机名称和操作系统类型）
+
+```shell
+uname -r
+# 3.10.0-1160.11.1.el7.x86_64
+```
+
+docker是一种容器引擎，容器引擎上面存在容器实例，容器实例就是来自于镜像
+
+鲸鱼背上的集装箱就是一个容器实例，
+
+## 镜像：
+
+![image-20230107224107306](images/image-20230107224107306.png) 
+
+## 容器：
+
+![image-20230107224312886](images/image-20230107224312886.png) 
+
+## 仓库：
+
+![image-20230107224500022](images/image-20230107224500022.png) 
+
+**Docker三要素的总结**
+
+![image-20230107224613254](images/image-20230107224613254.png) 
+
+### Docker中的镜像，容器，仓库之间的配合
+
+客户端通过给docker发送命令。让容器来做一下操作
+
+Docker引擎在本地找是否存在某种镜像，如果存在，直接运行，如果不存在，就去Docker仓库上去下载
+
+都不存，报镜像文件不存在的错误
+
+![image-20230107230414699](images/image-20230107230414699.png) 
+
+![image-20230107230625171](images/image-20230107230625171.png) 
+
+![image-20230107230611404](images/image-20230107230611404.png) 
+
+
+
+Docker
+
+![image-20230107232111173](images/image-20230107232111173.png) 
+
+![image-20230107232124594](images/image-20230107232124594.png) 
+
+![image-20230107232150453](images/image-20230107232150453.png)
+
+![image-20230107232226845](images/image-20230107232226845.png) 
+
+#### 启动一个容器
+
+
+
+![image-20230108142901558](images/image-20230108142901558.png) 
+
+参数介绍：
+
+run -d  后台运行
+
+5000:5000   前面表示宿主机的端口号，后面表示容器的端口号
+
+-v 添加自定义的容器卷    冒号左边的表示宿主机的路径，右边表示容器内的路径；-v 可以是多组
+
+--privileged=true表示放开权限；
+
+### 容器中的数据卷
+
+容器卷 加入参数  --privileged=true，表示给这个容器给了权限
+
+![image-20230108142714532](images/image-20230108142714532.png) 
+
+docker可以做一个容器的目录和主机的目录做映射
+
+将docker容器内的数据保存金宿主机的磁盘中
+
+![image-20230108143416957](images/image-20230108143416957.png) 
+
+![image-20230108144236983](images/image-20230108144236983.png) 
+
+如何运行一个带有容器卷存储功能的容器实例：
+
+```shell
+docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目录  镜像名
+```
+
+**容器卷的作用：**
+
+![image-20230108145049084](images/image-20230108145049084.png) 
+
+**容器卷的使用：**
+
+新建一个容器：
+
+![image-20230108153216392](images/image-20230108153216392.png) 
+
+进入容器内的/tmp/docker_data ，发现内容为空，新建一个文件，然后在主机对应的目录下查看内容
+
+![image-20230108154108998](images/image-20230108154108998.png) 
+
+![image-20230108154143350](images/image-20230108154143350.png) 
+
+发现在宿主机上存在了这个文件
+
+
+
+执行同样的操作，在宿主机上/tmp/host_data/目录下新建一个文件，然后查看容器内/tmp/docker_data目录下的文件
+
+![image-20230108154320266](images/image-20230108154320266.png) 
+
+![image-20230108154343586](images/image-20230108154343586.png) 
+
+
+
+结论： 无论在宿主机还是容器内有文件发生变动，另一个目录下的文件都会跟着发生相应的变化 
+
+无论是宿主机还是容器内的某个文件内容发生变化，另一个文件内容也会发生变化
+
+**查看数据卷是否挂载成功**
+
+```shell
+docker inspect 容器id
+```
+
+```json
+[
+    {
+        "Id": "eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948",
+        "Created": "2023-01-08T07:31:49.63650263Z",
+        "Path": "bash",
+        "Args": [],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 9148,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2023-01-08T07:31:50.034892028Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:6b7dfa7e8fdbe18ad425dd965a1049d984f31cf0ad57fa6d5377cca355e65f03",
+        "ResolvConfPath": "/var/lib/docker/containers/eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948/hostname",
+        "HostsPath": "/var/lib/docker/containers/eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948/hosts",
+        "LogPath": "/var/lib/docker/containers/eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948/eabe2706bbdd546b4ff666b42def275b562f0516890573d4ab37c00772b1c948-json.log",
+        "Name": "/u1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/tmp/host_data:/tmp/docker_data"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "host",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": true,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [
+                "label=disable"
+            ],
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": null,
+            "ReadonlyPaths": null
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/96646c91b3fa9108b24ff81941c7195ad62468814b3fbd76a8f66a21f30014a2-init/diff:/var/lib/docker/overlay2/6e0498f19bfa6e98ead026e9afd9dd8a32a67770d424f5f49a093004f8a9e232/diff",
+                "MergedDir": "/var/lib/docker/overlay2/96646c91b3fa9108b24ff81941c7195ad62468814b3fbd76a8f66a21f30014a2/merged",
+                "UpperDir": "/var/lib/docker/overlay2/96646c91b3fa9108b24ff81941c7195ad62468814b3fbd76a8f66a21f30014a2/diff",
+                "WorkDir": "/var/lib/docker/overlay2/96646c91b3fa9108b24ff81941c7195ad62468814b3fbd76a8f66a21f30014a2/work"
+            },
+            "Name": "overlay2"
+        },
+        // 这里就是挂载内容
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/tmp/host_data", // 宿主机的挂载位置
+                "Destination": "/tmp/docker_data", // 容器的文件目录
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "eabe2706bbdd",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": true,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": true,
+            "OpenStdin": true,
+            "StdinOnce": true,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "bash"
+            ],
+            "Image": "ubuntu",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "1fa7b6e0151042e49f117ed8b06a7dade00f4d5d5e1838890d9a146171765b0a",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/1fa7b6e01510",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "b8398ae1c15074ae1eb7eaada77be3415634a728a2d5e1f2bd9c076f130e0894",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.3",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:03",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "a586f565481f0514cd608ff76f8950a988bcc81d5f2b1342d9c9c5f9191c5a39",
+                    "EndpointID": "b8398ae1c15074ae1eb7eaada77be3415634a728a2d5e1f2bd9c076f130e0894",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+```
+
+可以看到上面的"Mounts"里面数据卷挂载成功了
+
+
+
+Note:如果容器停止了，在宿主机里面的文件做修改，然后开启容器，进入容器的目录下，发现容器内的文件也发生了变化
+
+**上面便是主机和容器之间的互通**
+
+### 容器卷的读写规则添加说明
+
+默认规则是同时支持**读写**  在数据卷后面添加的:rw
+
+1。 容器实例内部被限制，只能读取不能写，在数据卷后面添加的:ro
+
+docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目录:ro 镜像名
+
+修改完之后，在容器内修改，会发生错误；
+
+![image-20230108161437525](images/image-20230108161437525.png) 
+
+操作流程：
+
+docker stop 容器id/容器名字
+
+docker rm -rf  容器id/容器名字
+
+docker run -it --privileged=true -v /mydocker/u:/tmp/u:ro --name u2 ubuntu
+
+### 容器卷之间的继承
+
+1. 容器1完成和宿主机的映射/互通
+
+新建一个u1容器
+
+```shell
+docker run -it --privileged=true -v /mydocker/u:/tmp/u --name u1 ubuntu
+```
+
+
+
+2. 容器2继承容器1的卷规则 `docker run -it --volumes-from u1 --name u2 ubuntu`
+
+进入容器2的目录
+
+查看容器2的/tmp/u目录，发现容器1有的内容容器2也存在，即继承了u1的文件内容
+
+在u2新建文件，然后在u1容器里面的目录下查看，发现u1目录下存在了u2新建的文件，在主机的目录下查看，发现也存在了；
+
+
+
+**如果将u1停止了**
+
+不影响主机和u2之间的数据互通，即两个修改都互相影响，
+
+**如果u1启动了**
+
+之前u2和主机修改的文件，在u1目录下也照样存在，
+
+
+
+## Docker命令
+
+启动docker： systemctl start docker
+
+关闭docker： systemctl stop docker
+
+查看docker的运行状态： systemctl status docker
+
+![image-20230107191508567](images/image-20230107191508567.png) 
+
+设置docker开机自启动：systemctl enable docker
+
+查看docker信息： docker info
+
+![image-20230107192535950](images/image-20230107192535950.png) 
+
+docker帮助文档：docker --help  能够查看到很多命令
+
+显示当前docker下的所有镜像： docker images
+
+![image-20230107192835940](images/image-20230107192835940.png) 
+
+只显示镜像id： docker images -q
+
+![image-20230107192949295](images/image-20230107192949295.png) 
+
+从远程仓库查看指定名称的镜像： docker search [-limit N] 镜像名  
+
+N： 指定只列出多少个
+
+![image-20230107193053739](images/image-20230107193053739.png) 
+
+下载镜像到本地： docker pull 镜像名
+
+下载指定版本的镜像，默认为latest ： docker pull 镜像名字:版本号
+
+查看镜像/容器/数据卷所占的空间： docker system df
+
+![image-20230107193516312](images/image-20230107193516312.png) 
+
+删除镜像： docker rmi 镜像名/id
+
+强制删除： docker rmi -f 镜像名/id
+
+删除多个镜像 空格分割：docker rmi 镜像名/id  镜像名/id  
+
+全部删除： docker rmi -f ${docker images -qa}
+
+
+
+# 
+
+
+
+
+
 # Docker安装Gitlab
 
 https://blog.csdn.net/lianxiaohei/article/details/122665812   我是根据这个安装的
@@ -6,20 +502,7 @@ https://baijiahao.baidu.com/s?id=1735404739948635473&wfr=spider&for=pc
 
 https://www.cnblogs.com/chenyuanbo/p/12443662.html  docker安装gitlab 和 idea安装gitlab的教材
 
-**一些命令**
-
-停掉gitlab服务再重启
-
-```shell
-停掉gitlab服务再重启
-docker stop e37eeebc6c7a
-docker start e37eeebc6c7a
-curl 127.0.0.1:8090  # 测试能否连接gitlab
-```
-
-
-
-# Gitlab修改密码
+## Gitlab修改密码
 
 官方文档： **https://docs.gitlab.com/ee/security/reset_user_password.html**
 
@@ -52,6 +535,95 @@ docker exec -it gitlab bash
 **user.save**
 
 我们再次进入到自己搭建的gitlab服务器，然后可以使用新密码进行重新登录
+
+# Docker安装gitlab-runner
+
+https://blog.51cto.com/u_15067267/4293270
+
+GitLab-Runner 从安装到配置到入门
+
+https://blog.csdn.net/zyy247796143/article/details/123842374
+
+gitlab-runner的配置文件
+
+进入gitlab-runner容器： docker exec -it gitlab-runner /bin/bash
+
+找到配置文件的路径：cd /etc/gitlab-runner  config.toml
+
+config.toml这个文件就是runner的配置文件，当我们注册完runner之后，会生成一个这个文件
+
+cat config.toml可以查看这个文件的信息
+
+![image-20230107202631654](images/image-20230107202631654.png) 
+
+ 
+
+
+
+
+
+
+**一些命令**
+
+停掉gitlab服务再重启
+
+```shell
+停掉gitlab服务再重启
+docker stop e37eeebc6c7a
+docker start e37eeebc6c7a
+curl 127.0.0.1:8090  # 测试能否连接gitlab
+```
+
+gitlab-runner 常用命令，需要进入gitlab-runner容器
+
+进入runner容器： docker exec -it gitlab-runner /bin/bash
+
+看到保存在配置文件中的所有运行程序： gitlab-runner list
+
+![image-20230107201118783](images/image-20230107201118783.png) 
+
+检查注册的runner是否可以连接，但不验证GitLab服务是否正在使用runner：gitlab-runner verify  此命令。
+
+![image-20230107201306728](images/image-20230107201306728.png) 
+
+取消已注册的runner： gitlab-runner unregister 
+
+使用令牌注销：gitlab-runner unregister --url http://gitlab.example.com/ --token t0k3n
+
+使用名称注销： gitlab-runner unregister --name test-runner
+
+注销所有： gitlab-runner unregister --all-runners
+
+停止运行并从服务中卸载GitLab Runner：gitlab-runner uninstall
+
+启动Runner服务  ：gitlab-runner start
+
+停止GitLab Runner服务：gitlab-runner stop
+
+重启GitLab Runner服务：gitlab-runner restart
+
+显示GitLab Runner服务的状态。当服务正在运行时，退出代码为零；而当服务未运行时，退出代码为非零：gitlab-runner status
+
+
+
+调试模式排查错误特别有用： gitlab-runner --debug <command>
+
+获取帮助信息：gitlab-runner <command> --help  
+
+gitlab-runner run       		#普通用户模式  配置文件位置 ~/.gitlab-runner/config.toml
+sudo gitlab-runner run  	# 超级用户模式  配置文件位置/etc/gitlab-runner/config.toml 
+
+## 配置gitlab-runner
+
+可以通过修改 config.toml 文件。文件更改时不需要重启服务，每隔三秒GitLab Runner 会检查配置修改，并重新加载。
+
+进入配置目录： cd /etc/gitlab-runner
+
+
+
+
+
+
 
 # 解决git拉取代码时的问题
 
@@ -166,3 +738,176 @@ https://cloud.tencent.com/developer/article/1781698
 gitlab常用命令
 
 http://t.zoukankan.com/inxworld-p-11460991.html
+
+# GitLab-Runner配置参数详解
+
+http://events.jianshu.io/p/6decaed7b648
+
+# GitLab-Runner 从安装到配置到入门
+
+https://blog.csdn.net/zyy247796143/article/details/123842374
+
+# gitLab修改通过HTTP拉取代码时的ip地址
+
+![image-20230107190253968](images/image-20230107190253968.png)
+
+1. 找到gitlab.yml文件：
+
+进入gitlab容器
+
+```shell
+docker exec -it gitlab bash
+```
+
+2. 切换到`/opt/gitlab/embedded/service/gitlab-rails/config` 目录下，找到gitlab.yml并编辑
+
+![image-20230107190832873](images/image-20230107190832873.png) 
+
+编辑host，port， ssh_host的地址
+
+3. 修改完重启：
+
+```shell
+gitlab-ctl restart
+```
+
+通过多次尝试，就能发现这个配置修改的就是拉取代码时的配置
+
+## gitlab配置文件介绍
+
+https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/gitlab.yml.md
+
+## gitlab的gitlab.rb的配置
+
+https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
+
+## 极狐版的配置文件
+
+https://docs.gitlab.cn/omnibus/installation/
+
+# gitlab 企业级私有仓库搭建
+
+https://blog.csdn.net/m0_46090675/article/details/120853935/
+
+# gitlab帮助
+
+http://101.132.124.188:8090/help/gitlab-basics/README.md
+
+# 翻译的gitlab-ci.yml的配置文件
+
+## 使用.gitlab-ci.yml配置你的jobs
+
+.gitlab-ci.yml文件放置在项目的根目录下，里面包含了如何去构建你项目的一些定义
+
+在使用.gitlab-ci.yml的时候，我们需要注册gitlab-runner
+
+### jobs
+
+jobs是具有约束性的，指明应该在什么时候去运行；
+
+在.gitlab-ci.yml文件里面，jobs有以下特点
+
+1. 不限制数量
+2. 必须包含一个script脚本
+3. 应该被定义在根元素上
+
+```yaml
+job1:
+	script: 'execute-script-for-job1'
+job2:
+  script: "execute-script-for-job2"
+
+```
+
+上面的例子是具有两个互相独立的jobs，每一个job执行的是不同的命令，而这个命令是我们可以直接在容器执行的脚本(./configure;make;make install)，也可以是一个.sh执行的脚本文件
+
+jobs是由gitlab-runner找到，并执行在Runner环境中被执行，每一个job都是相互独立的
+
+每一个job的名称必须具有唯一性，下面的关键字不能被使用于job的名称：
+image，services，stages，types，before_script，after_script，variables，cache
+
+一个job定义的一些参数列表
+
+| 关键字        | 必填 | 描述                                                         |
+| ------------- | ---- | ------------------------------------------------------------ |
+| script        | yes  | 定义了Runner执行的脚本命令或.sh文件                          |
+| image         | no   | 使用的Docker，覆盖当前配置文件正在使用的imagge               |
+| services      | no   | 使用的docker服务，覆盖当前配置文件正在使用的services         |
+| stage         | no   | 定义了一个job进行的阶段（默认：test）                        |
+| type          | no   | stage的别名                                                  |
+| variables     | no   | 在一个job里面定义的变量，可以在当前job里面使用               |
+| only          | no   | 定义了一组为创建job的git引用列表                             |
+| except        | no   | 定义了一组不为创建job的git引用列表                           |
+| tags          | no   | 定义了一组标签的列表，被用于选择Runner，在注册Runner时的tags |
+| allow_failure | no   | 运行job失败，失败的job不会影响提交状态  *                    |
+| when          | no   | 定义在什么时候执行job，主要有on_success, on_failure, always or manual |
+| dependencies  | no   | 定义了job依赖在其他jobs上，这样你可以在他们之间传递传递artifacts * |
+| artifacts     | no   | 定义了job的一组artifacts列表 *                               |
+| cache         | no   | 定义了是否需要被缓存的文件列表，以便在后续执行时直接使用     |
+| before_script | no   | 覆盖在作业之前执行的一组命令                                 |
+| after_script  | no   | 覆盖在作业之后执行的一组命令                                 |
+| environment   | no   | 定义了一个这个job完成的部署的环境名称，                      |
+| coverage      | no   |                                                              |
+| retry         | no   | 定义了一个job失败后重试的次数                                |
+
+#### pages
+
+pages是一个特殊的job，是被用于上传静态的内容到Gitlab用于你的网站，他有特殊的语法，必须满足以下语法：
+
+- 任何静态内容都必须放在 public/ 目录下
+- 必须定义具有 public/ 目录路径的artifacts
+
+```yaml
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+```
+
+[更多参考](http://101.132.124.188:8090/help/user/project/pages/index.md)
+
+#### stages
+
+
+
+#### image
+
+#### services
+
+#### types
+
+#### before_script，after_script
+
+before_script被用于在所有jobs运行之前的命令，包括发布的jobs，这可以是数组或多行字符串，after_script被用于所有jobs运行之后的命令，包括失败的jobs，这可以是数组或多行字符串
+
+before_script和主脚本连接在一起，并在单个上下文/容器中运行，after_script是单独运行的，因此根据执行器的不同，所做的更改工作树外部可能不可见，例如安装在before_script之前的软件。
+
+可以为每个job设置before_script和after_script，每个job的这个脚本可以覆盖全局指定的脚本
+
+```yaml
+before_script:
+  - global before script
+
+job:
+  before_script:
+    - execute this instead of global before script
+  script:
+    - my command
+  after_script:
+    - execute this after my script
+
+```
+
+
+
+#### variables
+
+#### cache
+
