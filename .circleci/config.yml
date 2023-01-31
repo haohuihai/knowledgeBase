@@ -28,7 +28,7 @@ jobs:
           command: yarn build
       - run:
           name: Prepare shell commands
-          command: chmod +x scripts/deploy.sh
+          command: chmod +x deploy.sh
       - run:
           name: Run Deploy to Github pages
           command: ./deploy.sh
