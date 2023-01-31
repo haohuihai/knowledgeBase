@@ -2,9 +2,15 @@
 module.exports = {
   base: "/knowledgebase/" /* 基础虚拟路径 */,
   dest: "docs/dist" /* 打包文件基础路径, 在命令所在目录下 */,
-  title: "技术小记", // 标题
+  title: "DATA", // 标题
   description: "记录一些我遇到的技术", // 标题下的描述
-
+  // 指定网页head图标
+  head: [
+    [
+      "link",
+      { rel: "icon", href: `/icons/favicon.ico` },
+    ],
+  ],
   themeConfig: {
     // 主题配置
     logo: "/images/logo.jpeg",
@@ -114,12 +120,6 @@ module.exports = {
         ]
       }
     ],
-    head: [
-      // 指定网页head图标
-      [
-        "link",
-        { rel: "shortcut icon", type: "image/x-icon", href: `` },
-      ],
-    ],
   },
+
 };
