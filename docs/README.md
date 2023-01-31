@@ -2,7 +2,7 @@
 home: true
 heroImage: /images/hero.png
 actionText: 起步 →
-actionLink: /guide/
+actionLink: /pages/
 features:
 - title: 简明优先
   details: 对以 markdown 为中心的项目结构，做最简化的配置，帮助你专注于创作。
