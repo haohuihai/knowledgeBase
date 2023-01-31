@@ -65,10 +65,10 @@ module.exports = {
         collapsable: true,
         path: "../pages/Front/TS/ts",
       },
-      { title: "Node相关", path: "../pages/Node/aaa" },
+      { title: "Node", path: "../pages/Node/aaa" },
       { title: "Python", path: "../pages/Python/pythonBase" },
       {
-        title: "构建工具",
+        title: "构建",
         collapsable: true,
         children: [
           {
@@ -86,18 +86,23 @@ module.exports = {
         ],
       },
       {
-        title: "框架",
+        title: "Vue",
         collapsable: true,
         children: [
           {
-            title: "react",
-            path: "../pages/Framework/react/base",
+            title: "Vue2",
+            path: "../pages/Vue/vueComponent",
           },
           {
-            title: "vue",
-            path: "../pages/Framework/vue/vue3Base",
+            title: "Vue3",
+            path: "../pages/Vue/vue3Base",
           },
         ],
+      },
+      {
+        title: "React",
+        collapsable: true,
+        path: '../pages/React/base',
       },
       {
         title: "其他",
