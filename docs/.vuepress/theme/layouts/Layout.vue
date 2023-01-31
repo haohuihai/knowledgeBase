@@ -5,6 +5,7 @@
     @touchstart="onTouchStart"
     @touchend="onTouchEnd"
   >
+    <!-- 顶部导航栏 -->
     <Navbar
       v-if="shouldShowNavbar"
       @toggle-sidebar="toggleSidebar"
@@ -14,7 +15,7 @@
       class="sidebar-mask"
       @click="toggleSidebar(false)"
     />
-
+    <!-- 主页侧边栏 -->
     <Sidebar
       :items="sidebarItems"
       @toggle-sidebar="toggleSidebar"
@@ -26,9 +27,8 @@
         <slot name="sidebar-bottom" />
       </template>
     </Sidebar>
-
     <Home v-if="$page.frontmatter.home" />
-
+    <!-- 主页展示区 -->
     <Page
       v-else
       :sidebar-items="sidebarItems"
