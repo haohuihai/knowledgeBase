@@ -35,7 +35,7 @@ jobs:
             ls
             pwd
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
-              rsync -avce aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+              rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             else
               echo "Not master branch, dry run only"
             fi
