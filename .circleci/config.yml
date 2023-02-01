@@ -30,6 +30,7 @@ jobs:
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - deploy:
           name: deploy
+          command: ls
           command: |
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
