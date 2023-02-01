@@ -16,17 +16,18 @@ jobs:
       - restore_cache:
           keys:
             - dependencies_circle_demo
-      - run:
-          name: Install
-          command: yarn
+      # - run:
+      #     name: Install
+      #     command: yarn
       - save_cache:
           paths:
             - node_modules
           key: dependencies_circle_demo
-      - run: 
-          name: Build
-          command: yarn build
+      # - run: 
+      #     name: Build
+      #     command: yarn build
       - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-clients
+      - run: ps -aux | grep ssh
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run: ls
       - deploy:
