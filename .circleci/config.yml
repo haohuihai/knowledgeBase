@@ -28,9 +28,10 @@ jobs:
           command: yarn build
       - run: sudo apt-get update && sudo apt-get install rsync
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
+      - run: ls
       - deploy:
           name: deploy
-          command: ls
+          command: 
           command: |
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
