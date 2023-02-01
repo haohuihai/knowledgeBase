@@ -27,13 +27,14 @@ jobs:
           name: Build
           command: yarn build
       - run: sudo apt-get update && sudo apt-get install rsync
+      - run: yum install -y openssh-clients
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run: ls
       - deploy:
           name: deploy
           command: |
             ls
-            
+
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             else
