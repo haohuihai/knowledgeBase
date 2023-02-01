@@ -31,7 +31,6 @@ jobs:
       - run: ls
       - deploy:
           name: deploy
-          command: 
           command: |
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
