@@ -31,7 +31,7 @@ jobs:
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run:
           name: quanx
-          command: chmod + 755 /home/circleci/project/aaa.ts
+          command: chmod + 755  aaa.ts
       - run: ls
       - deploy:
           name: deploy
