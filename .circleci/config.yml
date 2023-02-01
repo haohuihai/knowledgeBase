@@ -26,7 +26,7 @@ jobs:
       # - run: 
       #     name: Build
       #     command: yarn build
-      - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-clients
+      - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
       - run: ps -aux | grep ssh
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run: ls
