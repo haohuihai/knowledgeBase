@@ -6,7 +6,7 @@ jobs:
     branches:
       only:
         - main
-    machine:	# 以虚拟机的方式运行
+    machine:  # 以虚拟机的方式运行
       enabled: true
     steps:
       - add_ssh_keys:
