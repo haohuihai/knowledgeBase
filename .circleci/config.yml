@@ -6,6 +6,8 @@ jobs:
     branches:
       only:
         - main
+    machine:	# 以虚拟机的方式运行
+      enabled: true
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -38,7 +40,7 @@ jobs:
           command: |
             ls
             pwd
-            rpm -qa | grep rsync
+            scp /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             else
