@@ -38,6 +38,7 @@ jobs:
           command: |
             ls
             pwd
+            rpm -qa | grep rsync
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
               rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             else
