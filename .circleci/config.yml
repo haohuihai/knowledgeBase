@@ -39,8 +39,8 @@ jobs:
           name: quanx
           command: chmod 755  aaa.ts
       - run:
-            name: Deploy Over SSH
-            command: |
+          name: Deploy Over SSH
+          command: |
             ssh $SSH_USER@$SSH_IP 
             scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
       - deploy:
