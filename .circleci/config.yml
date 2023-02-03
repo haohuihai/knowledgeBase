@@ -44,16 +44,16 @@ jobs:
           # scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
       - deploy:
           name: deploy
-          # command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-          command: |
-            ls
-            pwd
+          command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          # command: |
+          #   ls
+          #   pwd
             
-            if [ "${CIRCLE_BRANCH}" = "main" ]; then
-              rsync -avce ssh /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-            else
-              echo "Not master branch, dry run only"
-            fi
+          #   if [ "${CIRCLE_BRANCH}" = "main" ]; then
+          #     rsync -avce ssh /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          #   else
+          #     echo "Not master branch, dry run only"
+          #   fi
       - run: echo '部署完毕啊'
 # workflows:
 #   version: 2
