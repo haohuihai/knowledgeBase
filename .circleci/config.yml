@@ -40,9 +40,8 @@ jobs:
           command: |
             ls
             pwd
-            scp /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
-              rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+              rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/home/www/wwwroot/testbuild/
             else
               echo "Not master branch, dry run only"
             fi
