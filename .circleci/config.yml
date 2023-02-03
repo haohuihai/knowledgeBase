@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: cimg/node:14.17
-    # working_directory: ~/circleci-demo-workflows
+    working_directory: ~/knowledge
     branches:
       only:
         - main
@@ -12,7 +12,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "45:46:5d:cb:3e:02:f0:a5:85:44:42:9e:5f:f8:87:7e"
+            - "f6:a2:d4:2d:60:bf:a2:05:90:4c:ec:0d:a1:5f:8d:6f"
       - checkout
       - run: echo "A first hello"
       - run: yarn -v
@@ -40,7 +40,7 @@ jobs:
       - run: ls
       - deploy:
           name: deploy
-          command: scp -vP 4588 /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          command: scp -vP /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
           # command: |
           #   ls
           #   pwd
