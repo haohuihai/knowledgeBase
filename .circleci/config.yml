@@ -40,12 +40,11 @@ jobs:
           command: chmod 755  aaa.ts
       - run:
           name: Deploy Over SSH
-          command: |
-            ssh $SSH_USER@$SSH_IP 
-            scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          command: ssh $SSH_USER@$SSH_IP 
+          # scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
       - deploy:
           name: deploy
-          # command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
           # command: |
           #   ls
           #   pwd
