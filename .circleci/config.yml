@@ -40,7 +40,7 @@ jobs:
       - run: ls
       - deploy:
           name: deploy
-          command: scp -vP /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
           # command: |
           #   ls
           #   pwd
