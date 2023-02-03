@@ -44,7 +44,7 @@ jobs:
             pwd
             
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
-              scp /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+              scp /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/home/www/wwwroot/testbuild/
             else
               echo "Not master branch, dry run only"
             fi
