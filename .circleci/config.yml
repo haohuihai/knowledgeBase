@@ -28,6 +28,8 @@ jobs:
       # - run: 
       #     name: Build
       #     command: yarn build
+      #       rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+       
       - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
       - run: ps -aux | grep ssh
       - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
@@ -40,8 +42,9 @@ jobs:
           command: |
             ls
             pwd
+            
             if [ "${CIRCLE_BRANCH}" = "main" ]; then
-              rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/home/www/wwwroot/testbuild/
+              scp /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
             else
               echo "Not master branch, dry run only"
             fi
