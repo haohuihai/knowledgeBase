@@ -35,6 +35,7 @@ jobs:
       - run: ps -aux | grep ssh
       # - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run: ls
+      - run: ssh root@101.132.124.188 -vvv
       # - run:
       #     name: quanx
       #     command: chmod 755  aaa.ts
