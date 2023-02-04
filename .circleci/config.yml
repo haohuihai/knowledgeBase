@@ -3,69 +3,32 @@ jobs:
   build:
     docker:
       - image: cimg/node:14.17
-    working_directory: ~/knowledge
     branches:
       only:
         - main
-    machine:  # 以虚拟机的方式运行
-      enabled: true
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "f6:a2:d4:2d:60:bf:a2:05:90:4c:ec:0d:a1:5f:8d:6f"
+            - "5d:d8:5e:09:c4:cc:57:2f:e4:3b:7e:49:2a:b3:f0:24"
       - checkout
       - run: echo "A first hello"
       - run: yarn -v
       - restore_cache:
           keys:
             - dependencies_circle_demo
-      # - run:
-      #     name: Install
-      #     command: yarn
-      # - save_cache:
-      #     paths:
-      #       - node_modules
-      #     key: dependencies_circle_demo
-      # - run: 
-      #     name: Build
-      #     command: yarn build
-      #       rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-       
-      - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
-      - run: ps -aux | grep ssh
-      - run: ls
-      - run: pwd
-      # - run: echo $REMOTE_HOSTKEY >> /home/circleci/.ssh/known_hosts
-      - run: ls
-      # - run: ssh -o StrictHostKeyChecking=no root@101.132.124.188 -vvv
-      # - run:
-      #     name: quanx
-      #     command: chmod 755  aaa.ts
-      # - run:
-      #     name: Deploy Over SSH
-      #     command: ssh $SSH_USER@$SSH_IP 
-          # scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-      - deploy:
-          name: deploy
-          command: scp -v /home/circleci/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-          # command: |
-          #   ls
-          #   pwd
-            
-          #   if [ "${CIRCLE_BRANCH}" = "main" ]; then
-          #     rsync -avce ssh /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-          #   else
-          #     echo "Not master branch, dry run only"
-          #   fi
-      - run: echo '部署完毕啊'
-# workflows:
-#   version: 2
-#   scheduled-workflow:
-#     jobs:
-#       - build
-      # - run:
-      #     name: Prepare shell commands
-      #     command: chmod +x deploy.sh
-      # - run:
-      #     name: Run Deploy to Github pages
-      #     command: ./deploy.sh
+      - run:
+          name: Install
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies_circle_demo
+      - run: 
+          name: Build
+          command: yarn build
+      - run:
+          name: Prepare shell commands
+          command: chmod +x deploy.sh
+      - run:
+          name: Run Deploy to Github pages
+          command: ./deploy.sh
