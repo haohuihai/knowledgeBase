@@ -12,7 +12,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "45:46:5d:cb:3e:02:f0:a5:85:44:42:9e:5f:f8:87:7e"
+            - "f6:a2:d4:2d:60:bf:a2:05:90:4c:ec:0d:a1:5f:8d:6f"
       - checkout
       - run: echo "A first hello"
       - run: yarn -v
@@ -31,13 +31,13 @@ jobs:
       #     command: yarn build
       #       rsync -avce /home/circleci/project/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
        
-      - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
-      - run: ps -aux | grep ssh
-      - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
+      # - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
+      # - run: ps -aux | grep ssh
+      # - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
       - run: ls
-      - run:
-          name: quanx
-          command: chmod 755  aaa.ts
+      # - run:
+      #     name: quanx
+      #     command: chmod 755  aaa.ts
       # - run:
       #     name: Deploy Over SSH
       #     command: ssh $SSH_USER@$SSH_IP 
