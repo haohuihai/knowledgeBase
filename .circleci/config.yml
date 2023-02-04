@@ -37,7 +37,7 @@ jobs:
       - run: pwd
       # - run: echo $REMOTE_HOSTKEY >> /home/circleci/.ssh/known_hosts
       - run: ls
-      - run: ssh -o StrictHostKeyChecking=no root@101.132.124.188 -vvv
+      # - run: ssh -o StrictHostKeyChecking=no root@101.132.124.188 -vvv
       # - run:
       #     name: quanx
       #     command: chmod 755  aaa.ts
@@ -47,7 +47,7 @@ jobs:
           # scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
       - deploy:
           name: deploy
-          command: scp -v /home/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+          command: scp -v /home/circleci/knowledge/aaa.ts $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
           # command: |
           #   ls
           #   pwd
