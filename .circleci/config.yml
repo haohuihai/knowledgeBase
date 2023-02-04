@@ -33,7 +33,7 @@ jobs:
        
       - run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
       - run: ps -aux | grep ssh
-      - run: echo $REMOTE_HOSTKEY >> /home/circleci/.ssh/known_hosts
+      - run: echo $REMOTE_HOSTKEY >> /root/.ssh/known_hosts
       - run: ls
       - run: ssh -o StrictHostKeyChecking=no root@101.132.124.188 -vvv
       # - run:
