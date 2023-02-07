@@ -350,3 +350,73 @@ interview这个是静态的项目，还没确定放到什么地方上
 
 
 光明公益小程序+后台+后端：放的地方不一致
+
+chapt
+
+```js
+const http = require('http');
+
+/**
+ * @name:
+ * @description: 封装了一下ChatGPT
+ * @param {*} msg 发送的消息
+ * @param {*} sessionToken 浏览器cookie拿到的令牌
+ * @return {Promise}
+ */
+ const sendChatGPTMsg = async ({ msg, sessionToken }) => {
+  const { promise, resolve, reject } = defer();
+  const api = new ChatGPTAPI({
+    sessionToken,
+    markdown: false,
+  });
+  await api.ensureAuth().catch(reject); // 校验令牌
+  api.sendMessage(msg).catch(reject).then(resolve);
+  return promise;
+};
+
+
+/**
+ * @name:
+ * @description: promise扁平处理
+ * @return {*}
+ */
+ const defer = () => {
+  let resolve, reject;
+  return {
+    promise: new Promise((_resolve, _reject) => {
+      resolve = _resolve;
+      reject = _reject;
+    }),
+    resolve,
+    reject,
+  };
+};
+
+
+
+http.createServer((req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*"); //设置响应头解决跨域
+    if (req.url !== "/sendMsg") return sendRes(res, "not find", 404);
+    let _data = "";
+    req.on("data", (d) => {
+      _data += d;
+    });
+    req.on("end", () => {
+      const data = JSON.parse(_data);
+      sendChatGPTMsg(data)
+        .then((r) => {
+          res.writeHead(200, {
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": "*",
+          });
+          console.log(r)
+          res.write(r);
+          res.end();
+        })
+    });
+  })
+  .listen(1024, () => {
+    console.log("服务开启！");
+  });
+```
+
