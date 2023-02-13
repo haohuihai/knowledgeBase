@@ -1,11 +1,14 @@
+[[toc]]
 Axios的详细使用方法在https://www.axios-http.cn/
 
 这里介绍一下Axios的使用方法，然后通过这些方法来写Axios源码
 Axios可以使用在node和浏览器
+
 > 这里以浏览器为例
 默认axios都是经过安装且已经引入过的
 # 初步使用
 **安装**
+
 ```js
 npm install axios
 ```
@@ -118,7 +121,7 @@ axios({
     console.log(response);
 });
 ```
-delete，put，的方式和上面的相似
+delete，put的方式和上面的相似
 
 ## 请求方式
 1. 通过API的方式来发起请求
@@ -378,7 +381,7 @@ console.log('axios', axios.get);
 console.log('axios', axios.post);
 console.log('axios', axios.request);
 ```
-![image-20230213155536730](images/image-20230213155536730.png)
+![image-20230213155536730](./images/image-20230213155536730.png)
 
 以上就完成了axios的基本使用，下面要做的就是调用XMLHttpRequest方法了
 
@@ -405,17 +408,293 @@ console.log('axios', axios.request);
 
 源码将一些内容已经写的很清楚了，这里只是解释一下相关内容，这些内容就不再写在里面了
 
-mergeConfig方法，这个方法是将用户传入的配置和默认的配置进行合并，
-这里的做法是自定义了一个forEach方法，来处理合并的的参数，初始化了config，导入默认的配置，最终将默认的和自定义的合并到config里面在返回出来
+mergeConfig方法，这个方法是将用户传入的配置和默认的配置进行合并，这里的做法是自定义了一个forEach方法，来处理合并的的参数，初始化了config，导入默认的配置，最终将默认的和自定义的合并到config里面在返回出来
 
 我们在写方法名时，发现大写小写都可以，那是因为源代码里面最后都处理为小写
+```js
+  if (config.method) {
+      config.method = config.method.toLowerCase();
+  } else if (this.defaults.method) {
+      config.method = this.defaults.method.toLowerCase();
+  } else {
+      config.method = 'get';
+  }
+```
+
+请求拦截是怎么实现的
+
+在源码里面，
 
 为什么在处理请求拦截器的时候，拦截顺序时从下到上，而响应顺序时从上到下的
 
 
+```js
+// Hook up interceptors middleware
+  // 创建拦截器中间件  第一个参数用来发送请求, 第二个为 undefined 用来补位
+  var chain = [dispatchRequest, undefined];
+  // 创建一个成功的 promise 且成功的值为合并后的请求配置
+  var promise = Promise.resolve(config);//  promise 成功的Promise
+  // 遍历实例对象的请求拦截器,
+  this.interceptors.request.forEach(function unshiftRequestInterceptors (interceptor) {
+      //将请求拦截器压入数组的最前面
+      chain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
 
+  this.interceptors.response.forEach(function pushResponseInterceptors (interceptor) {
+      //将相应拦截器压入数组的最尾部
+      chain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  //如果链条长度不为 0
+  while (chain.length) {
+      //依次取出 chain 的回调函数, 并执行
+      
+      promise = promise.then(chain.shift(), chain.shift());
+  }
+```
+可以看到，请求拦截器在执行前就被执行过了。响应拦截器在请求之后才被执行
+
+下面自己实现一下
 ```js
 Axios.prototype.request = function(config) {
+  //1. 发送请求
+  //创建一个 promise 对象
+  let promise = Promise.resolve(config);
+  //声明一个数组
+  let chains = [dispatchRequest, undefined];// undefined 占位
+  //调用 then 方法指定回调
+  let result = promise.then(chains[0], chains[1]);
+  //返回 promise 的结果
+  return result;
+}
 
+```
+
+dispatchRequest是我们发送请求的方法，
+```js
+//2. dispatchRequest 函数
+function dispatchRequest(config){
+    //调用适配器发送请求
+    return xhrAdapter(config).then(response => {
+        //响应的结果进行转换处理
+        //....
+        return response;
+    }, error => {
+        throw error;
+    });
+}
+
+```
+
+xhrAdapter方法是真正调用去请求的方法
+```js
+//3. adapter 适配器
+function xhrAdapter(config){
+    console.log('xhrAdapter 函数执行');
+    return new Promise((resolve, reject) => {
+        //发送 AJAX 请求
+        let xhr = new XMLHttpRequest();
+        //初始化
+        xhr.open(config.method, config.url);
+        //发送
+        xhr.send();
+        //绑定事件
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4){
+                //判断成功的条件
+                if(xhr.status >= 200 && xhr.status < 300){
+                    //成功的状态
+                    resolve({
+                        //配置对象
+                        config: config,
+                        //响应体
+                        data: xhr.response,
+                        //响应头
+                        headers: xhr.getAllResponseHeaders(), //字符串  parseHeaders
+                        // xhr 请求对象
+                        request: xhr,
+                        //响应状态码
+                        status: xhr.status,
+                        //响应状态字符串
+                        statusText: xhr.statusText
+                    });
+                }else{
+                    //失败的状态
+                    reject(new Error('请求失败 失败的状态码为' + xhr.status));
+                }
+            }
+        }
+    });
 }
 ```
+上面的代码就是真正的创建了一个axios的请求
+
+## 拦截器
+
+对于拦截器，Axios源码中使用一个InterceptorManager的构造函数来管理拦截器，这个构造函数原型上有3个方法：use、eject、forEach。
+我们使用的use是来添加拦截器的规则，每次添加的是成功和失败
+
+在Axios中定义拦截器
+
+```js
+function Axios(config){
+    this.config = config;
+    this.interceptors = {
+        request: new InterceptorManager(),
+        response: new InterceptorManager(),
+    }
+}
+```
+在request执行的时候添加拦截器
+```js
+Axios.prototype.request = function(config){
+  //创建一个 promise 对象
+  let promise = Promise.resolve(config);
+  const chains = [dispatchRequest, undefined];
+  //请求拦截器 将请求拦截器的回调 压入到 chains 的前面  request.handles = []
+  this.interceptors.request.handlers.forEach(item => {
+      chains.unshift(item.fulfilled, item.rejected);
+  });
+  //响应拦截器
+  this.interceptors.response.handlers.forEach(item => {
+      chains.push(item.fulfilled, item.rejected);
+  });
+
+  // 添加了拦截器后的chain数组：
+  // [
+  //   requestFulfilledFn, requestRejectedFn, ..., 
+  //   dispatchRequest, undefined,
+  //   responseFulfilledFn, responseRejectedFn, ....,
+  // ]
+
+  //遍历
+  while(chains.length > 0){
+    // 从chain数组里按序取出两项，并分别作为promise.then方法的第一个和第二个参数
+      promise = promise.then(chains.shift(), chains.shift());
+  }
+}
+
+ //拦截器管理器构造函数
+function InterceptorManager(){
+    this.handlers = [];
+}
+InterceptorManager.prototype.use = function(fulfilled, rejected){
+    this.handlers.push({
+        fulfilled,
+        rejected
+    })
+}
+
+// 最后将拦截器interceptors添加到axios函数对象身上
+let context = new Axios({});
+//创建axios函数
+let axios = Axios.prototype.request.bind(context);
+//将 context 属性 config interceptors 添加至 axios 函数对象身上
+Object.keys(context).forEach(key => {
+    axios[key] = context[key];
+});
+```
+
+## 取消请求
+取消功能的核心是通过CancelToken内的this.promise = new Promise(resolve => resolvePromise = resolve)，得到实例属性promise，此时该promise的状态为pending
+通过这个属性，在/lib/adapters/xhr.js文件中继续给这个promise实例添加.then方法
+在这个方法里面在去钓鱼abort方法来取消请求
+
+
+在CancelToken外界，通过executor参数拿到对cancel方法的控制权，
+这样当执行cancel方法时就可以改变实例的promise属性的状态为rejected，
+从而执行request.abort()方法达到取消请求的目的。
+```js
+ //xhrAdapter
+function xhrAdapter(config){
+    //发送 AJAX 请求
+    return new Promise((resolve, reject) => {
+        //实例化对象
+        const xhr = new XMLHttpRequest();
+        //初始化
+        xhr.open(config.method, config.url);
+        //发送
+        xhr.send();
+        //处理结果
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4){
+                //判断结果
+                if(xhr.status >= 200 && xhr.status < 300){
+                    //设置为成功的状态
+                    resolve({
+                        status: xhr.status,
+                        statusText: xhr.statusText
+                    });
+                }else{
+                    reject(new Error('请求失败'));
+                }
+            }
+        }
+        //取消请求的处理
+        if(config.cancelToken){
+            //对 cancelToken 对象身上的 promise 对象指定成功的回调
+            config.cancelToken.promise.then(value => {
+                xhr.abort();
+                //将整体结果设置为失败
+                reject(new Error('请求已经被取消'))
+            });
+        }
+    })
+}
+
+//CancelToken 构造函数
+function CancelToken(executor){
+    //声明一个变量
+    var resolvePromise;
+    //为实例对象添加属性
+    this.promise = new Promise((resolve) => {
+        //将 resolve 赋值给 resolvePromise
+        resolvePromise = resolve
+    });
+    //调用 executor 函数
+    executor(function(){
+        //执行 resolvePromise 函数
+        resolvePromise();
+    });
+}
+
+//声明全局变量
+let cancel = null;
+
+```
+
+在发起请求的时候，我们要将cacelToken传给axios，
+```js
+// 全局定义一个cancel标志位
+requestMethod() {
+  //检测上一次的请求是否已经完成
+  if(cancel !== null){
+      //取消上一次的请求
+      cancel();
+  }
+
+  //创建 cancelToken 的值
+  let cancelToken = new CancelToken(function(c){
+      cancel = c;
+  });
+
+  axios({
+      method: 'GET',
+      url: 'http://localhost:3000/posts',
+      cancelToken: cancelToken
+  }).then(response => {
+      console.log(response);
+      //将 cancel 的值初始化
+      cancel = null;
+  })
+}
+
+// 当我们取消请求的时候
+// 直接调用cancel方法即可
+
+cancel()
+```
+
+以上就是大概的说明了axios的多种请求方式的创建，拦截器的实现，取消请求的实现
+
+里面还有很多内容需要写，等后面在写

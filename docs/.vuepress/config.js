@@ -5,6 +5,7 @@ module.exports = {
   title: "DATA", // 标题
   description: "记录一些我遇到的技术", // 标题下的描述
   // 指定网页head图标
+  level: [1, 2, 3],
   head: [
     [
       "link",
@@ -70,6 +71,16 @@ module.exports = {
         title: "TypeScript",
         collapsable: true,
         path: "../pages/Front/TS/ts",
+      },
+      {
+        title: "Axios",
+        collapsable: true,
+        path: "../pages/Axios/axios",
+      },
+      {
+        title: "Promise",
+        collapsable: true,
+        path: "../pages/Promise/promise",
       },
       { title: "Node", path: "../pages/Node/aaa" },
       { title: "Python", path: "../pages/Python/pythonBase" },
