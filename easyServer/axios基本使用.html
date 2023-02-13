@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <button class="getAxios">发送get</button>
+      <button class="postAxios">发送post</button>
+      <button class="putAxios">发送put</button>
+      <button class="deleteAxios">发送delete</button>
+    </div>
+    <script>
+      //   axios返回的是promise对象，使用then去接收
+      const btn = document.querySelectorAll("button");
+      //  获取
+      btn[0].onclick = function () {
+        axios({
+          method: "GET",
+          url: "http://localhost:3000/posts",
+        }).then((res) => {
+          console.log(`res`, res);
+        });
+      };
+      //   添加新的文章
+      btn[1].onclick = function () {
+        axios({
+          method: "POST",
+          url: "http://localhost:3000/posts",
+          data: {
+            title: "今天天气怎么不错，好",
+            author: "zs",
+          },
+        }).then((res) => {
+          console.log(`res`, res);
+        });
+      };
+      //   更新新的文章
+      btn[2].onclick = function () {
+        axios({
+          method: "PUT",
+          url: "http://localhost:3000/posts/1",
+          data: {
+            title: "今天天气怎么不错，好",
+            author: "4444",
+          },
+        }).then((res) => {
+          console.log(`res`, res);
+        });
+      };
+      //   更新新的文章
+      btn[3].onclick = function () {
+        axios({
+          method: "PUT",
+          url: "http://localhost:3000/posts/1",
+        }).then((res) => {
+          console.log(`res`, res);
+        });
+      };
+    </script>
+  </body>
+</html>

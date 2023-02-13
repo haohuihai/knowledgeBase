@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <button class="getAxios">发送get</button>
+      <button class="postAxios">发送post</button>
+      <button class="putAxios">发送put</button>
+      <button class="deleteAxios">发送delete</button>
+    </div>
+    <script>
+        const btn = document.querySelectorAll("button");
+
+        // 配置对象里面可以设置哪些内容
+        // 处理请求和响应的数据，在进行发送  transformRequest transformResponse
+        //   headers   控制请求头信息
+        // 配置对象里面设置内容 params
+
+        //   axios的默认配置
+        //   默认请求类型
+        //   默认请求baseURL
+        //   修改的配置里的都可以设置默认
+        //   超时时间
+
+        //   axios创建实例对象发送ajax请求
+        create创建出来的对象和axios函数的功能大致一样;
+        const creatReq = axios.create({
+          baseURL: "",
+          timeout: 2000,
+        });
+        //   直接使用   和creatReq和axios功能一样
+        creatReq({
+          url: "",
+        }).then((res) => {
+          console.log(`res`, res);
+        });
+
+        createReq.get("/");
+
+        作用: 两个服务的使用的时候可以创建两个对象来切换使用;
+        // 拦截器的作用
+        内部使用Promsie;
+        请求拦截器;
+        响应拦截器;
+        对请求或响应的数据或结果做处理;
+        axios.intercerceptors.request.use(
+          (config) => {
+            throw "识别";
+          },
+          (err) => {}
+        );
+        axios.intercerceptors.response.use(
+          (config) => {},
+          (err) => {}
+        );
+        请求拦截器失败时, 走的是响应拦截器失败的回调, 然后到接口失败的回调;
+
+        两个请求拦截器时, 先执行第二个, 然后到第一个;
+        后进先执行;
+        两个响应拦截器, 先执行第一个, 然后在执行第二个;
+
+
+        config参数就是配置对象
+        修改congfig参数
+
+        响应参数,对返回的内容做修改
+        响应的时候可以只返回data   response.data
+
+        axios 取消请求
+
+        //  获取
+        声明全局变量
+        let cancel = null;
+        btn[0].onclick = function () {
+          axios
+            .request({
+              method: "GET",
+              url: "http://localhost:3000/posts/1",
+              cancelToken: new axios.cancelToken(function(c) {
+                  cancel = c;
+              })
+            })
+            .then((res) => {
+              console.log(`res`, res);
+              cancel = null  // cancel设置为null
+            });
+        };
+      //   取消请求
+
+      // 可以让服务端延时响应
+      btn[1].onclick = function () {
+          cancel()
+      };
+        // 当连续发送多次请求的时候，在发送请求之前，可以检测上次的请求是否已经完成
+        // cancel如果是!==null  说明上一次还在执行，在执行这一次的时候，可以取消上一次在执行这一次
+
+
+        //   添加新的文章
+        btn[1].onclick = function () {
+          axios
+            .post("http://localhost:3000/comments", {
+              body: "some comment2222222",
+              postId: 4,
+            })
+            .then((res) => {
+              console.log(`res`, res);
+            });
+        };
+        //   更新新的文章
+        btn[2].onclick = function () {};
+        //   更新新的文章
+        btn[3].onclick = function () {};
+    </script>
+  </body>
+</html>
