@@ -127,6 +127,8 @@ delete，put的方式和上面的相似
 1. 通过API的方式来发起请求
 其中url是必选的，config是可选的，不填则为默认，默认为什么值，可通过上面的链接查看
 ```js
+axios(config): 通用/最本质的发任意类型请求的方式
+axios(url[, config]): 可以只指定url发get请求
 axios.request(config)
 axios.get(url[, config])
 axios.delete(url[, config])
@@ -135,6 +137,10 @@ axios.options(url[, config])
 axios.post(url[, data[, config]])
 axios.put(url[, data[, config]])
 axios.patch(url[, data[, config]])
+
+axios.defaults.xxx: 请求的默认全局配置
+axios.interceptors.request.use(): 添加请求拦截器
+axios.interceptors.response.use(): 添加响应拦截器
 ```
 2. 通过实例的方式来发起请求
 创建实例
@@ -163,8 +169,16 @@ axios#post(url[, data[, config]])
 axios#put(url[, data[, config]])
 axios#patch(url[, data[, config]])
 axios#getUri([config])
+
+axios#all(promises) 用于批量执行多个异步请求
+axios#spread() 用来指定接收所有成功数据的回调函数的方法
 ```
+
+
 ## 拦截器
+
+调用axios()并不是立即发送ajax请求, 而是需要经历一个较长的流程
+
 ### 请求拦截器
 在请求被发送之前的调用
 ```js
@@ -198,6 +212,8 @@ axios.interceptors.request.use(function (config) {
 
 请求拦截--------2
 请求拦截--------1
+
+
 
 ### 响应拦截器
 在请求被响应到，then或catch捕获前的调用
@@ -234,7 +250,13 @@ axios.interceptors.response.use(function (response) {
 
 请求完之后的输出顺序为
 响应拦截--------1
-响应拦截--------
+响应拦截--------2
+
+**总结**
+
+请求拦截器2 => 请求拦截器1 => 发ajax请求 => 响应拦截器1 => 响应拦截器2 => 请求的回调
+
+此流程是通过promise串连起来的, 请求拦截器传递的是config, 响应拦截器传递的是response错误流程控制与错误处理
 
 ## 取消请求响应
 从 v0.22.0 开始，Axios 支持以 fetch API 方式—— AbortController 取消请求：
@@ -249,6 +271,8 @@ axios.get('/foo/bar', {
 // 取消请求
 controller.abort()
 ```
+
+
 
 # 源码开始
 
@@ -350,7 +374,6 @@ axios.request({
       // 我们需要一个兼容调用axios({})的，也要兼容axios.get({})的， 返回的instance此时并不能通过axios.get()来使用
 
       // 我们知道函数也是一个对象。所以我们可以把Axios原型上的方法放到这个instance上面，当作一个方法；
-
 
       //将 Axios.prototype 对象中的方法添加到instance函数对象中
       Object.keys(Axios.prototype).forEach(key => {
@@ -698,3 +721,81 @@ cancel()
 以上就是大概的说明了axios的多种请求方式的创建，拦截器的实现，取消请求的实现
 
 里面还有很多内容需要写，等后面在写
+
+## 总结
+
+### 1. axios为什么能有多种发请求的方法?
+
+    axios函数对应的是Axios.prototype.request方法通过bind(Axiox的实例)产生的函数
+    axios有Axios原型上的所有发特定类型请求的方法: get()/post()/put()/delete()
+    axios有Axios的实例上的所有属性: defaults/interceptors
+    后面又添加了create()/CancelToken()/all()
+
+### 2. axios.create()返回的对象与axios的区别?
+
+    相同: 
+        都是一个能发任意请求的函数: request(config)
+        都有发特定请求的各种方法: get()/post()/put()/delete()
+        都有默认配置和拦截器的属性: defaults/interceptors
+    不同:
+        默认匹配的值很可能不一样
+        instance没有axios后面添加的一引起方法: create()/CancelToken()/all()
+
+### 3. axios运行的整体流程
+
+```
+  1). 整体流程: request(config)  ===> dispatchRequest(config) ===> xhrAdapter(config)
+  2). request(config): 将请求拦截器 / dispatchRequest() / 响应拦截器 通过promise链串连起来, 返回promise
+  3). dispatchRequest(config): 转换请求数据 ===> 调用xhrAdapter()发请求 ===> 请求返回后转换响应数据. 返回promise
+  4). xhrAdapter(config): 创建XHR对象, 根据config进行相应设置, 发送特定请求, 并接收响应数据, 返回promise 
+```
+
+
+
+### 4. Axios.prototype.request()都做了什么?
+
+### 5. dispatchrequest()都做了什么?
+
+### 6. xhrAdapter()做了什么?
+
+    整体流程: request(config)  ===> dispatchRequest(config) ===> xhrAdapter(config)
+    request(config): 将请求拦截器 / dispatchRequest() / 响应拦截器 通过promise链串连起来, 返回promise
+    dispatchRequest(config): 转换请求数据 ===> 调用xhrAdapter()发请求 ===> 请求返回后转换响应数据. 返回promise
+    xhrAdapter(config): 创建XHR对象, 根据config进行相应设置, 发送特定请求, 并接收响应数据, 返回promise 
+
+### 7. axios的请求/响应拦截器是什么?
+
+    请求拦截器: 在真正发请求前, 可以对请求进行检查或配置进行特定处理的函数, 包括成功/失败的函数, 传递的必须是config
+    响应拦截器: 在请求返回后, 可以对响应数据进行特定处理的函数, 包括成功/失败的函数, 传递的默认是response
+
+### 8. axios的请求/响应数据转换器是什么?
+
+    请求转换器: 对请求头和请求体数据进行特定处理的函数
+        setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+        return JSON.stringify(data)
+    响应转换器: 将响应体json字符串解析为js对象或数组的函数
+        response.data = JSON.parse(response.data)
+
+### 9. response的整体结构
+
+    {
+        data,
+        status,
+        statusText,
+        headers,
+        config,
+        request
+    }
+
+### 10. error的整体结构
+
+    {
+        message,
+        request,
+        response
+    }
+
+### 11. 如何取消已经发送的请求?
+
+
+

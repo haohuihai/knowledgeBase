@@ -420,3 +420,334 @@ http.createServer((req, res) => {
   });
 ```
 
+## 常用命令
+
+查看端口：
+
+```shell
+netstat -ntulp | grep 3306
+lsof -i:3306
+```
+
+杀死端口
+
+```shell
+kill -9 pid
+```
+
+进入容器
+
+```shell
+docker exec -it containerId /bin/bash
+```
+
+进入mysql
+
+```mysql
+mysql -h localhost -u root -p
+```
+
+推出mysql
+
+```shell
+mysql > quit
+```
+
+退出容器：
+
+```shell
+exit
+```
+
+删除镜像
+
+```shell
+docker rm containerId
+```
+
+查看是否运行的容器
+
+```shell
+docker ps
+```
+
+查看所有容器
+
+```shell
+docker ps -a
+```
+
+查看容器日志
+
+```shell
+docker logs imagename
+```
+
+```shell
+
+```
+
+# pm2常用指令
+
+```js
+$ pm2 start app.js # 启动app.js应用程序
+
+$ pm2 start app.js -i 4        # cluster mode 模式启动4个app.js的应用实例
+
+# 4个应用程序会自动进行负载均衡
+
+$ pm2 start app.js --name="api" # 启动应用程序并命名为 "api"
+
+$ pm2 start app.js --watch      # 当文件变化时自动重启应用
+
+$ pm2 start script.sh          # 启动 bash 脚本
+
+$ pm2 list                      # 列表 PM2 启动的所有的应用程序
+
+$ pm2 monit                    # 显示每个应用程序的CPU和内存占用情况
+
+$ pm2 show [app-name]          # 显示应用程序的所有信息
+
+$ pm2 logs                      # 显示所有应用程序的日志
+
+$ pm2 logs [app-name]          # 显示指定应用程序的日志
+
+$ pm2 flush                       # 清空所有日志文件
+
+$ pm2 stop all                  # 停止所有的应用程序
+
+$ pm2 stop 0                    # 停止 id为 0的指定应用程序
+
+$ pm2 restart all              # 重启所有应用
+
+$ pm2 reload all                # 重启 cluster mode下的所有应用
+
+$ pm2 gracefulReload all        # Graceful reload all apps in cluster mode
+
+$ pm2 delete all                # 关闭并删除所有应用
+
+$ pm2 delete 0                  # 删除指定应用 id 0
+
+$ pm2 scale api 10              # 把名字叫api的应用扩展到10个实例
+
+$ pm2 reset [app-name]          # 重置重启数量
+
+$ pm2 startup                  # 创建开机自启动命令
+
+$ pm2 save                      # 保存当前应用列表
+
+$ pm2 resurrect                # 重新加载保存的应用列表
+
+$ pm2 update                    # Save processes, kill PM2 and restore processes
+
+$ pm2 generate                  # Generate a sample json configuration file
+```
+
+
+
+# nginx location
+
+http://t.zoukankan.com/shijianchuzhenzhi-p-6873737.html
+
+# 修改容器中的配置文件
+
+
+
+docker 运行容器；
+
+```
+docker run --name nginx -p 80:80 -d nginx
+```
+
+```shell
+docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+```
+
+
+
+修改容器里面的文件，由于容器里面的文件无法修改该，通过拷贝的方式来替换掉原来的文件
+
+进入容器：
+
+```
+docker exec -it nginx /bin/bash
+```
+
+将容器中 的文件拷贝到宿主机里面
+
+```
+docker cp nginx:/etc/nginx/conf.d/default.conf /home/
+```
+
+修改完将修改的文件拷贝到容器里面
+
+```shell
+docker cp /home/default.conf nginx:/etc/nginx/conf.d
+```
+
+重启容器：
+
+```shell
+docker restart nginx
+```
+
+# docker启动mysql时，有端口被占用，使用kill -9 pid杀不死的解决办法
+
+彻底停止mysql：
+
+```shell
+sudo /etc/init.d/mysql stop
+```
+
+# docker容器之间访问端口需要使用ip代替localhost
+
+# docker不能运行mysql的时候查看一下端口是否占用‘
+
+# mysql容器无法外部访问解决方案
+
+进入容器内  docker exec -it mysql /bin/bash
+
+登陆mysql   mysql -u root -p 
+
+修改访问权限，允许所有人访问 
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
+
+更新权限 
+
+flush privileges;
+
+# 修改nginx容器中的文件
+
+通过拷贝主机上的文件到nginx容器，可修改容器中的文件
+
+```shell
+
+```
+
+# 查看nginx的安装目录
+
+```shell
+ps -ef | grep nginx
+```
+
+# Dockerfile 中 run 和 cmd 区别
+
+- `run` 是在 `docker build` 构建镜像时, 会执行的命令
+- `cmd` 是在 `docker run` 启动容器时, 会执行的命令
+
+# 在node启动的时候，sequlize报错
+
+有可能时mysql没有连上，mysql是一个容器，node后端项目的容器在连接mysql的时候，有可能连接不上mysql；
+
+下面错误：
+
+Client does not support authentication protocol requested by server； conside
+
+**查看mysql的版本**发现是8以后的，所以加密规则会变
+
+```mysql
+select version();
+2 修改加密方式
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
+```
+
+这里的password是你正在使用的密码
+
+然后
+
+> `FLUSH PRIVILEGES;`
+> 刷新权限，让修改生效。
+
+还有： 
+
+alter USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRENEVER; alter USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '修改自己的密码';
+
+错误：
+
+Operation ALTER USER failed for 'root'@'localhost'
+
+
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'xxxxx';
+
+ERROR 1396 (HY000): Operation ALTER USER failed for 'root'@'localhost'
+
+
+
+发现 host 列的值是 ‘%’，因此将修改密码语句改为： 
+
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'xxxxxx';
+
+flush privileges;
+
+# 开始部署一个项目
+
+安装git
+
+```
+yum install git -y
+```
+
+新建文件夹
+
+```
+mkdir /usr/projects
+```
+
+生成一个github公钥
+
+```
+ssh-keygen -t rsa -b 4096 -C "157855644@qq.com"
+```
+
+默认在`/root/.ssh/id_rsa`下面
+
+密码： 无
+
+读取公钥：
+
+```
+cat /root/.ssh/id_rsa.pub
+```
+
+将得到的公钥添加进github
+
+在指定文件夹下使用ssh拉取项目
+
+安装node，npm
+
+```shell
+安装node和npm,nvm , pm2
+
+
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+source /root/.bashrc
+nvm install v16.14.0 #下载指定版本
+npm i nrm -g
+nrm use taobao
+npm i pm2 -g
+```
+
+**像nginx，mysql，redis，这些可以安装到宿主机上，然后容器去访问就可以了，没必要放到容器里面**
+
+# 安装 mysql
+
+https://blog.csdn.net/qq_55752792/article/details/122149990
+
+https://blog.csdn.net/weixin_42123191/article/details/113230075
+
+https://blog.csdn.net/Y00010010/article/details/124562115
+
+# 安装docker
+
+https://github.com/sillyhong/whongjiagou-learn/blob/master/turndownMarkdown/markdown/72.deploy.md
+
+安装完启动；
+
+```shell
+sudo systemctl start docker
+```
+
+# linux查看进程
+
+https://blog.csdn.net/weixin_39785970/article/details/116867920

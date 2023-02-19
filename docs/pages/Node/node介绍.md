@@ -1,4 +1,4 @@
-Node概述
+## Node介绍
 
  Node基于谷歌的V8引擎(JS解释器)，运行在服务器端的语言，基于JS。
 
@@ -6,7 +6,21 @@ Node概述
 
  http://nodejs.cn 中文
 
- **对比JS和NODEJS**
+我们可以安装⼀些⼯具，对 node.js 版本进⾏切换，例如 nvm 和 n
+
+nvm 的全称就是 node version manager，意思就是能够管理 node 版本的⼀个⼯具，它提供了⼀种直接通过shell 执⾏的⽅式来进⾏安装。简单来说，就是通过将多个 node 版本安装在指定路径，然后通过 nvm 命令切换时，就会切换我们环境变量中 node 命令指定的实际⾏的软件路径。
+
+node.js 的主要依赖⼦模块有以下内容：
+
+V8 引擎：主要是 JS 语法的解析，有了它才能识别 JS语法
+
+libuv: c 语⾔实现的⼀个⾼性能异步⾮阻塞 IO 库，⽤来实现 node.js 的事件循环
+
+http-parser/llhttp: 底层处理 http 请求，处理报⽂，解析请求包等内容
+
+openssl: 处理加密算法，各种框架运⽤⼴泛 
+
+**对比JS和NODEJS**
 
  (1)JS运行在浏览器端，存在兼容性的问题；NodeJS运行在服务器端，不存在兼容性问题。
 
@@ -30,7 +44,7 @@ Node概述
 
 应用于基础社交网络的大规模web应用
 
-**全局对象**
+### 全局对象
 
  **NodeJS: global**
 
@@ -42,37 +56,41 @@ Node概述
 
  在浏览器下，文件中声明的变量和创建的函数是全局对象下的，可以使用window来访问，例如 `var a=1; window.a`
 
- (1)console对象
+### console对象
 
-  global.console.log() 打印日志
+```
+global.console.log() 打印日志
 
-  global.console.info()  打印消息
+global.console.info()  打印消息
 
-  global.console.warn()  打印警告
+global.console.warn()  打印警告
 
-  global.console.error()  打印错误
+global.console.error()  打印错误
 
-  global.console.time('自定义字符串');  开始计时
+global.console.time('自定义字符串');  开始计时
 
-  global.console.timeEnd('自定义字符串');  结束计时
+global.console.timeEnd('自定义字符串');  结束计时
+```
 
- (2)process
+### process
 
   当前计算机的进程
 
-  process.arch  查看当前CPU的架构  X64
+```
+process.arch  查看当前CPU的架构  X64
 
-  process.platform  查看当前的操作系统  win32
+process.platform  查看当前的操作系统  win32
 
-  process.env  查看当前的环境变量有哪些
+process.env  查看当前的环境变量有哪些
 
-  process.version  查看当前nodejs的版本号
+process.version  查看当前nodejs的版本号
 
-  process.pid 查看当前的进行编号
+process.pid 查看当前的进行编号
 
-  process.kill(编号)  杀死某个编号的进程
+process.kill(编号)  杀死某个编号的进程
+```
 
- (3)Buffer
+ **(3)Buffer**
 
   缓冲区：在内存中存储数据的区域，存储网络传输时的资源。
 
@@ -99,7 +117,7 @@ var num2=buf2.toString();
 console.log(Number(num1)+Number(num2));
 ```
 
-**模块系统**
+### 模块系统
 
  模块是一个预定义好的功能体，在NodeJS下，每一个文件都是一个模块。
 
@@ -128,15 +146,15 @@ console.log(Number(num1)+Number(num2));
 | 文件模块 | require('./circle.js')常用于用户自定义模块，如果后缀名是js是可以省略的 | require('url')常用于引入官方提供的核心模块                   |
 | 目录模块 | require('./Animal')会在当前目录下的Animal中寻找package.json文件中的main属性对应的值，如果不存在该文件，则自动寻找index.js | require('Animal')要求引入的目录出现在node_modules中，如果找不到，则会到上一级目录查找，直到顶层。常用于第三方模块。 |
 
-**第三方模块**
+### 第三方模块
 
 安装方式：`npm install package`
 
-**核心模块**
+### 核心模块
 
 是NodeJS官方提供的模块，可以直接引入，不需要创建。
 
-**查询字符串模块——querystring**
+1. **查询字符串模块——querystring**
 
 ```js
 const querystring=require('querystring');
@@ -188,10 +206,9 @@ console.log(obj3);
 
  ```
 
+2. **Url模块**
 
-
-**Url模块**
-
+```
 parse()  将URL解析为对象
 
 protocol  协议
@@ -207,6 +224,7 @@ query 查询字符串
 format()  将对象转换成url
 
 query属性对应的是对象格式
+```
 
 ```js
 //引入url模块
@@ -247,46 +265,7 @@ console.log(obj2);
 // { cname: 'js', price: '5000' }
 ```
 
-**全局函数**
-
-`parseInt/parseFloat/encodeURI/decodeURI/isNaN/ isFinite/eval`
-
-定时器 `let timer = setTimeout(callback, time)`、`let timer = setInterval(callback, time)`
-
-清除定时器  `clearTimeout(timer)`、`clearInterval(timer)`
-
-立即执行定时器： `process.nextTick(回调函数)`
-
-看下列的执行顺序：
-
-```js
-setTimeout(() => {
-    console.log('setTimeout')
-},0)
-//立即执行定时器
-//后执行
-console.log('1212')
-var timer=setImmediate(()=>{
-    console.log('立即执行');
-});
-//先执行
-process.nextTick(()=>{
-    console.log('tick');
-});
-console.log('33333')
-
-
-结果：
-1212
-33333
-tick
-setTimeout
-立即执行
-```
-
-
-
-**文件系统模块**
+### 文件系统模块
 
 用于操作服务器的文件(目录)，创建目录、删除目录、读取目录、创建文件、删除文件、写入文件....
 
@@ -310,11 +289,8 @@ fs.readdir(path, callback)  —— 异步
 fs.readdirSync(path)    —— 同步
  ```
 
-**对比同步和异步的区别**
-
- 同步会阻止后续代码的执行，只有执行完以后才会执行后续代码；是通过返回值来获取结果。
-
- 异步不会阻止后续代码的执行，在整个程序的最后执行，是通过回调函数来获取结果。常用于一些比较耗时的操作。
+> 1. 同步会阻止后续代码的执行，只有执行完以后才会执行后续代码；是通过返回值来获取结果；
+> 2. 异步不会阻止后续代码的执行，在整个程序的最后执行，是通过回调函数来获取结果。常用于一些比较耗时的操作。
 
  (4)写入文件
 
@@ -322,7 +298,7 @@ fs.readdirSync(path)    —— 同步
 fs.writeFile(path, data, callback)
 ```
 
- 如果文件不存在，则会创建文件，然后写入数据；如果文件已经存在，则会清空文件的内容，然后写入
+如果文件不存在，则会创建文件，然后写入数据；如果文件已经存在，则会清空文件的内容，然后写入
 
 > callback的格式
 
@@ -360,9 +336,58 @@ fs.appendFileSync(path,data)
 fs.readFile(path, callback)/fs.readFileSync(path)
 ```
 
-  读取的数据格式为buffer
+> 读取的数据格式为buffer
 
-**http协议**
+### path路径系统，
+
+能够处理路径之间的问题
+
+### os操作系统层
+
+例如告诉你当前系统类型及⼀些参数
+
+### crypto加密模块，
+
+能够以标准的加密⽅式对我们的内容进⾏加解密
+
+### 全局函数
+
+`parseInt/parseFloat/encodeURI/decodeURI/isNaN/ isFinite/eval`
+
+定时器 `let timer = setTimeout(callback, time)`、`let timer = setInterval(callback, time)`
+
+清除定时器  `clearTimeout(timer)`、`clearInterval(timer)`
+
+立即执行定时器： `process.nextTick(回调函数)`
+
+看下列的执行顺序：
+
+```js
+setTimeout(() => {
+    console.log('setTimeout')
+},0)
+//立即执行定时器
+//后执行
+console.log('1212')
+var timer=setImmediate(()=>{
+    console.log('立即执行');
+});
+//先执行
+process.nextTick(()=>{
+    console.log('tick');
+});
+console.log('33333')
+
+
+结果：
+1212
+33333
+tick
+setTimeout
+立即执行
+```
+
+### http协议
 
  是浏览器和web服务器之间的通信协议
 
@@ -406,7 +431,7 @@ fs.readFile(path, callback)/fs.readFileSync(path)
 
   可有可无，浏览器端向服务器端传递的数据
 
-3.http模块
+**http模块**
 
  可以模拟浏览器向服务器端发送请求；也可以创建web服务器
 
@@ -482,7 +507,7 @@ server.on('request',(req,res)=>{
 });
 ```
 
-4.express框架
+## express框架
 
  基于NodeJS，用于构建web服务器的框架。
 
@@ -499,7 +524,7 @@ server.listen(3000);
 //监听3000端口
 ```
 
- (1)路由
+### 路由
 
   浏览器向web服务器发送请求，web服务器会根据请求的URL和请求的方法来做出响应
 
@@ -617,7 +642,7 @@ server.get('/detail/:lid', (req,res)=>{
 
  浏览器传递数据：` http://127.0.0.1:3000/detail/5`
 
-5.路由器
+### 路由器
 
  路由在使用过程中，不同的模块可能出现相同的URL，把同一个模块下的所有路由挂载到特定的前缀。
 
@@ -641,7 +666,7 @@ server.use('/product', productRouter);
 //把路由器挂载到 /product下，访问形式 /product/list
 ```
 
-6.中间件
+### 中间件
 
  中间件的作用为主要的业务逻辑所服务
 
@@ -740,123 +765,4 @@ server.post('/mylogin',(req,res)=>{
 });
 ```
 
-
-
-2.MySQL模块
-
- 增  INSERT INTO emp VALUES(NULL,'tom'....);
-
- 删  DELETE FROM emp WHERE eid=5;
-
- 改  UPDATE emp SET ename='tom',sex='1' WHERE eid=5;
-
- 查  SELECT * FROM emp;
-
- mysql.exe -h127.0.0.1 -P3306 -uroot -p
-
- (1)普通连接
-
-```JS
-var connection=mysql.createConnection({ }); 
-创建连接对象，传递mysql服务器的IP地址/域名,端口,用户名,密码,使用的数据库
-connection.connect();  执行连接
-connection.query(sql,callback)   sql要执行的SQL语句， callback回调函数，获取SQL语句结果。connection.end(); 执行完所有的SQL语句，关闭连接。
-```
-
-```JS
-//引入mysql模块
-const mysql=require('mysql');
-//1.普通连接
-//1.1创建连接
-var connection=mysql.createConnection({
-    host:'127.0.0.1',
-    port:'3306',
-    user:'root',
-    password:'',
-    database:'test'  //使用的数据库
-});
-//1.2执行连接
-connection.connect();
-//执行SQL语句
-connection.query('SELECT * FROM person',(err,result)=>{
-    if(err) throw err;
-    console.log(result);
-});
-//关闭连接
-
-```
-
- (2)使用连接池
-
-```JS
- var pool=mysql.createPool({ }); 
-创建连接池对象，传递mysql服务器的IP地址/域名,端口,用户名,密码,使用的数据库,设置连接池的大小(connectionLimit) pool.query(sql,callback)  sql执行的SQL语句，callback回调函数，获取SQL语句的执行结果。
-```
-
-```JS
-const mysql=require('mysql');
-//2.使用连接池
-//创建连接池对象
-var pool=mysql.createPool({
-    host:'127.0.0.1',
-    port:'3306',
-    user:'root',
-    password:'root',
-    database:'xz',
-    connectionLimit:20  //设置连接池的数量
-});
-//执行SQL语句
-
-// pool.query('SELECT * FROM emp WHERE eid=2',(err,result)=>{
-//   if(err) throw err;
-//   console.log(result);
-// });
-
-//插入数据
-// pool.query(`INSERT INTO emp VALUES(NULL,'apache',1,'1999-7-1',8800,30)`,(err,result)=>{
-//   if(err) throw err;
-//   console.log(result);
-// })
-
-//使用占位符的形式设置SQL语句中的值
-//可以防止SQL注入
-// pool.query(`INSERT INTO emp VALUES(?,?,?,?,?,?)`,[null,'java',0,'1998-3-2',5400,10],(err,result)=>{
-//   if(err) throw err;
-//   console.log(result);
-// });;
-// var emp={
-//   eid:null,
-//   ename:'html',
-//   sex:1,
-//   birthday:'1995-12-25',
-//   salary:6100,
-//   deptId:30
-// };
-//直接使用对象的方式插入数据
-// pool.query('INSERT INTO emp SET ?',[emp],(err,result)=>{
-//   if(err) throw err;
-//   console.log(result);
-// });
-
-// pool.query('UPDATE emp SET birthday=?,salary=? WHERE eid=?',['2000-1-1','7500',19],(err,result)=>{
-//   if(err) throw err;
-//   //console.log(result);
-//   //判断是否更改成功
-//   if(result.affectedRows>0){
-//     console.log('修改成功');
-//   }else{
-//     console.log('修改失败');
-//   }
-// });
-
-
-pool.query('DELETE FROM shop WHERE shopid=?',[4],(err,result)=>{
-    if(err) throw err;
-    if(result.affectedRows>0){
-        console.log('删除成功');
-    }else{
-        console.log('删除失败');
-    }
-})
-```
 
