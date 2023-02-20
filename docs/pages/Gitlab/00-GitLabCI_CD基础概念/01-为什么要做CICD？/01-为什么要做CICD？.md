@@ -14,7 +14,7 @@ https://blog.csdn.net/bocai_xiaodaidai/article/details/119823661
 
 **QA 团队** 进行测试，测试通过后通知部署人员发布到生产环境。
 
-![images](images/01.png)
+![images](./images/01.png)
 
 
 
@@ -91,7 +91,7 @@ https://blog.csdn.net/bocai_xiaodaidai/article/details/119823661
 
 专业的CI工具，可扩展自动化服务器、安装配置简单、丰富的插件库、分布式架构设计、支持所有的平台、可视化的管理页面。
 
-![images](images/03.png)
+![images](./images/03.png)
 
 
 
@@ -99,7 +99,7 @@ https://blog.csdn.net/bocai_xiaodaidai/article/details/119823661
 
 端到端DevOps工具，常用功能：代码审查、问题跟踪、动态订阅、易于扩展、项目wiki、多角色项目管理、项目代码在线编译预览、CI工具集成。
 
-![images](images/02.png)
+![images](./images/02.png)
 
 提交合并代码集成 ：通过git push 进行操作或者在GitLab Web页面操作。
 

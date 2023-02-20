@@ -2,11 +2,9 @@
 
 #### 样式表书写位置
 
-1. 内联样式
-2. 外嵌
-3. 行内
+1. 内嵌样式
 
-```html
+```css
 <head>
 	<style>
 		样式表书写内容
@@ -14,29 +12,33 @@
 </head> 
 ```
 
+2. 外链
+
+```html
+<link href="css文件路径" type="text/css" ref="stylesheet"/>
+```
+
+3. 行内
+
+```html
+<div style="width: 200px"></div>
+```
+
 ### 选择器
 
 选择器 {属性:值； 属性:值;}
 
-| 属性                              | 解释               |
-| --------------------------------- | ------------------ |
-| Width:20px;                       | 宽                 |
-| Height:20px;                      | 高                 |
-| Background-color:red;             | 背景颜色           |
-| font-size:24px;                   | 文字大小           |
-| text-align:left \| center\| right | 内容的水平对齐方式 |
-| text-indent:2em;                  | 首行缩进           |
-| color:red;                        | 文字颜色           |
-
 #### 基础选择器
 
-标签选择器：
+**标签选择器：**
 
 标签{属性：值;}
 
 特点：标签选择器定义之后，会将页面所有的元素都执行这个标签样式。
 
-
+```css
+div {}
+```
 
 **类选择器：**
 
@@ -56,13 +58,9 @@
 <div class="box box1">类选择器</div>
 ```
 
-
-
 **id选择器：**
 
-一个ID选择器在一个页面只能调用一次。如果使用2次或者2次以上；
-
- 一个标签只能调用一个ID选择器。
+一个ID选择器在一个页面只能调用一次。
 
 ```css
 #box2 {
@@ -86,9 +84,7 @@
 }
 ```
 
-
-
-#### 复合选择器：
+#### 复合选择器
 
 两个或者两个以上的基础选择器通过不同的方式连接在一起
 
@@ -99,10 +95,10 @@
 即要满足使用了某个标签，还要满足使用了类（id）选择器。
 
 ```css
-div.box {
+div .box {
 	color:red;
 }
-div#box {
+div #box {
 	color: green;
 }
 ```
@@ -122,7 +118,7 @@ div#box {
 
 特点：无限制隔代。
 
-   只要能代表标签，标签、类选择器、ID选择器自由组合。
+只要能代表标签，标签、类选择器、ID选择器自由组合。
 
 **子代选择器：**
 
@@ -150,17 +146,17 @@ p > span {
 
 选择器+，+选择器+，选择器{属性:值;}
 
-### 属性选择器
+#### 属性选择器
 
-| 选择器        | 示例 | 含义                                |
-| ------------- | ---- | ----------------------------------- |
-| E[attr]       |      | 存在attr属性即可                    |
-| E[attr=val]   |      | 属性值完全等于val                   |
-| E[attr\*=val] |      | 属性值里包含val字符并且在“任意”位置 |
-| E[attr^=val]  |      | 属性值里包含val字符并且在“开始”位置 |
-| E[attr$=val]  |      | 属性值里包含val字符并且在“结束”位置 |
+| 选择器        | 含义                                |
+| ------------- | ----------------------------------- |
+| E[attr]       | 存在attr属性即可                    |
+| E[attr=val]   | 属性值完全等于val                   |
+| E[attr\*=val] | 属性值里包含val字符并且在“任意”位置 |
+| E[attr^=val]  | 属性值里包含val字符并且在“开始”位置 |
+| E[attr$=val]  | 属性值里包含val字符并且在“结束”位置 |
 
-### 伪类
+#### 伪类
 
 除了以前学过的:link、:active、:visited、:hover，CSS3又新增了其它的伪类选择器。
 
@@ -168,32 +164,38 @@ p > span {
 
 以某元素（E）相对于其父元素或兄弟元素的位置来获取无素；
 
-| 选择器              | 示例 | 含义                            |
-| ------------------- | ---- | ------------------------------- |
-| E:first-child       |      | 其父元素的第1个子元素           |
-| E:last-child        |      | 其父元素的最后1个子元素         |
-| E:nth-child(n)      |      | 其父元素的第n个子元素           |
-| E:nth-last-child(n) |      | 其父元素的第n个子元素（倒着数） |
+| 选择器                | 含义                            |
+| --------------------- | ------------------------------- |
+| E:first-child         | 其父元素的第1个子元素           |
+| E:last-child          | 其父元素的最后1个子元素         |
+| E:nth-child(n)        | 其父元素的第n个子元素           |
+| E:nth-last-child(n)   | 其父元素的第n个子元素（倒着数） |
+| E:root                | 文档的根元素                    |
+| E:empty               | 无子元素的元素                  |
+| E:first-letter        | 元素的首字母                    |
+| E:first-line          | 元素的首行                      |
+| E:only-child          | 父元素仅有该元素的元素          |
+| E:nth-of-type(n)      | 标签中指定顺序索引的标签        |
+| E:nth-last-of-type(n) | 标签中指定逆序索引的标签        |
+| E:first-of-type       | 标签中为首的标签                |
+| E:last-of-type        | 标签中为尾标签                  |
+| E:only-of-type        | 元素仅有该标签的标签            |
 
 n遵循线性变化，其取值0、1、2、3、4、... 
 
 n可是多种形式：nth-child(2n+0)、nth-child(2n+1)、nth-child(-1n+3)等；
 
-注：指E元素的父元素，并对应位置的子元素必须是E
+> 指E元素的父元素，并对应位置的子元素必须是E
 
-2、空伪类
-
-E:empty 选中没有任何子节点的E元素；（使用不是非常广泛）
-
-3、目标伪类
+目标伪类
 
 E:target 结合锚点进行使用，处于当前锚点的元素会被选中；
 
-4、排除伪类
+排除伪类
 
 E:not(selector) 除selector（任意选择器）外的元素会被选中；
 
-###  伪元素
+#### 伪元素
 
 1、E::first-letter文本的第一个单词或字（如中文、日文、韩文等）
 
@@ -207,27 +209,55 @@ E:not(selector) 除selector（任意选择器）外的元素会被选中；
 
 E:after、E:before 在旧版本里是伪元素，CSS3的规范里“:”用来表示伪类，“::”用来表示伪元素，但是在高版本浏览器下E:after、E:before会被自动识别为E::after、E::before，这样做的目的是用来做兼容处理。
 
-E:after、E:before后面的练习中会反复用到，目前只需要有个大致了解
+#### 状态伪类
 
-":" 与 "::" 区别在于区分伪类和伪元素
+| 选择器         | 描述                   |
+| -------------- | ---------------------- |
+| E:target       | 当前锚点的元素         |
+| E:read-write   | 可读可写的表单元素     |
+| E:blank        | 输入为空的表单元素     |
+| E:current()    | 浏览中的元素           |
+| E:link         | 未访问的链接元素       |
+| E:visited      | 已访问的链接元素       |
+| E:focus        | 输入聚焦的表单元素     |
+| E:required     | 输入必填的表单元素     |
+| E:valid        | 输入合法的表单元素     |
+| E:invalid      | 输入非法的表单元素     |
+| E:in-range     | 输入范围以内的表单元素 |
+| E:out-of-range | 输入范围以外的表单元素 |
+| E:checked      | 选项选中的表单元素     |
+| E:optional     | 选项可选的表单元素     |
+| E:enabled      | 事件启用的表单元素     |
+| E:disabled     | 事件禁用的表单元素     |
+| E:read-only    | 只读的表单元素         |
+| E:past()       | 已浏览的元素           |
+| E:future()     | 未浏览的元素           |
 
+#### 条件伪类
 
+| 选择器   | 描述                           |
+| -------- | ------------------------------ |
+| E:lang() | 基于元素语言来匹配页面元素     |
+| E:dir()  | 匹配特定文字书写方向的元素     |
+| E:has()  | 匹配包含指定元素的元素         |
+| E:is()   | 匹配指定选择器列表里的元素     |
+| E:not()  | 用来匹配不符合一组选择器的元素 |
 
 ### 文本元素
 
 属性：
 
-font-size:16px;  文字大小
+`font-size:16px`  ;  文字大小
 
-Font-weight: 700	;  值从100-900，文字粗细，不推荐使用font-weight:bold;
+`font-weight: 700`	;  值从100-900，文字粗细
 
-Font-family:微软雅黑;  文本的字体
+`font-family`:微软雅黑;  文本的字体
 
-Font-style: normal | italic;    normal 默认值  italic  斜体
+`font-style: normal | italic`;    normal 默认值  italic   斜体
 
-line-height: 行高
+`line-height`: 行高
 
-text-shadow，可分别设置偏移量、模糊度、颜色（可设透明度）。
+`text-shadow`，可分别设置偏移量、模糊度、颜色（可设透明度）。
 
 ```css
 text-shadow: 2px 2px 2px #CCC;
@@ -246,7 +276,46 @@ font: font-style font-weight  font-size/line-height  font-family;
 
 > font:后边写属性的值。一定按照书写顺序。文本属性连写文字大小和字体为必写项。Font:italic 700 16px/40px  微软雅黑;
 
+`text-align`: 水平位置
+
+`text-indent`：首行缩进
+
+`text-decoration`：下划线
+
+`letter-spacing`：属性增加或减少字符间的空白
+
+`word-spacing`：属性增加或减少字与字之间的空白  (英文里面表示单词之间的空白)
+
+`white-space`：设置或检索对象内文本显示方式， 
+
+```css
+white-space:normal ；默认处理方式
+
+white-space:nowrap ；　强制在同一行内显示所有文本，直到文本结束或者遭遇br标签对象才换行。
+```
+
+`text-overflow `: 设置或检索是否使用一个省略标记（...）标示对象内文本的溢出
+
+```css
+text-overflow : clip ；不显示省略标记（...），而是简单的裁切 
+
+text-overflow：ellipsis ； 当对象内文本溢出时显示省略标记（...）
+```
+
+超出省略的常用代码
+
+```css
+/*1. 先强制一行内显示文本*/
+white-space: nowrap;
+/*2. 超出的部分隐藏*/
+overflow: hidden;
+/*3. 文字用省略号替代超出的部分*/
+text-overflow: ellipsis;
+```
+
 **行高**
+
+`line-height`
 
 浏览器默认文字大小
 
@@ -292,7 +361,30 @@ font: font-style font-weight  font-size/line-height  font-family;
 
 总结:不带单位时，行高是和子元素文字大小相乘，em和%的行高是和父元素文字大小相乘。行高以像素为单位，就是定义的行高值。
 
-推荐行高使用像素为单位
+**垂直对齐**
+
+- 有宽度的块级元素居中对齐，是margin: 0 auto;
+- 让文字居中对齐，是 text-align: center;
+
+但是我们从来没有讲过有垂直居中的属性。
+
+vertical-align 垂直对齐，它只针对于**行内元素**或者**行内块元素**
+
+![image-20230220220136547](./images/image-20230220220136547.png) 
+
+```css
+vertical-align : baseline |top |middle |bottom 
+```
+
+vertical-align 不影响块级元素中的内容对齐，它只针对于**行内元素**或者**行内块元素**，
+
+特别是行内块元素， **通常用来控制图片/表单与文字的对齐**。
+
+与图片结合的对齐方式
+
+![image-20230220220302512](./images/image-20230220220302512.png) 
+
+
 
 ### 颜色
 
@@ -330,8 +422,6 @@ A 透明度 取值范围0~1
 
 RGBA、HSLA可应用于所有使用颜色的地方。
 
-见代码示
-
 关于CSS透明度：
 
 1、opacity只能针对整个盒子设置透明度，子盒子及内容会继承父盒子的透明度；
@@ -350,27 +440,25 @@ CSS3中可以通过box-sizing 来指定盒模型，即可指定为content-box、
 
 2、box-sizing: content-box  盒子大小为 width + padding + border
 
-> 上面的标注的width指的是CSS属性里设置的width: length，content的值是会自动调整的。
+
 
 ![image-20220624065351549](./images/image-20220624065351549.png) 
 
 css中盒子模型由三部分组成: 边框（border） 内边距（padding） 外边距（margin） 
 
+
+
 **边框**  border
 
 ```css
-Border-top-style:  solid  实线
+border-top-style:  solid  实线 
+dotted  点线
+dashed  虚线
 
-​ dotted  点线
+border-top-color:  边框颜色
 
-​ dashed  虚线
-
-Border-top-color:  边框颜色
-
-Border-top-width:  边框粗细
+border-top-width:  边框粗细
 ```
-
-特点：没有顺序要求，线型为必写项。
 
 四个边框值相同的写法
 
@@ -403,7 +491,7 @@ label  for  id    获取光标焦点
 | ------------ | ------------------------------ |
 | 获取焦点     | :focus 获取鼠标光标状态        |
 | 取消表单边框 | border:0 none;      兼容性好   |
-| label标签    | <label for="ID名">   友好性    |
+| label标签    | `<label for="ID名">`   友好性  |
 
 **内边距**
 
@@ -443,13 +531,13 @@ margin-left  | right  |  top  |  bottom
 外边距连写
 
 ```css
-Margin: 20px;   上下左右外边距20PX
+margin: 20px;   上下左右外边距20PX
 
-Margin: 20px 30px;  上下20px  左右30px
+margin: 20px 30px;  上下20px  左右30px
 
-Margin: 20px  30px  40px;   上20px  左右30px  下  40px
+margin: 20px  30px  40px;   上20px  左右30px  下  40px
 
-Margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
+margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 ```
 
 垂直方向外边距合并
@@ -476,11 +564,11 @@ Margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 
 标准流：块级元素纵向有序排列，行内块（行内）元素横向有序排列
 
-**浮动**
+### 浮动
 
 语法：float:left  |  right
 
-设置了浮动的元素，脱离标准流（脱标）
+设置了浮动的元素，脱离标准流
 
 浮动特点
 
@@ -495,8 +583,17 @@ Margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 **清除浮动的方式**
 
 1：给父容器设置高度
-2：通过设置clear:left | right  | both
-3：给父容器设置 overflow:hidden 
+
+2：通过设置`clear`
+
+- left：不允许左侧有浮动元素（清除左侧浮动的影响）
+- right  不允许右侧有浮动元素（清除右侧浮动的影响）
+- both   同时清除左右两侧浮动的影响
+
+3：给父容器设置 `overflow`
+
+可以给父级添加： overflow为 hidden| auto| scroll  都可以实现
+
 4：通过伪元素  
 
  ```CSS
@@ -512,29 +609,48 @@ Margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 }
  ```
 
+5: 使用双伪元素清除浮动
+
+```css
+.clearfix:before,.clearfix:after { 
+  content:"";
+  display:table; 
+}
+.clearfix:after {
+ clear:both;
+}
+.clearfix {
+  *zoom:1;
+}
+```
+
+
+
 **Overflow**
 
 overflow 属性规定当内容溢出元素框时发生的事情。
 
-| 属性             | 描述                                                     |
-| ---------------- | -------------------------------------------------------- |
-| overflow:visible | 默认值。内容不会被修剪，会呈现在元素框之外。             |
-| overflow:hidden  | 内容会被修剪，并且其余内容是不可见的。                   |
-| overflow:scroll  | 内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。 |
-| overflow:auto    | 如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。 |
+| 属性              | 描述                                                     |
+| ----------------- | -------------------------------------------------------- |
+| overflow: visible | 默认值。内容不会被修剪，会呈现在元素框之外。             |
+| overflow: hidden  | 内容会被修剪，并且其余内容是不可见的。                   |
+| overflow: scroll  | 内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。 |
+| overflow: auto    | 如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。 |
 
-**定位（position）**
+### 定位
 
-| **语法**          | **介绍** |
-| ----------------- | -------- |
-| position:static   | 静态定位 |
-| position:absolute | 绝对定位 |
-| position:relative | 相对定位 |
-| position:fixed    | 固定定位 |
+定位是通过定位模式 + 偏移量使得本应该在标准流当中的盒子发生位置上的变化
+
+| **语法**           | **介绍** |
+| ------------------ | -------- |
+| position: static   | 静态定位 |
+| position: absolute | 绝对定位 |
+| position: relative | 相对定位 |
+| position: fixed    | 固定定位 |
 
 1. 绝对定位（absloute）
 
-- 绝对定位以浏览器左上角为基准设置位置
+- 是元素以带有定位的父级元素来移动位置 
 - 当一个盒子包含在另一个盒子中，父盒子未设置定位，子盒子以浏览器左上角为基准设置位置； 当父盒子设置定位，子盒子以父盒子左上角为基准设置位置
 - 绝对定位绝对不占空间位置（与浮动一样）
 - 绝对定位可是实现模式转换
@@ -553,6 +669,10 @@ overflow 属性规定当内容溢出元素框时发生的事情。
 
 4. 静态定位（static）
    按照标准流的显示方式    取消定位：position:static
+   
+   只认**浏览器的可视窗口** —— `浏览器可视窗口 + 边偏移属性` 来设置元素的位置；
+   
+   不随滚动条滚动
 
 **水平居中**
 
@@ -560,7 +680,7 @@ overflow 属性规定当内容溢出元素框时发生的事情。
            2 设置子盒子left值为父盒子宽度一半
            3  设置子盒子左边距为自己宽度一半
 
-总结：margin:0 auto 只能让在标准流的盒子居中
+总结：margin: 0 auto 只能让在标准流的盒子居中
 
 ```
 规范：
@@ -574,12 +694,17 @@ overflow 属性规定当内容溢出元素框时发生的事情。
 
 由于浮动、定位都脱离了标准流，会对网页布局造成一定的影响，在以后的网页布局中优先考虑：标准流，浮动，定位
 
-**使用margin-left:auto  规避脱标**
+在使用**绝对定位**时要想实现水平居中，可以按照下图的方法：
 
-margin:0 auto         居中对齐的由来
+1. `left: 50%;`：让**盒子的左侧**移动到**父级元素的水平中心位置**；
+2. `margin-left: -100px;`：让盒子**向左**移动**自身宽度的一半**。
 
- margin-left:auto     让盒子左侧充满
- marin-right:auto    让盒子右侧充满
+**使用margin-left: auto  规避脱标**
+
+margin: 0 auto         居中对齐的由来
+
+margin-left: auto     让盒子左侧充满
+margin-right: auto    让盒子右侧充满
 
 ![image-20220624230446628](./images/image-20220624230446628.png) 
 
@@ -591,7 +716,7 @@ vertical-align:middle  常与 display:inline-block 配合使用， 表格对此�
 
 ![image-20220624230535041](./images/image-20220624230535041.png) 
 
-**css可见性**
+### 可见性
 
 | 属性               | **作用**         |
 | ------------------ | ---------------- |
@@ -600,13 +725,34 @@ vertical-align:middle  常与 display:inline-block 配合使用， 表格对此�
 | visibility:hidden; | 不显示元素       |
 
 特点总结：
-     1：display:none        元素隐藏不占位置
-     2：overflow:hidden;  将超出部分的元素隐藏
-     3：visibility:hidden;    元素隐藏占位置
+ display: none        元素隐藏不占位置
+overflow: hidden;  将超出部分的元素隐藏
+visibility: hidden;    元素隐藏占位置
+
+**overflow**
+
+| 属性值  |                                            |
+| ------- | ------------------------------------------ |
+| visible | 不剪切内容也不添加滚动条                   |
+| hidden  | 不显示超过对象尺寸的内容，超出的部分隐藏掉 |
+| scroll  | 不管超出内容否，总是显示滚动条             |
+| auto    | 超出自动显示滚动条，不超出不显示滚动条     |
 
 使用text-indent移除文字
 
 使用padding撑开盒子，overflow：hidden 移除内容
+
+### 鼠标样式
+
+设置或检索在对象上移动的鼠标指针采用何种系统预定义的光标形状。
+
+| 属性值          | 描述       |
+| --------------- | ---------- |
+| **default**     | 小白  默认 |
+| **pointer**     | 小手       |
+| **move**        | 移动       |
+| **text**        | 文本       |
+| **not-allowed** | 禁止       |
 
 ### 边框
 
@@ -672,6 +818,24 @@ b) repeat 单纯平铺,多余部分，会被“裁切”而不能完整显示。
 4border-image-width
 ```
 
+### 轮廓线 outline
+
+ 是绘制于元素周围的一条线，位于边框边缘的外围，可起到突出元素的作用。 
+
+```css
+ outline : outline-color ||outline-style || outline-width 
+```
+
+ 但是我们都不关心可以设置多少，我们平时都是去掉的。 li  
+
+最直接的写法是 ：  outline: 0;   或者  outline: none;
+
+```html
+ <input  type="text"  style="outline: 0;"/>
+```
+
+
+
 **CSS 精灵工作原理**
 CSS 精灵其实是将网页中的一些背景图像整合到一张大图中（精灵图）。然而，各个网页元素通常只需要精灵图中不同位置的某个小图，要想精确定位到精灵图中的某个小图，就需要使用CSS的`background-image`、`background-repeat`和`background-position`属性进行背景定位，其中最关键的是使用`background-position`属性精确地定位。
 
@@ -690,19 +854,17 @@ CSS 精灵其实是将网页中的一些背景图像整合到一张大图中（�
 
 ### 背景
 
-背景在CSS3中也得到很大程度的增强，比如背景图片尺寸、背景裁切区域、背景定位参照点、多重背景等。
-
-1、 **background-size**
+ **1、background-size**
 
 通过background-size设置背景图片的尺寸，就像我们设置img的尺寸一样，在移动Web开发中做屏幕适配应用非常广泛。
 
 **其参数设置如下：**
 
-a) 可以设置长度单位(px)或百分比（设置百分比时，参照盒子的宽高）
+- 可以设置长度单位(px)或百分比（设置百分比时，参照盒子的宽高）
 
-b) 设置为cover时，会自动调整缩放比例，保证图片始终填充满背景区域，如有溢出部分则会被隐藏。
+- 设置为cover时，会自动调整缩放比例，保证图片始终填充满背景区域，如有溢出部分则会被隐藏。
 
-c) 设置为contain会自动调整缩放比例，保证图片始终完整显示在背景区域。 
+- 设置为contain会自动调整缩放比例，保证图片始终完整显示在背景区域。 
 
 **2、background-origin**
 
@@ -710,11 +872,11 @@ c) 设置为contain会自动调整缩放比例，保证图片始终完整显示�
 
 **参数设置如下：**
 
-border-box以边框做为参考原点；
+- border-box以边框做为参考原点；
 
-padding-box以内边距做为参考原点；
+- padding-box以内边距做为参考原点；
 
-content-box以内容区做为参考点；
+- content-box以内容区做为参考点；
 
 **3、background-clip**
 
@@ -722,15 +884,75 @@ content-box以内容区做为参考点；
 
 **其参数设置如下：**
 
-border-box裁切边框以内为背景区域；
+- border-box裁切边框以内为背景区域；
 
-padding-box裁切内边距以内为背景区域；
+- padding-box裁切内边距以内为背景区域；
 
-content-box裁切内容区做为背景区域；
+- content-box裁切内容区做为背景区域；
 
 **4、多背景**
 
 以逗号分隔可以设置多背景，可用于自适应布局
+
+**5、背景其他属性**
+
+| 背景属性    | 默认值      | 可选                                        | 描述                 |
+| ----------- | ----------- | ------------------------------------------- | -------------------- |
+| -color      | transparent | 各种颜色值                                  | 背景颜色             |
+| -image      | none        | none \| url                                 | 背景图片             |
+| -repeat     | repeat      | repeat \| no-repeat \| repeat-x \| repeat-y | 背景平铺             |
+| -position   |             | length \|\| length  position \|\| position  | 背景定位             |
+| -attachment |             | scroll \| fixed                             | 背景是滚动的还是固定 |
+
+**background-position**
+
+- 必须先指定background-image属性
+- position 后面是x坐标和y坐标。 可以使用方位名词或者 精确单位。
+- 如果指定两个值，两个值都是方位名字，则两个值前后顺序无关，比如left  top和top  left效果一致
+- 如果只指定了一个方位名词，另一个值默认居中对齐。
+- 如果position 后面是精确坐标， 那么第一个，肯定是 x  第二的一定是y
+- 如果只指定一个数值,那该数值一定是x坐标，另一个默认垂直居中
+- 如果指定的两个值是 精确单位和方位名字混合使用，则第一个值是x坐标，第二个值是y坐标
+
+**background-attachment**
+
+- scroll  背景图像是随对象内容滚动
+
+- fixed: 背景图像固定
+
+**背景简写**
+
+```css
+background: transparent url(image.jpg) repeat-y  scroll center top ;
+```
+
+### 图片
+
+我们可以给图片设置圆角（`border-radius`）、阴影(`text-shadow`)、边框(`border`)
+
+如果你需要自由缩放图片，且图片放大的尺寸不大于其原始的最大值，则可使用以下代码
+
+```css
+img {
+    max-width: 100%;
+    height: auto;
+}
+```
+
+**图片滤镜**
+
+ `filter` 属性用为元素添加可视效果
+
+修改所有图片的颜色为黑白 (100% 灰度):
+
+```css
+img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+```
+
+
 
 ### 渐变
 
@@ -923,10 +1145,6 @@ i、steps(60) 表示动画分成60步完成
 
 ### 伸缩布局
 
-CSS3在布局方面做了非常大的改进，使得我们对块级元素的布局排列变得十分灵活，适应性非常强，其强大的伸缩性，在响应式开中可以发挥极大的作用。
-
-，学习新的概念：
-
 主轴：Flex容器的主轴主要用来配置Flex项目，默认是水平方向
 
 侧轴：与主轴垂直的轴称作侧轴，默认是垂直方向的
@@ -962,8 +1180,6 @@ f、flex-flow是flex-direction、flex-wrap的简写形式
 g、flex子项目在主轴的缩放比例，不指定flex属性，则不参与伸缩分配
 
 h、order控制子项目的排列顺序，正序方式排序，从小到大
-
-此知识点重在理解，要明确找出主轴、侧轴、方向，各属性对应的属性值可参考示例源码。
 
 ### 多列布局
 
