@@ -63,7 +63,7 @@ module.exports = {
           },
           {
             title: "阶段四",
-            path: "../pages/Front/JS/Fourth",
+            path: "../pages/Webpack/work",
           },
         ],
       },
@@ -71,6 +71,16 @@ module.exports = {
         title: "TypeScript",
         collapsable: true,
         path: "../pages/Front/TS/ts",
+      },
+      {
+        title: "Docker",
+        collapsable: true,
+        path: "../pages/Docker/note",
+      },
+      {
+        title: "Webpack",
+        collapsable: true,
+        path: "../pages/Webpack/webpack",
       },
       {
         title: "Axios",
