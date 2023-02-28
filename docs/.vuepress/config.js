@@ -92,7 +92,20 @@ module.exports = {
         collapsable: true,
         path: "../pages/Promise/promise",
       },
-      { title: "Node", path: "../pages/Node/aaa" },
+      { 
+        title: "Node", 
+        collapsable: true,
+        children: [
+          {
+            title: "Node基本",
+            path: "../pages/Node/node",
+          },
+          {
+            title: 'Node搭建服务器',
+            path: '../pages/Node/node1'
+          },
+        ],
+      },
       { title: "Python", path: "../pages/Python/pythonBase" },
       {
         title: "构建",
