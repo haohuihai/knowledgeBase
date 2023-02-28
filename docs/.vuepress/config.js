@@ -90,12 +90,17 @@ module.exports = {
       {
         title: "Axios",
         collapsable: true,
-        path: "../pages/Axios/axios",
+        path: "../pages/Axios/note",
       },
       {
         title: "Promise",
         collapsable: true,
-        path: "../pages/Promise/promise",
+        path: "../pages/Promise/note",
+      },
+      {
+        title: "网络",
+        collapsable: true,
+        path: "../pages/Http/note",
       },
       { 
         title: "Node", 
@@ -103,11 +108,11 @@ module.exports = {
         children: [
           {
             title: "Node基本",
-            path: "../pages/Node/node",
+            path: "../pages/Node/note",
           },
           {
             title: 'Node搭建服务器',
-            path: '../pages/Node/node1'
+            path: '../pages/Node/note1'
           },
         ],
       },
@@ -188,6 +193,16 @@ module.exports = {
         path: '../pages/React/base',
       },
       {
+        title: "Swagger",
+        collapsable: true,
+        path: '../pages/Swagger/note',
+      },
+      {
+        title: "小程序",
+        collapsable: true,
+        path: '../pages/SmallApp/note',
+      },
+      {
         title: "Circleci",
         path: '../pages/Circleci/note',
       },
@@ -197,11 +212,11 @@ module.exports = {
         children: [
           {
             title: "浏览器原理",
-            path: "../pages/Chrome/node",
+            path: "../pages/Chrome/note",
           },
           {
             title: "浏览器原理基本知识",
-            path: "../pages/Chrome/node1",
+            path: "../pages/Chrome/note1",
           },
         ],
       },
@@ -211,7 +226,7 @@ module.exports = {
         children: [
           {
             title: "Linux常用命令",
-            path: "../pages/Linux/node",
+            path: "../pages/Linux/note",
           },
           {
             title: "Linux错误记录",
