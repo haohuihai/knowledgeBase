@@ -751,3 +751,9 @@ sudo systemctl start docker
 # linux查看进程
 
 https://blog.csdn.net/weixin_39785970/article/details/116867920
+
+## Docker部署vue
+
+https://blog.csdn.net/weixin_42349568/article/details/125155544
+
+https://www.jb51.net/article/151958.htms

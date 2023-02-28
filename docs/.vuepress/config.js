@@ -73,6 +73,11 @@ module.exports = {
         path: "../pages/Front/TS/ts",
       },
       {
+        title: "Git",
+        collapsable: true,
+        path: "../pages/Git/note",
+      },
+      {
         title: "Docker",
         collapsable: true,
         path: "../pages/Docker/note",
@@ -126,6 +131,44 @@ module.exports = {
         ],
       },
       {
+        title: "GitLab",
+        collapsable: true,
+        children: [
+          {
+            title: "Gitlab进阶",
+            path: "../pages/Gitlab/Advance/note",
+          },
+          {
+            title: 'Gitlab集成部署',
+            path: '../pages/Gitlab/CICD/note'
+          },
+          {
+            title: 'Gitlab交付流水线',
+            path: '../pages/Gitlab/PayLine/note'
+          },
+          {
+            title: 'Gitlab最佳实践',
+            path: '../pages/Gitlab/Practice/note'
+          },
+          {
+            title: 'GitlabRunner',
+            path: '../pages/Gitlab/Runner/note'
+          },
+          {
+            title: 'Gitlab管道',
+            path: '../pages/Gitlab/Pipeline/note'
+          },
+          {
+            title: 'Docker安装Gitlab',
+            path: '../pages/Gitlab/dockerInstallGitlab'
+          },
+          {
+            title: '搭建私有Gitlab',
+            path: '../pages/Gitlab/note'
+          },
+        ],
+      },
+      {
         title: "Vue",
         collapsable: true,
         children: [
@@ -143,6 +186,38 @@ module.exports = {
         title: "React",
         collapsable: true,
         path: '../pages/React/base',
+      },
+      {
+        title: "Circleci",
+        path: '../pages/Circleci/note',
+      },
+      {
+        title: "Chrome",
+        collapsable: true,
+        children: [
+          {
+            title: "浏览器原理",
+            path: "../pages/Chrome/node",
+          },
+          {
+            title: "浏览器原理基本知识",
+            path: "../pages/Chrome/node1",
+          },
+        ],
+      },
+      {
+        title: "Linux",
+        collapsable: true,
+        children: [
+          {
+            title: "Linux常用命令",
+            path: "../pages/Linux/node",
+          },
+          {
+            title: "Linux错误记录",
+            path: "../pages/Linux/error",
+          },
+        ],
       },
       {
         title: "其他",

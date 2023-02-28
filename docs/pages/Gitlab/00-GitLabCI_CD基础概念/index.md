@@ -1,6 +1,0 @@
-# GitLab CI/CD
-
-
-
-
-
