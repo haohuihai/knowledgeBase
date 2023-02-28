@@ -144,7 +144,7 @@ module.exports = {
             path: "../pages/Gitlab/Advance/note",
           },
           {
-            title: 'Gitlab集成部署',
+            title: 'Gitlab基础',
             path: '../pages/Gitlab/CICD/note'
           },
           {

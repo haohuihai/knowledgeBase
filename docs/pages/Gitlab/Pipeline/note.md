@@ -4,14 +4,6 @@ https://zhuanlan.zhihu.com/p/122449725  k8s发布
 
 https://zhuanlan.zhihu.com/p/82303318  GitlabCI/CD
 
-这里写一些流水线语法的总结
-
-- 注意事项
-- 学习方法
-- 编写思路
-- 问题解决
-- 学完目的
-
 ### 流水线语法有哪些？ 流水线参数列表
 
 | Keyword                                                                                                           | Description                                            |
