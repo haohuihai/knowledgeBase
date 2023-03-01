@@ -370,7 +370,7 @@ names.forEach(function(item) {
 
 我们是否可以改变该函数的this指向呢？
 
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/O8xWXzAqXuudtInnD9wxRhHgxcvDTBiawz3JpiceQnDbwbxib2xgcWCicmtt8BccIXdZ22wKp7p8DZOhOv3KrxTvZw/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1)forEach参数
+forEach参数
 
 ```
 var names = ["abc", "cba", "nba"];
@@ -508,7 +508,7 @@ var obj = {
 var foo = new foo.call(obj);
 ```
 
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/O8xWXzAqXuudtInnD9wxRhHgxcvDTBiawqMVqDcUCicycrB19VfsAgV4FWLL4vsBDcbkaG4V0FDD0iaEZW3PKGwfQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1)new和call同时使用
+![image-20230302073400781](./images/image-20230302073400781.png)new和call同时使用
 
 但是new绑定是否可以和bind后的函数同时使用呢？可以
 

@@ -1,4 +1,4 @@
-•三大家族（offset/scroll/client）
+三大家族（offset/scroll/client）
 
 •事件对象/event
 

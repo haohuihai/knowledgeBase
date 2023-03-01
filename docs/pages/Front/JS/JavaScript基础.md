@@ -1,4 +1,6 @@
-## 数据类型的分类和判断
+# 数据类型的分类和判断
+
+## 分类
 
 * 基本(值)类型
   * Number ----- 任意数值 -------- typeof
@@ -11,24 +13,625 @@
   * Array ------ instanceof
   * Function ---- typeof
 
-2. 判断
+## 判断
 
-  * typeof:
+### typeof
 
-    * 可以区别: 数值, 字符串, 布尔值, undefined, function
-    * 不能区别: null与对象, 一般对象与数组
+* 可以区别: number, string, boolean, undefined, function
+* 不能区别: null与对象、 一般对象与数组
 
-  * instanceof
+```js
+typeof 1 // 'number'
+typeof '1' // 'string'
+typeof undefined // 'undefined'
+typeof true // 'boolean'
+typeof Symbol() // 'symbol'
+typeof null // 'object'
+typeof [] // 'object'
+typeof {} // 'object'
+typeof console // 'object'
+typeof console.log // 'function'
+```
 
-    * 专门用来判断对象数据的类型: Object, Array与Function
+### instanceof
 
-  * ===
+* 专门用来判断对象数据的类型: Object, Array与Function
+* 不能正确判断基础数据类型
 
-    * 可以判断: undefined和null
+```js
+let Car = function() {}
+let benz = new Car()
+benz instanceof Car // true
+let car = new String('Mercedes Benz')
+car instanceof String // true
+let str = 'Covid-19'
+str instanceof String // false
+```
 
-    typeof 的结果是小写字母的字符串
+手写instanceof
 
-## 数据,变量, 内存的理解
+```js
+function myInstanceof(left, right) {
+  // 这里先用typeof来判断基础数据类型，如果是，直接返回false
+  if(typeof left !== 'object' || left === null) return false;
+  // getProtypeOf是Object对象自带的API，能够拿到参数的原型对象
+  let proto = Object.getPrototypeOf(left);
+  while(true) {                  //循环往下寻找，直到找到相同的原型对象
+    if(proto === null) return false;
+    if(proto === right.prototype) return true;//找到相同原型对象，返回true
+    proto = Object.getPrototypeof(proto);
+    }
+}
+// 验证一下自己实现的myInstanceof是否OK
+console.log(myInstanceof(new Number(123), Number));    // true
+console.log(myInstanceof(123, Number));                // false
+```
+
+### ===
+
+可以判断: undefined和null
+
+typeof 的结果是小写字母的字符串
+
+### Object.prototype.toString
+
+toString() 是 Object 的原型方法，调用该方法，可以统一返回格式为 “[object Xxx]” 的字符串
+
+对于 Object 对象，直接调用 toString() 就能返回 [object Object]；而对于其他对象，则需要通过 call 来调用，才能返回正确的类型信息
+
+```js
+Object.prototype.toString({})       // "[object Object]"
+Object.prototype.toString.call({})  // 同上结果，加上call也ok
+Object.prototype.toString.call(1)    // "[object Number]"
+Object.prototype.toString.call('1')  // "[object String]"
+Object.prototype.toString.call(true)  // "[object Boolean]"
+Object.prototype.toString.call(function(){})  // "[object Function]"
+Object.prototype.toString.call(null)   //"[object Null]"
+Object.prototype.toString.call(undefined) //"[object Undefined]"
+Object.prototype.toString.call(/123/g)    //"[object RegExp]"
+Object.prototype.toString.call(new Date()) //"[object Date]"
+Object.prototype.toString.call([])       //"[object Array]"
+Object.prototype.toString.call(document)  //"[object HTMLDocument]"
+Object.prototype.toString.call(window)   //"[object Window]"
+```
+
+手写一个数据类型判断的方法
+
+```js
+function getType(obj){
+  let type  = typeof obj;
+  if (type !== "object") {    // 先进行typeof判断，如果是基础数据类型，直接返回
+    return type;
+  }
+  // 对于typeof返回结果是object的，再进行如下的判断，正则返回结果
+  return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1');  // 注意正则中间有个空格
+}
+/* 代码验证，需要注意大小写，哪些是typeof判断，哪些是toString判断？思考下 */
+getType([])     // "Array" typeof []是object，因此toString返回
+getType('123')  // "string" typeof 直接返回
+getType(window) // "Window" toString返回
+getType(null)   // "Null"首字母大写，typeof null是object，需toString来判断
+getType(undefined)   // "undefined" typeof 直接返回
+getType()            // "undefined" typeof 直接返回
+getType(function(){}) // "function" typeof能判断，因此首字母小写
+getType(/123/g)      //"RegExp" toString返回
+```
+
+## 类型转换
+
+在日常的业务开发中，经常会遇到 JavaScript 数据类型转换问题，有的时候需要我们主动进行强制转换，而有的时候 JavaScript 会进行隐式转换，隐式转换的时候就需要我们多加留心。
+
+那么这部分都会涉及哪些内容呢？我们先看一段代码，了解下大致的情况。
+
+```js
+'123' == 123   // false or true?
+'' == null    // false or true?
+'' == 0        // false or true?
+[] == 0        // false or true?
+[] == ''       // false or true?
+[] == ![]      // false or true?
+null == undefined //  false or true?
+Number(null)     // 返回什么？
+Number('')      // 返回什么？
+parseInt('');    // 返回什么？
+{}+10           // 返回什么？
+let obj = {
+    [Symbol.toPrimitive]() {
+        return 200;
+    },
+    valueOf() {
+        return 300;
+    },
+    toString() {
+        return 'Hello';
+    }
+}
+console.log(obj + 200); // 这里打印出来是多少？
+```
+
+强制类型转换
+强制类型转换方式包括 Number()、parseInt()、parseFloat()、toString()、String()、Boolean()，这几种方法都比较类似，通过字面意思可以很容易理解，都是通过自身的方法来进行数据类型的强制转换。下面我列举一些来详细说明。
+
+上面代码中，第 8 行的结果是 0，第 9 行的结果同样是 0，第 10 行的结果是 NaN。这些都是很明显的强制类型转换，因为用到了 Number() 和 parseInt()。
+
+其实上述几个强制类型转换的原理大致相同，下面我挑两个比较有代表性的方法进行讲解。
+
+Number() 方法的强制转换规则
+
+如果是布尔值，true 和 false 分别被转换为 1 和 0；
+
+如果是数字，返回自身；
+
+如果是 null，返回 0；
+
+如果是 undefined，返回 NaN；
+
+如果是字符串，遵循以下规则：如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；如果字符串中包含有效的浮点格式，将其转换为浮点数值；如果是空字符串，将其转换为 0；如果不是以上格式的字符串，均返回 NaN；
+
+如果是 Symbol，抛出错误；
+
+如果是对象，并且部署了 [Symbol.toPrimitive] ，那么调用此方法，否则调用对象的 valueOf() 方法，然后依据前面的规则转换返回的值；如果转换的结果是 NaN ，则调用对象的 toString() 方法，再次依照前面的顺序转换返回对应的值（Object 转换规则会在下面细讲）。
+
+下面通过一段代码来说明上述规则。
+
+```js
+Number(true);        // 1
+Number(false);       // 0
+Number('0111');      //111
+Number(null);        //0
+Number('');          //0
+Number('1a');        //NaN
+Number(-0X11);       //-17
+Number('0X11')       //17
+```
+
+其中，我分别列举了比较常见的 Number 转换的例子，它们都会把对应的非数字类型转换成数字类型，而有一些实在无法转换成数字的，最后只能输出 NaN 的结果。
+Boolean() 方法的强制转换规则
+
+这个方法的规则是：除了 undefined、 null、 false、 ''、 0（包括 +0，-0）、 NaN 转换出来是 false，其他都是 true。
+
+这个规则应该很好理解，没有那么多条条框框，我们还是通过代码来形成认知，如下所示。
+
+```js
+Boolean(0)          //false
+Boolean(null)       //false
+Boolean(undefined)  //false
+Boolean(NaN)        //false
+Boolean(1)          //true
+Boolean(13)         //true
+Boolean('12')       //true
+```
+
+其余的 parseInt()、parseFloat()、toString()、String() 这几个方法，你可以按照我的方式去整理一下规则，在这里不占过多篇幅了。
+
+隐式类型转换
+凡是通过逻辑运算符 (&&、 ||、 !)、运算符 (+、-、*、/)、关系操作符 (>、 <、 <= 、>=)、相等运算符 (==) 或者 if/while 条件的操作，如果遇到两个数据类型不一样的情况，都会出现隐式类型转换。这里你需要重点关注一下，因为比较隐蔽，特别容易让人忽视。
+
+下面着重讲解一下日常用得比较多的“==”和“+”这两个符号的隐式转换规则。
+
+'==' 的隐式类型转换规则
+
+如果类型相同，无须进行类型转换；
+
+如果其中一个操作值是 null 或者 undefined，那么另一个操作符必须为 null 或者 undefined，才会返回 true，否则都返回 false；
+
+如果其中一个是 Symbol 类型，那么返回 false；
+
+两个操作值如果为 string 和 number 类型，那么就会将字符串转换为 number；
+
+如果一个操作值是 boolean，那么转换成 number；
+
+如果一个操作值为 object 且另一方为 string、number 或者 symbol，就会把 object 转为原始类型再进行判断（调用 object 的 valueOf/toString 方法进行转换）。
+
+```js
+null == undefined       // true  规则2
+null == 0               // false 规则2
+'' == null              // false 规则2
+'' == 0                 // true  规则4 字符串转隐式转换成Number之后再对比
+'123' == 123            // true  规则4 字符串转隐式转换成Number之后再对比
+0 == false              // true  e规则 布尔型隐式转换成Number之后再对比
+1 == true               // true  e规则 布尔型隐式转换成Number之后再对比
+var a = {
+  value: 0,
+  valueOf: function() {
+    this.value++;
+    return this.value;
+  }
+};
+// 注意这里a又可以等于1、2、3
+console.log(a == 1 && a == 2 && a ==3);  //true f规则 Object隐式转换
+// 注：但是执行过3遍之后，再重新执行a==3或之前的数字就是false，因为value已经加上去了，这里需要注意一下
+```
+
+对照着这个规则看完上面的代码和注解之后，你可以再回过头做一下我在讲解“数据类型转换”之前的那 12 道题目，是不是就很容易解决了？
+
+'+' 的隐式类型转换规则
+
+'+' 号操作符，不仅可以用作数字相加，还可以用作字符串拼接。仅当 '+' 号两边都是数字时，进行的是加法运算；如果两边都是字符串，则直接拼接，无须进行隐式类型转换。
+
+除了上述比较常规的情况外，还有一些特殊的规则，如下所示。
+
+如果其中有一个是字符串，另外一个是 undefined、null 或布尔型，则调用 toString() 方法进行字符串拼接；如果是纯对象、数组、正则等，则默认调用对象的转换方法会存在优先级（下一讲会专门介绍），然后再进行拼接。
+
+如果其中有一个是数字，另外一个是 undefined、null、布尔型或数字，则会将其转换成数字进行加法运算，对象的情况还是参考上一条规则。
+
+如果其中一个是字符串、一个是数字，则按照字符串规则进行拼接。
+
+下面还是结合代码来理解上述规则，如下所示。
+
+```js
+1 + 2        // 3  常规情况
+'1' + '2'    // '12' 常规情况
+// 下面看一下特殊情况
+'1' + undefined   // "1undefined" 规则1，undefined转换字符串
+'1' + null        // "1null" 规则1，null转换字符串
+'1' + true        // "1true" 规则1，true转换字符串
+'1' + 1n          // '11' 比较特殊字符串和BigInt相加，BigInt转换为字符串
+1 + undefined     // NaN  规则2，undefined转换数字相加NaN
+1 + null          // 1    规则2，null转换为0
+1 + true          // 2    规则2，true转换为1，二者相加为2
+1 + 1n            // 错误  不能把BigInt和Number类型直接混合相加
+'1' + 3           // '13' 规则3，字符串拼接
+```
+
+整体来看，如果数据中有字符串，JavaScript 类型转换还是更倾向于转换成字符串，因为第三条规则中可以看到，在字符串和数字相加的过程中最后返回的还是字符串，这里需要关注一下。
+
+了解了 '+' 的转换规则后，我们最后再看一下 Object 的转换规则。
+
+Object 的转换规则
+
+对象转换的规则，会先调用内置的 [ToPrimitive] 函数，其规则逻辑如下：
+
+如果部署了 Symbol.toPrimitive 方法，优先调用再返回；
+
+调用 valueOf()，如果转换为基础类型，则返回；
+
+调用 toString()，如果转换为基础类型，则返回；
+
+如果都没有返回基础类型，会报错。
+
+直接理解有些晦涩，还是直接来看代码，你也可以在控制台自己敲一遍来加深印象。
+
+```js
+var obj = {
+  value: 1,
+  valueOf() {
+    return 2;
+  },
+  toString() {
+    return '3'
+  },
+  [Symbol.toPrimitive]() {
+    return 4
+  }
+}
+console.log(obj + 1); // 输出5
+// 因为有Symbol.toPrimitive，就优先执行这个；如果Symbol.toPrimitive这段代码删掉，则执行valueOf打印结果为3；如果valueOf也去掉，则调用toString返回'31'(字符串拼接)
+// 再看两个特殊的case：
+10 + {}
+// "10[object Object]"，注意：{}会默认调用valueOf是{}，不是基础类型继续转换，调用toString，返回结果"[object Object]"，于是和10进行'+'运算，按照字符串拼接规则来，参考'+'的规则C
+[1,2,undefined,4,5] + 10
+// "1,2,,4,510"，注意[1,2,undefined,4,5]会默认先调用valueOf结果还是这个数组，不是基础数据类型继续转换，也还是调用toString，返回"1,2,,4,5"，然后再和10进行运算，还是按照字符串拼接规则，参考'+'的第3条规则
+```
+
+# 深浅拷贝
+
+## 浅拷贝
+
+自己创建一个新的对象，来接受你要重新复制或引用的对象值。如果对象属性是基本的数据类型，复制的就是基本类型的值给新对象；但如果属性是引用数据类型，复制的就是内存中的地址，如果其中一个对象改变了这个内存中的地址，肯定会影响到另一个对象。
+
+**一、 object.assign**
+
+object.assign 是 ES6 中 object 的一个方法，该方法可以用于 JS 对象的合并等多个用途，其中一个用途就是可以进行浅拷贝。该方法的第一个参数是拷贝的目标对象，后面的参数是拷贝的来源对象（也可以是多个来源）。
+
+> object.assign 的语法为：Object.assign(target, ...sources)
+
+object.assign 的示例代码如下：
+
+```js
+let target = {};
+let source = { a: { b: 1 } };
+Object.assign(target, source);
+console.log(target); // { a: { b: 1 } };
+```
+
+从上面的代码中可以看到，通过 object.assign 我们的确简单实现了一个浅拷贝，“target”就是我们新拷贝的对象，下面再看一个和上面不太一样的例子。
+
+```js
+let target = {};
+let source = { a: { b: 2 } };
+Object.assign(target, source);
+console.log(target); // { a: { b: 10 } }; 
+source.a.b = 10; 
+console.log(source); // { a: { b: 10 } }; 
+console.log(target); // { a: { b: 10 } };
+```
+
+从上面代码中我们可以看到，首先通过 Object.assign 将 source 拷贝到 target 对象中，然后我们尝试将 source 对象中的 b 属性由 2 修改为 10。通过控制台可以发现，打印结果中，三个 target 里的 b 属性都变为 10 了，证明 Object.assign 暂时实现了我们想要的拷贝效果。
+
+但是使用 object.assign 方法有几点需要注意：
+
+它不会拷贝对象的继承属性；
+
+它不会拷贝对象的不可枚举的属性；
+
+可以拷贝 Symbol 类型的属性。
+
+可以简单理解为：Object.assign 循环遍历原对象的属性，通过复制的方式将其赋值给目标对象的相应属性，来看一下这段代码，以验证它可以拷贝 Symbol 类型的对象。
+
+```js
+let obj1 = { a:{ b:1 }, sym:Symbol(1)}; 
+Object.defineProperty(obj1, 'innumerable' ,{
+    value:'不可枚举属性',
+    enumerable:false
+});
+let obj2 = {};
+Object.assign(obj2,obj1)
+obj1.a.b = 2;
+console.log('obj1',obj1);
+console.log('obj2',obj2);
+```
+
+我们来看一下控制台打印的结果，如下图所示。
+
+![image-20230302071207277](./images/image-20230302071207277.png) 
+
+从上面的样例代码中可以看到，利用 object.assign 也可以拷贝 Symbol 类型的对象，但是如果到了对象的第二层属性 obj1.a.b 这里的时候，前者值的改变也会影响后者的第二层属性的值，说明其中依旧存在着访问共同堆内存的问题，也就是说这种方法还不能进一步复制，而只是完成了浅拷贝的功能。
+
+**二、扩展运算符方式**
+
+我们也可以利用 JS 的扩展运算符，在构造对象的同时完成浅拷贝的功能。
+
+> 扩展运算符的语法为：let cloneObj = { ...obj };
+
+代码如下所示。
+
+```js
+/* 对象的拷贝 */
+let obj = {a:1,b:{c:1}}
+let obj2 = {...obj}
+obj.a = 2
+console.log(obj)  //{a:2,b:{c:1}} console.log(obj2); //{a:1,b:{c:1}}
+obj.b.c = 2
+console.log(obj)  //{a:2,b:{c:2}} console.log(obj2); //{a:1,b:{c:2}}
+/* 数组的拷贝 */
+let arr = [1, 2, 3];
+let newArr = [...arr]; //跟arr.slice()是一样的效果
+```
+
+扩展运算符 和 object.assign 有同样的缺陷，也就是实现的浅拷贝的功能差不多，但是如果属性都是基本类型的值，使用扩展运算符进行浅拷贝会更加方便。
+
+**三、concat拷贝数组**
+
+数组的 concat 方法其实也是浅拷贝，所以连接一个含有引用类型的数组时，需要注意修改原数组中的元素的属性，因为它会影响拷贝之后连接的数组。不过 concat 只能用于数组的浅拷贝，使用场景比较局限。代码如下所示。
+
+```js
+let arr = [1, 2, 3];
+let newArr = arr.concat();
+newArr[1] = 100;
+console.log(arr);  // [ 1, 2, 3 ]
+console.log(newArr); // [ 1, 100, 3 ]
+```
+
+
+
+**四、slice 拷贝数组**
+
+slice 方法也比较有局限性，因为它仅仅针对数组类型。slice 方法会返回一个新的数组对象，这一对象由该方法的前两个参数来决定原数组截取的开始和结束时间，是不会影响和改变原始数组的。
+
+> slice 的语法为：arr.slice(begin, end);
+
+我们来看一下 slice 怎么使用，代码如下所示。
+
+```js
+let arr = [1, 2, {val: 4}];
+let newArr = arr.slice();
+newArr[2].val = 1000;
+console.log(arr);  //[ 1, 2, { val: 1000 } ]
+```
+
+
+
+**实现一个浅拷贝**
+
+1. 对基础类型做一个最基本的一个拷贝；
+
+2. 对引用类型开辟一个新的存储，并且拷贝一层对象属性。
+
+```js
+const shallowClone = (target) => {
+  if (typeof target === 'object' && target !== null) {
+    const cloneTarget = Array.isArray(target) ? []: {};
+    for (let prop in target) {
+      if (target.hasOwnProperty(prop)) {
+          cloneTarget[prop] = target[prop];
+      }
+    }
+    return cloneTarget;
+  } else {
+    return target;
+  }
+}
+```
+
+## 深拷贝
+
+浅拷贝只是创建了一个新的对象，复制了原有对象的基本类型的值，而引用数据类型只拷贝了一层属性，再深层的还是无法进行拷贝。深拷贝则不同，对于复杂引用数据类型，其在堆内存中完全开辟了一块内存地址，并将原有的对象完全复制过来存放。
+
+这两个对象是相互独立、不受影响的，彻底实现了内存上的分离。总的来说，深拷贝的原理可以总结如下：
+
+将一个对象从内存中完整地拷贝出来一份给目标对象，并从堆内存中开辟一个全新的空间存放新对象，且新对象的修改并不会改变原对象，二者实现真正的分离。
+
+现在原理你知道了，那么怎么去实现深拷贝呢？我也总结了几种方法分享给你。
+
+方法一：乞丐版（JSON.stringify）
+JSON.stringify() 是目前开发过程中最简单的深拷贝方法，其实就是把一个对象序列化成为 JSON 的字符串，并将对象里面的内容转换成字符串，最后再用 JSON.parse() 的方法将JSON 字符串生成一个新的对象。示例代码如下所示。
+
+复制代码
+
+```js
+let obj1 = { a:1, b:[1,2,3] }
+let str = JSON.stringify(obj1)；
+let obj2 = JSON.parse(str)；
+console.log(obj2);   //{a:1,b:[1,2,3]} 
+obj1.a = 2；
+obj1.b.push(4);
+console.log(obj1);   //{a:2,b:[1,2,3,4]}
+console.log(obj2);   //{a:1,b:[1,2,3]}
+```
+
+从上面的代码可以看到，通过 JSON.stringify 可以初步实现一个对象的深拷贝，通过改变 obj1 的 b 属性，其实可以看出 obj2 这个对象也不受影响。
+
+但是使用 JSON.stringify 实现深拷贝还是有一些地方值得注意，我总结下来主要有这几点：
+
+拷贝的对象的值中如果有函数、undefined、symbol 这几种类型，经过 JSON.stringify 序列化之后的字符串中这个键值对会消失；
+
+- 拷贝 Date 引用类型会变成字符串；
+
+- 无法拷贝不可枚举的属性；
+
+- 无法拷贝对象的原型链；
+
+- 拷贝 RegExp 引用类型会变成空对象；
+
+- 对象中含有 NaN、Infinity 以及 -Infinity，JSON 序列化的结果会变成 null；
+
+- 无法拷贝对象的循环应用，即对象成环 (obj[key] = obj)。
+
+针对这些存在的问题，你可以尝试着用下面的这段代码亲自执行一遍，来看看如此复杂的对象，如果用 JSON.stringify 实现深拷贝会出现什么情况。
+
+```js
+function Obj() { 
+  this.func = function () { alert(1) }; 
+  this.obj = {a:1};
+  this.arr = [1,2,3];
+  this.und = undefined; 
+  this.reg = /123/; 
+  this.date = new Date(0); 
+  this.NaN = NaN;
+  this.infinity = Infinity;
+  this.sym = Symbol(1);
+} 
+let obj1 = new Obj();
+Object.defineProperty(obj1,'innumerable',{ 
+  enumerable:false,
+  value:'innumerable'
+});
+console.log('obj1',obj1);
+let str = JSON.stringify(obj1);
+let obj2 = JSON.parse(str);
+console.log('obj2',obj2);
+```
+
+通过上面这段代码可以看到执行结果如下图所示。
+
+![image-20230302072903135](./images/image-20230302072903135.png) 
+
+使用 JSON.stringify 方法实现深拷贝对象，虽然到目前为止还有很多无法实现的功能，但是这种方法足以满足日常的开发需求，并且是最简单和快捷的。而对于其他的也要实现深拷贝的，比较麻烦的属性对应的数据类型，JSON.stringify 暂时还是无法满足的，那么就需要下面的几种方法了。
+
+**二：基础版（手写递归实现）**
+下面是一个实现 deepClone 函数封装的例子，通过 for in 遍历传入参数的属性值，如果值是引用类型则再次递归调用该函数，如果是基础数据类型就直接复制，代码如下所示。
+
+```js
+let obj1 = {
+  a:{
+    b:1
+  }
+}
+function deepClone(obj) { 
+  let cloneObj = {}
+  for(let key in obj) {                 //遍历
+    if(typeof obj[key] ==='object') { 
+      cloneObj[key] = deepClone(obj[key])  //是对象就再次调用该函数递归
+    } else {
+      cloneObj[key] = obj[key]  //基本类型的话直接复制值
+    }
+  }
+  return cloneObj
+}
+let obj2 = deepClone(obj1);
+obj1.a.b = 2;
+console.log(obj2);   //  {a:{b:1}}
+```
+
+虽然利用递归能实现一个深拷贝，但是同上面的 JSON.stringify 一样，还是有一些问题没有完全解决，例如：
+
+这个深拷贝函数并不能复制不可枚举的属性以及 Symbol 类型；
+
+这种方法只是针对普通的引用类型的值做递归复制，而对于 Array、Date、RegExp、Error、Function 这样的引用类型并不能正确地拷贝；
+
+对象的属性里面成环，即循环引用没有解决。
+
+
+
+**方法三：改进版（改进后递归实现）**
+
+1. 针对能够遍历对象的不可枚举属性以及 Symbol 类型，我们可以使用 Reflect.ownKeys 方法；
+
+2. 当参数为 Date、RegExp 类型，则直接生成一个新的实例返回；
+
+3. 利用 Object 的 getOwnPropertyDescriptors 方法可以获得对象的所有属性，以及对应的特性，顺便结合 Object 的 create 方法创建一个新对象，并继承传入原对象的原型链；
+
+4. 利用 WeakMap 类型作为 Hash 表，因为 WeakMap 是弱引用类型，可以有效防止内存泄漏（你可以关注一下 Map 和 weakMap 的关键区别，这里要用 weakMap），作为检测循环引用很有帮助，如果存在循环，则引用直接返回 WeakMap 存储的值。
+
+当然，如果你在考虑到循环引用的问题之后，还能用 WeakMap 来很好地解决，并且向面试官解释这样做的目的，那么你所展示的代码，以及你对问题思考的全面性，在面试官眼中应该算是合格的了。
+
+那么针对上面这几个问题，我们来看下改进后的递归实现的深拷贝代码应该是什么样子的，如下所示。
+
+```js
+
+const isComplexDataType = obj => (typeof obj === 'object' || typeof obj === 'function') && (obj !== null)
+const deepClone = function (obj, hash = new WeakMap()) {
+  if (obj.constructor === Date) 
+  return new Date(obj)       // 日期对象直接返回一个新的日期对象
+  if (obj.constructor === RegExp)
+  return new RegExp(obj)     //正则对象直接返回一个新的正则对象
+  //如果循环引用了就用 weakMap 来解决
+  if (hash.has(obj)) return hash.get(obj)
+  let allDesc = Object.getOwnPropertyDescriptors(obj)
+  //遍历传入参数所有键的特性
+  let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc)
+  //继承原型链
+  hash.set(obj, cloneObj)
+  for (let key of Reflect.ownKeys(obj)) { 
+    cloneObj[key] = (isComplexDataType(obj[key]) && typeof obj[key] !== 'function') ? deepClone(obj[key], hash) : obj[key]
+  }
+  return cloneObj
+}
+// 下面是验证代码
+let obj = {
+  num: 0,
+  str: '',
+  boolean: true,
+  unf: undefined,
+  nul: null,
+  obj: { name: '我是一个对象', id: 1 },
+  arr: [0, 1, 2],
+  func: function () { console.log('我是一个函数') },
+  date: new Date(0),
+  reg: new RegExp('/我是一个正则/ig'),
+
+[Symbol('1')]: 1,
+
+};
+Object.defineProperty(obj, 'innumerable', {
+  enumerable: false, value: '不可枚举属性' }
+);
+obj = Object.create(obj, Object.getOwnPropertyDescriptors(obj))
+obj.loop = obj    // 设置loop成循环引用的属性
+let cloneObj = deepClone(obj)
+cloneObj.arr.push(4)
+console.log('obj', obj)
+console.log('cloneObj', cloneObj)
+```
+
+我们看一下结果，cloneObj 在 obj 的基础上进行了一次深拷贝，cloneObj 里的 arr 数组进行了修改，并未影响到 obj.arr 的变化，如下图所示。
+
+![image-20230302073129935](./images/image-20230302073129935.png) 
+
+从这张截图的结果可以看出，改进版的 deepClone 函数已经对基础版的那几个问题进行了改进，也验证了我上面提到的那四点理论。
+
+# 数据，变量，内存
 
 * 什么是数据?
 
@@ -357,7 +960,7 @@ var obj = {}
   }, 2000)
   ```
 
-##### 原型和原型链
+## 原型和原型链
 
  所有函数都有一个特别的属性: `prototype` : 显式原型属性
 

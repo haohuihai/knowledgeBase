@@ -71,7 +71,7 @@ module.exports = {
           },
           {
             title: "JS原型函数",
-            path: "../pages/Front/JS/JavaScript原型函数",
+            path: "../pages/Front/JS/JavaScript原生函数",
           },
           {
             title: "JS基础",
@@ -186,10 +186,6 @@ module.exports = {
           {
             title: 'Gitlab基础',
             path: '../pages/Gitlab/CICD/note'
-          },
-          {
-            title: 'Gitlab最佳实践',
-            path: '../pages/Gitlab/Practice/note'
           },
           {
             title: 'GitlabRunner',
