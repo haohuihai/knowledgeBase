@@ -50,20 +50,40 @@ module.exports = {
         collapsable: true,
         children: [
           {
-            title: "阶段一",
-            path: "../pages/Front/JS/First",
+            title: "模块化",
+            path: "../pages/Front/JS/modules",
           },
           {
-            title: "阶段二",
-            path: "../pages/Front/JS/Second",
+            title: "BOM",
+            path: "../pages/Front/JS/BOM",
           },
           {
-            title: "阶段三",
-            path: "../pages/Front/JS/Third",
+            title: "JS的继承方式",
+            path: "../pages/Front/JS/extend",
           },
           {
-            title: "阶段四",
-            path: "../pages/Webpack/work",
+            title: "JS核心原理相等",
+            path: "../pages/Front/JS/JavaScript核心原理相等操作",
+          },
+          {
+            title: "JS核心原理原型",
+            path: "../pages/Front/JS/JavaScript核心原理之原型",
+          },
+          {
+            title: "JS原型函数",
+            path: "../pages/Front/JS/JavaScript原型函数",
+          },
+          {
+            title: "JS基础",
+            path: "../pages/Front/JS/JavaScript基础",
+          },
+          {
+            title: "This",
+            path: "../pages/Front/JS/This",
+          },
+          {
+            title: "JSON",
+            path: "../pages/Front/JS/JSON",
           },
         ],
       },
@@ -71,6 +91,11 @@ module.exports = {
         title: "TypeScript",
         collapsable: true,
         path: "../pages/Front/TS/ts",
+      },
+      {
+        title: "MySQL",
+        collapsable: true,
+        path: "../pages/MySQL/note",
       },
       {
         title: "Git",
@@ -85,7 +110,28 @@ module.exports = {
       {
         title: "Webpack",
         collapsable: true,
-        path: "../pages/Webpack/webpack",
+        children: [
+          {
+            title: "基本使用",
+            path: "../pages/Webpack/webpack",
+          },
+          {
+            title: '源码分析',
+            path: '../pages/Webpack/note'
+          },
+          {
+            title: '自定义插件(plugin)',
+            path: '../pages/Webpack/plugin'
+          },
+          {
+            title: '自定义插件(loader)',
+            path: '../pages/Webpack/loader'
+          },
+          {
+            title: 'work',
+            path: '../pages/Webpack/work'
+          },
+        ],
       },
       {
         title: "Axios",
@@ -116,40 +162,30 @@ module.exports = {
           },
         ],
       },
-      { title: "Python", path: "../pages/Python/pythonBase" },
-      {
-        title: "构建",
+      { 
+        title: "Nginx", 
         collapsable: true,
         children: [
           {
-            title: "umi",
-            path: "../pages/umi/note",
+            title: "命令",
+            path: "../pages/Nginx/common",
           },
           {
-            title: 'docker',
-            path: '../pages/Docker/note'
-          },
-          {
-            title: 'gitlab',
-            path: '../pages/Gitlab/note'
+            title: '基本操作',
+            path: '../pages/Nginx/note'
           },
         ],
       },
+      { title: "Python", path: "../pages/Python/pythonBase" },
+      { title: "Npm", path: "../pages/Npm/note" },
+      { title: "Umi", path: "../pages/umi/note" },
       {
         title: "GitLab",
         collapsable: true,
         children: [
           {
-            title: "Gitlab进阶",
-            path: "../pages/Gitlab/Advance/note",
-          },
-          {
             title: 'Gitlab基础',
             path: '../pages/Gitlab/CICD/note'
-          },
-          {
-            title: 'Gitlab交付流水线',
-            path: '../pages/Gitlab/PayLine/note'
           },
           {
             title: 'Gitlab最佳实践',
