@@ -1,3 +1,5 @@
+## React事件
+
 #### react支持的事件
 
 #### 事件捕获与冒泡
@@ -17,7 +19,6 @@ function Test() {
     }
   }, [])
   function handleFather(e) {
-    
     console.log(`handleFather`)
   }
   function handdleSon(e) {
@@ -34,9 +35,12 @@ export default Test
 ```
 
 点击handdleSon事件，依次打印一下：
+
+```
 handdleSon
 handleFather
 document
+```
 
 由此可以看出，事件执行过程是从子--->父--->根 
 
@@ -75,7 +79,7 @@ DOM2 Events规范规定事件流分为3个阶段：事件捕获、到达目标�
 
 在DOM事件流中，实际的目标（`<div>`元素）在捕获阶段不会接收到事件。这是因为捕获阶段从document到`<html>`再到`<body>`就结束了。下一阶段，即会在`<div>`元素上触发事件的“到达目标”阶段，然后，冒泡阶段开始，事件反向传播至文档。
 
-#### 在react中阻止冒泡的三种方式
+### 在react中阻止冒泡的三种方式
 
 - e.stopPropagation()
 - e.nativeEvent.stopImmediatePropagation()
@@ -111,10 +115,11 @@ function Test() {
       document.removeEventListener('click', () => { })
     }
   }, [])
-  function handleFather(e) {
     
+  function handleFather(e) {
     console.log(`handleFather`)
   }
+    
   function handdleSon(e) {
     e.stopPropagation()
     console.log(`handdleSon`)
@@ -175,21 +180,21 @@ e.nativeEvent.stopImmediatePropagation()能阻止合成和原生事件间的冒�
 上面的`useEffect`里面的代码可以写为
 
 ```js
-  useEffect(() => {
+useEffect(() => {
     document.addEventListener('click', (e) => {
         // 这里匹配的标签名
-      if(e.target && e.target.matchs('a')) return;
+        if(e.target && e.target.matchs('a')) return;
         console.log('document')
     })
     return () => {
-      document.removeEventListener('click', () => { })
+        document.removeEventListener('click', () => { })
     }
-  }, [])
+}, [])
 ```
 
 这样就可以阻止打印出document
 
-#### 在react中阻止事件捕获
+### 在react中阻止事件捕获
 
 给需要捕获的元素将onClick改为onClickCapture
 
@@ -199,27 +204,27 @@ e.nativeEvent.stopImmediatePropagation()能阻止合成和原生事件间的冒�
 import { useEffect } from 'react'
 import './index.less';
 function Test() {
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      console.log(`document`);
-    })
-    return () => {
-      document.removeEventListener('click', () => { })
+    useEffect(() => {
+        document.addEventListener('click', () => {
+            console.log(`document`);
+        })
+        return () => {
+            document.removeEventListener('click', () => { })
+        }
+    }, [])
+    function handleFather(e) {
+        console.log(`handleFather`)
     }
-  }, [])
-  function handleFather(e) {
-    console.log(`handleFather`)
-  }
-  function handdleSon(e) {
-    console.log(`handdleSon`)
+    function handdleSon(e) {
+        console.log(`handdleSon`)
 
-  }
+    }
 
-  return (
-    <div onClickCapture={handleFather} className="fatherStyle">
-      <div onClick={handdleSon} className="sonStyle">点击Son</div>
-    </div>
-  );
+    return (
+        <div onClickCapture={handleFather} className="fatherStyle">
+        <div onClick={handdleSon} className="sonStyle">点击Son</div>
+</div>
+);
 }
 export default Test
 ```
@@ -227,15 +232,20 @@ export default Test
 一步步来看，先将父onClick修改为onClickCapture
 
 ```html
- <div onClickCapture={handleFather} className="fatherStyle">
-      <div onClick={handdleSon} className="sonStyle">点击Son</div>
+<div onClickCapture={handleFather} className="fatherStyle">
+    <div onClick={handdleSon} className="sonStyle">点击Son</div>
 </div>
 ```
 
 点击子元素节点，打印：
+
+```
 handleFather
 handdleSon
 document
+```
+
+
 
 根据上面说的捕获与冒泡分析以下
 
@@ -245,29 +255,63 @@ document
  function handleFather(e) {
     e.stopPropagation() 
     console.log(`handleFather`)
-  }
+ }
 ```
 
 此时打印出来：
+
+```
 handleFather
+```
+
+
 
 如果向在document这里拦截，这么做：
 
 ```js
-  useEffect(() => {
+useEffect(() => {
     document.addEventListener('click', (e) => {
-      e.stopPropagation() // 阻止冒泡
+        e.stopPropagation() // 阻止冒泡
     }, true) // 第三个参数，阻止捕获
     return () => {
-      document.removeEventListener('click', () => { })
+        document.removeEventListener('click', () => { })
     }
-  }, [])
+}, [])
+
  function handleFather(e) {
     console.log(`handleFather`)
   }
+
   function handdleSon(e) {
     console.log(`handdleSon`)
-
   }
+```
+
+## React生命周期
+
+生命周期用在类组件里面，函数组件里面可以使用`useEffect`，主要介绍常用的生命周期
+
+按照创建，更新，销毁来调用
+
+**创建时**
+
+```
+constructor
+render
+componentDidMount
+```
+
+**更新时**
+
+```
+shouldComponentUpdate
+render
+componentDidUpdate
+```
+
+**销毁时**
+
+```
+componentWillUnmount
 ```
 
