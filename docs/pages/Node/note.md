@@ -265,6 +265,10 @@ console.log(obj2);
 // { cname: 'js', price: '5000' }
 ```
 
+3. **child_process**
+
+https://zhuanlan.zhihu.com/p/36678971
+
 ### 文件系统模块
 
 用于操作服务器的文件(目录)，创建目录、删除目录、读取目录、创建文件、删除文件、写入文件....

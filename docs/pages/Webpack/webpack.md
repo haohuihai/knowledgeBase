@@ -731,11 +731,9 @@ HMR Server 是服务端，用来将变化的 js 模块通过 websocket 的消息
 
 HMR Runtime是浏览器端，用于接受  HMR Server 传递的模块数据，浏览器端可以看到 .hot-update.json 的文件过来。 
 
-HotModuleReplacementPlugin是做什么用的？ webpack 构建出来的 bundle.js 本身是不具备热更新的能力的，HotModuleReplacementPlugin 的作用就是将 HMR runtime 注入到 bundle.js，使得bundle.js可以和HMR server建立websocket的通信连接
+HotModuleReplacementPlugin是做什么用的？ webpack 构建出来的 bundle.js 本身是不具备热更新的能力的，HotModuleReplacementPlugin 的作用就是将 HMR runtime 注入到 bundle.js，使得bundle.js可以和HMR Server建立websocket的通信连接，一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 js module 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。 
 
-webpack-dev-server(WDS)的功能提供 bundle server的能力，就是生成的 bundle.js 文件可以通过 localhost://xxx 的方式去访问，另外 WDS 也提供 livereload(浏览器的自动刷新)。 
-
-hot-module-replacement-plugin 的作用是提供 HMR 的 runtime，并且将 runtime 注入到 bundle.js 代码里面去。一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 js module 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。 
+webpack-dev-server的功能提供 bundle server的能力，就是生成的 bundle.js 文件可以通过 localhost://xxx 的方式去访问，另外 WDS 也提供 livereload(浏览器的自动刷新)。 
 
 单独写两个包也是出于功能的解耦来考虑的。简单来说就是：hot-module-replacement-plugin 包给 webpack-dev-server 提供了热更新的能力。
 
@@ -767,6 +765,18 @@ app.listen(3000, function () {
 热更新原理：
 
 ![image-20230227132047234](./images/image-20230227132047234.png) 
+
+Webpack Compile: 将JS编译成Bundle
+
+HMR Server：将热更新的文件输出给HMR Runtime
+
+Bundle Server： 提供文件在浏览器的访问
+
+HMR Runtime：会被注入到浏览器，更新文件的变化
+
+bundle.js：构建输出的文件
+
+
 
 开始启动会走上面的路线
 
@@ -828,9 +838,9 @@ npm i mini-css-extract-plugin -D
 const MinCssExtractPlugin = require('mini-css-extract-plugin')
 ```
 
-这个插件无法和`style-loader`一起使用，`style-loader`将样式放入head
+这个插件无法和`style-loader`一起使用，`style-loader`将样式放入Html文档的head标签中
 
-`MinCssExtractPlugin`是将css单独提取出为一个文件
+而`MinCssExtractPlugin`是将css单独提取出为一个文件
 
 所以修改rules匹配的`.less`和`.css`规则
 
@@ -846,7 +856,31 @@ const MinCssExtractPlugin = require('mini-css-extract-plugin')
 
 图片或其他的文件设置
 
-![image-20230227132728146](./images/image-20230227132728146.png)  
+| 占位符名称    | 含义                          |
+| ------------- | ----------------------------- |
+| [ext]         | 资源后缀名                    |
+| [name]        | 问件名称                      |
+| [folder]      | 文件所在的文件夹              |
+| [contenthash] | 文件内容的hash，默认是md5生成 |
+| [path]        | 文件的相对路径                |
+
+```js
+module: {
+    rules: [
+        {
+            test: /.(png | svg | jpg | gig)$/,
+            use: [
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'img/[name][hash:8].[ext]'
+                    }
+                }
+            ]
+        }
+    ]
+}
+```
 
 ## 代码压缩 
 
@@ -856,7 +890,7 @@ webpack4内置了`uglifyjs-webpack-plugin`默认的js压缩，可以设置并行
 
 **css文件的压缩**
 
-安装`optimize-css-assets-webpack-plugin`，cssnano
+安装`optimize-css-assets-webpack-plugin`，`cssnano`
 
 ```
 npm install optimize-css-assets-webpack-plugin cssnano -D
@@ -946,7 +980,7 @@ new HtmlWebpackPlugin({
 
 清理构建目录顾名思义就是在每次构建前清理掉构建目录dist
 
-使用clean-webpack-plugin插件，他默认会删除output指定的输出目录
+使用`clean-webpack-plugin`插件，他默认会删除output指定的输出目录
 
 安装
 
@@ -1107,9 +1141,7 @@ http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html
 
  source-map: 一种 提供源代码到构建后代码映射 技术 （如果构建后代码出错了，通过映射可以追踪源代码错误）
 
-source-map：外部
-
-   错误代码准确信息 和 源代码的错误位置
+source-map：外部错误代码准确信息 和 源代码的错误位置
 
 inline-source-map：内联
 
@@ -1187,11 +1219,9 @@ devtool: 'cheap-source-map'
 
 ## 基础库的分离
 
-**有疑问**
-
 用于生产环境
 
-将react、react-dom基础包通过cdn引入，不打如bundle中
+将react、react-dom基础包通过cdn引入，不打入bundle中
 
 1. 使用`html-webpack-externals-plugin`
 
@@ -1220,7 +1250,7 @@ plugins: [
 module.exports = {
   externals: {
     // 拒绝jQuery被打包进来
-    jquery: 'jQuery' // jquery是jquery包导出时的名称，jQuery是使用是的名称
+    react: 'React' // jquery是jquery包导出时的名称，jQuery是使用是的名称
   }
 };
 
@@ -1240,27 +1270,26 @@ index.html
 
 <body>
   <h1 id="title">hello html</h1>
+    < !--->可以区分生产和开发环境使用不同的CDN链接</!--->
   <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 </body>
 
 </html>
 ```
 
+**利⽤ SplitChunksPlugin 进⾏公共脚本分离**
 
+**利⽤ SplitChunksPlugin 分离基础包**
 
+**利⽤ SplitChunksPlugin 分离⻚⾯公共⽂件**
 
-
-#### 利⽤ SplitChunksPlugin 进⾏公共脚本分离
-
-#### 利⽤ SplitChunksPlugin 分离基础包
-
-#### 利⽤ SplitChunksPlugin 分离⻚⾯公共⽂件
-
-#### PWA
+## PWA
 
 PWA: 渐进式网络开发应用程序(离线可访问)
 
+```
 workbox --> workbox-webpack-plugin
+```
 
 webpack.config.js
 
@@ -1336,15 +1365,13 @@ export function count(x, y) {
 
 ```
 
-
-
-#### tree shaking(摇树优化)
+## Tree Shaking
 
 概念：1 个模块可能有多个⽅法，只要其中的某个⽅法使⽤到了，则整个⽂件都会被打到 bundle ⾥⾯去
 
-tree shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会在 uglify 阶段被擦除掉。
+Tree Shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会在 uglify 阶段被擦除掉。
 
-使⽤：webpack 默认⽀持，在 .babelrc ⾥设置 modules: false 即可 · production mode的情况下默认开启
+使⽤：webpack 默认⽀持，在 .babelrc ⾥设置 modules: false 即可，production mode的情况下默认开启
 
 要求：必须是 ES6 的语法，CJS 的⽅式不⽀持 
 
@@ -1364,7 +1391,7 @@ tree shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会�
 
 .babelrc ⾥设置，production mode的情况下默认开启
 
-#### 构建后的代码存在⼤量闭包代码
+**构建后的代码存在⼤量闭包代码**
 
 ![image-20230227132827851](./images/image-20230227132827851.png)  
 
@@ -1372,7 +1399,7 @@ tree shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会�
 
 运⾏代码时创建的函数作⽤域变多，内存开销变⼤
 
-##### 模块转换分析
+**模块转换分析**
 
 ![image-20230227132850584](./images/image-20230227132850584.png)  
 
@@ -1380,15 +1407,62 @@ tree shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会�
 
 ![image-20230227133013460](./images/image-20230227133013460.png) 
 
-![image-20230227133001039](./images/image-20230227133001039.png) 
+**Scope hoisting的使用**
 
-![image-20230227132953110](./images/image-20230227132953110.png) 
+webpack mode为production时默认开启
 
-![image-20230227132943621](./images/image-20230227132943621.png) 
+```js
+module.export = {
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]
+}
+```
+
+**代码分割的意义**
+
+- 对于大的Web应用来讲，将所有的代码都放在一个文件中显然是不够有效的，特别是当你的某些代码块是在某些特殊的时候才会被用到。
+- webpack有一个功能就是将你的代码库分割成chunks语块，当代码运行到需要它们的时候再进行加载。 适用的场景
+- 抽离相同代码到一个共享块
+- 脚本懒加载，使得初始下载的代码更小
+
+**如何使用动态import**
+
+- 用户当前需要用什么功能就只加载这个功能对应的代码，也就是所谓的按需加载 在给单页应用做按需加载优化时，一般采用以下原则：
+  - 对网站功能进行划分，每一类一个chunk
+  - 对于首次打开页面需要的功能直接加载，尽快展示给用户,某些依赖大量代码的功能点可以按需加载
+  - 被分割出去的代码需要一个按需加载的时机
+- 动态import 目前并没有原生支持，需要babel
+
+安装babel插件
+
+```shell
+npm install @babel/plugin-syntax-dynamic-import --save-dev
+```
+
+webpack-config.pro.js
+
+```js
+{
+    "plugin": ["@babel/plugin-syntax-dynamic-import"]
+}
+```
+
+```js
+document.querySelector('#clickBtn').addEventListener('click',() => {
+    import('./hello').then(result => {
+        console.log(result.default);
+    });
+});
+```
+
+```html
+<button id="clickBtn">点我</button>
+```
 
 
 
-#### webpack打包库和组件
+## webpack打包库和组件
 
 rollup也可以使用打包库组件
 
@@ -2708,7 +2782,7 @@ webpack在整个过程中，必须要实现四件事情；
 
 ### 查找webpack入口文件
 
-在命令行运行以上命令后，npm会让命令行工具进入`node_modules\.bin`目录查找是否存在webpack.sh或者webpack.md文件，如果存在就执行，不存在就抛出错误
+在运行以上命令后，npm会让命令行工具进入`node_modules\.bin`目录查找是否存在webpack.sh或者webpack.md文件，如果存在就执行，不存在就抛出错误
 
 实际的入口文件是：node_modules\webpack\bin\webpack.js
 
@@ -2731,8 +2805,18 @@ webpack-cli也是一样
 ```js
 process.exitCode = 0  //正常执行返回 ，1表示报错
 const runCommand = (command,args) => {}  //运行某个命令
+const executedCommand = cp.spawn(command, args, {
+			stdio: "inherit",
+			shell: true
+		});
+
+
 const isInstalled = packageName => {} //判断某个包是否安装
-const CLIs = []  // webpack可用CLI:webpack-cli   webpack-command 
+// 查找的核心代码
+fs.statSync(path.join(dir, "node_modules", packageName)).isDirectory() // 返回true表示已安装
+
+const CLIs = []  // webpack可用CLI: webpack-cli   webpack-command 
+// 在版本5中，好像只支持webpack-cli
 const installedClis = CLIs.filter(cli => cli.installed);  //判断两个Cli是否安装了
 if(installedClis.length === 1) {} else if(installedClis.length === 1) {} else {}
 // 根据安装cli的数量进行不同的处理
