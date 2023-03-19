@@ -1,21 +1,29 @@
-# 数据类型的分类和判断
+# 数据类型的分类、判断、类型转换
 
 ## 分类
 
-* 基本(值)类型
-  * Number ----- 任意数值 -------- typeof
-  * String ----- 任意字符串 ------ typeof
-  * Boolean ---- true/false ----- typeof
-  * undefined --- undefined ----- typeof   ===
-  * null -------- null ---------- ===
-* 对象(引用)类型
-  * Object ----- typeof/instanceof
-  * Array ------ instanceof
-  * Function ---- typeof
+| 类型                | 范围                | 判断方式 |
+| ------------------- | ------------------- | -------- |
+| 数字（number）      | 任意数值            | typeof   |
+| 字符串（string）    | 任意字符串          | typeof   |
+| 布尔值（boolean）   | true/false          | typeof   |
+| 未定义（undefined） | undefined           | typeof   |
+| 空值（null）        | null                | ===      |
+| 对象（object）      | Array function null |          |
+| 符号（symbol）      |                     | typeof   |
+
+对象(引用)类型
+* Object ----- typeof/instanceof
+* Array ------ instanceof
+* Function ---- typeof
+
+其中Arrray和function是object的子类型
 
 ## 判断
 
-### typeof
+**typeof**
+
+typeof返回的是一个小写字母的字符串
 
 * 可以区别: number, string, boolean, undefined, function
 * 不能区别: null与对象、 一般对象与数组
@@ -26,6 +34,8 @@ typeof '1' // 'string'
 typeof undefined // 'undefined'
 typeof true // 'boolean'
 typeof Symbol() // 'symbol'
+
+
 typeof null // 'object'
 typeof [] // 'object'
 typeof {} // 'object'
@@ -33,15 +43,19 @@ typeof console // 'object'
 typeof console.log // 'function'
 ```
 
-### instanceof
+在使用typeof操作时，得到的结果并不是该遍历的类型，而是该变量持有值的类型
 
-* 专门用来判断对象数据的类型: Object, Array与Function
+> JavaScript中的变量没有类型
+
+**instanceof**
+
+* 专门用来判断对象数据的类型： Object, Array与Function
 * 不能正确判断基础数据类型
 
 ```js
 let Car = function() {}
 let benz = new Car()
-benz instanceof Car // true
+benz instanceof Car // true  Object.getPrototypeOf(benz) === Car.prototype
 let car = new String('Mercedes Benz')
 car instanceof String // true
 let str = 'Covid-19'
@@ -59,7 +73,7 @@ function myInstanceof(left, right) {
   while(true) {                  //循环往下寻找，直到找到相同的原型对象
     if(proto === null) return false;
     if(proto === right.prototype) return true;//找到相同原型对象，返回true
-    proto = Object.getPrototypeof(proto);
+    	proto = Object.getPrototypeof(proto);
     }
 }
 // 验证一下自己实现的myInstanceof是否OK
@@ -67,17 +81,26 @@ console.log(myInstanceof(new Number(123), Number));    // true
 console.log(myInstanceof(123, Number));                // false
 ```
 
-### ===
+相关知识
+
+**`instanceof`** **运算符**用于检测构造函数的 `prototype` 属性是否出现在某个实例对象的原型链上。
+
+**===**
+
+检查两个操作数是否相等，不会对左右两边的值进行转换，属于严格相等
 
 可以判断: undefined和null
 
-typeof 的结果是小写字母的字符串
+```js
+undefined === undefined // true
+null === null
+```
 
-### Object.prototype.toString
+**Object.prototype.toString**
 
-toString() 是 Object 的原型方法，调用该方法，可以统一返回格式为 “[object Xxx]” 的字符串
+toString() 是 Object 的原型上的方法，调用该方法，可以统一返回格式为` [object Xxx]`的字符串
 
-对于 Object 对象，直接调用 toString() 就能返回 [object Object]；而对于其他对象，则需要通过 call 来调用，才能返回正确的类型信息
+对于 Object 对象，直接调用 toString() 就能返回 `[object Object]`而对于其他对象，则需要通过 call 来调用，才能返回正确的类型信息
 
 ```js
 Object.prototype.toString({})       // "[object Object]"
@@ -106,7 +129,7 @@ function getType(obj){
   // 对于typeof返回结果是object的，再进行如下的判断，正则返回结果
   return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1');  // 注意正则中间有个空格
 }
-/* 代码验证，需要注意大小写，哪些是typeof判断，哪些是toString判断？思考下 */
+
 getType([])     // "Array" typeof []是object，因此toString返回
 getType('123')  // "string" typeof 直接返回
 getType(window) // "Window" toString返回
@@ -117,24 +140,36 @@ getType(function(){}) // "function" typeof能判断，因此首字母小写
 getType(/123/g)      //"RegExp" toString返回
 ```
 
+相关知识：正则表达式中的replace
+
+语法 `str.replace(regexp|substr, newSubStr|function)`
+
+第一个参数为正则或一个字符串
+正则匹配到的内容会被第二个参数的返回值替换掉，字符串匹配到的内容会被第二个参数替换掉
+
+第二个参数为要替换的字符串或一个函数
+将第一个匹配到的内容替换为newSubstr， 函数的返回值替换第一个参数匹配到的结果，
+
+返回部分或全部有替代模式所取代的新的字符串
+
+上面正则的`(\S+)`代表将`[object Window]`的第二个参数通过$1返回
+
 ## 类型转换
 
-在日常的业务开发中，经常会遇到 JavaScript 数据类型转换问题，有的时候需要我们主动进行强制转换，而有的时候 JavaScript 会进行隐式转换，隐式转换的时候就需要我们多加留心。
-
-那么这部分都会涉及哪些内容呢？我们先看一段代码，了解下大致的情况。
+先测试下面的代码
 
 ```js
-'123' == 123   // false or true?
-'' == null    // false or true?
-'' == 0        // false or true?
-[] == 0        // false or true?
-[] == ''       // false or true?
-[] == ![]      // false or true?
-null == undefined //  false or true?
-Number(null)     // 返回什么？
-Number('')      // 返回什么？
-parseInt('');    // 返回什么？
-{}+10           // 返回什么？
+'123' == 123   
+'' == null    
+'' == 0        
+[] == 0       
+[] == ''      
+[] == ![]      
+null == undefined 
+Number(null)     
+Number('')      
+parseInt('');   
+{}+10 
 let obj = {
     [Symbol.toPrimitive]() {
         return 200;
@@ -150,29 +185,22 @@ console.log(obj + 200); // 这里打印出来是多少？
 ```
 
 强制类型转换
-强制类型转换方式包括 Number()、parseInt()、parseFloat()、toString()、String()、Boolean()，这几种方法都比较类似，通过字面意思可以很容易理解，都是通过自身的方法来进行数据类型的强制转换。下面我列举一些来详细说明。
+强制类型转换方式包括 Number()、parseInt()、parseFloat()、toString()、String()、Boolean()，这几种方法都比较类似，通过字面意思可以很容易理解，都是通过自身的方法来进行数据类型的强制转换
 
 上面代码中，第 8 行的结果是 0，第 9 行的结果同样是 0，第 10 行的结果是 NaN。这些都是很明显的强制类型转换，因为用到了 Number() 和 parseInt()。
 
-其实上述几个强制类型转换的原理大致相同，下面我挑两个比较有代表性的方法进行讲解。
-
 Number() 方法的强制转换规则
 
-如果是布尔值，true 和 false 分别被转换为 1 和 0；
+如果是**布尔值**，true 和 false 分别被转换为 1 和 0；
+如果是**数字**，返回自身；
+如果是 **null**，返回 0；
+如果是 **undefined**，返回 NaN；
+如果是**字符串**，遵循以下规则：
+		如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；如果字符串中包含有效的浮点格式，将其转换为浮点数值；如果是空字符串，将其转换为 0；如果不是以上格式的字符串，均返回 NaN；
+如果是 **Symbol**，抛出错误；
+如果是**对象**，并且部署了 [Symbol.toPrimitive] ，那么调用此方法，否则调用对象的 valueOf() 方法，然后依据前面的规则转换返回的值；如果转换的结果是 NaN ，则调用对象的 toString() 方法，再次依照前面的顺序转换返回对应的值
 
-如果是数字，返回自身；
-
-如果是 null，返回 0；
-
-如果是 undefined，返回 NaN；
-
-如果是字符串，遵循以下规则：如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；如果字符串中包含有效的浮点格式，将其转换为浮点数值；如果是空字符串，将其转换为 0；如果不是以上格式的字符串，均返回 NaN；
-
-如果是 Symbol，抛出错误；
-
-如果是对象，并且部署了 [Symbol.toPrimitive] ，那么调用此方法，否则调用对象的 valueOf() 方法，然后依据前面的规则转换返回的值；如果转换的结果是 NaN ，则调用对象的 toString() 方法，再次依照前面的顺序转换返回对应的值（Object 转换规则会在下面细讲）。
-
-下面通过一段代码来说明上述规则。
+例如：
 
 ```js
 Number(true);        // 1
@@ -185,12 +213,11 @@ Number(-0X11);       //-17
 Number('0X11')       //17
 ```
 
-其中，我分别列举了比较常见的 Number 转换的例子，它们都会把对应的非数字类型转换成数字类型，而有一些实在无法转换成数字的，最后只能输出 NaN 的结果。
 Boolean() 方法的强制转换规则
 
 这个方法的规则是：除了 undefined、 null、 false、 ''、 0（包括 +0，-0）、 NaN 转换出来是 false，其他都是 true。
 
-这个规则应该很好理解，没有那么多条条框框，我们还是通过代码来形成认知，如下所示。
+例如：
 
 ```js
 Boolean(0)          //false
@@ -202,14 +229,10 @@ Boolean(13)         //true
 Boolean('12')       //true
 ```
 
-其余的 parseInt()、parseFloat()、toString()、String() 这几个方法，你可以按照我的方式去整理一下规则，在这里不占过多篇幅了。
-
 隐式类型转换
-凡是通过逻辑运算符 (&&、 ||、 !)、运算符 (+、-、*、/)、关系操作符 (>、 <、 <= 、>=)、相等运算符 (==) 或者 if/while 条件的操作，如果遇到两个数据类型不一样的情况，都会出现隐式类型转换。这里你需要重点关注一下，因为比较隐蔽，特别容易让人忽视。
+凡是通过逻辑运算符 (&&、 ||、 !)、运算符 (+、-、*、/)、关系操作符 (>、 <、 <= 、>=)、相等运算符 (==) 或者 if/while 条件的操作，如果遇到两个数据类型不一样的情况，都会出现隐式类型转换。
 
-下面着重讲解一下日常用得比较多的“==”和“+”这两个符号的隐式转换规则。
-
-'==' 的隐式类型转换规则
+**'==' 的隐式类型转换规则**
 
 如果类型相同，无须进行类型转换；
 
@@ -217,20 +240,20 @@ Boolean('12')       //true
 
 如果其中一个是 Symbol 类型，那么返回 false；
 
-两个操作值如果为 string 和 number 类型，那么就会将字符串转换为 number；
+两个操作值如果为 string 和 number 类型，那么就会将字符串转换为 number；不能转换为number的则为false
 
 如果一个操作值是 boolean，那么转换成 number；
 
 如果一个操作值为 object 且另一方为 string、number 或者 symbol，就会把 object 转为原始类型再进行判断（调用 object 的 valueOf/toString 方法进行转换）。
 
 ```js
-null == undefined       // true  规则2
-null == 0               // false 规则2
-'' == null              // false 规则2
-'' == 0                 // true  规则4 字符串转隐式转换成Number之后再对比
-'123' == 123            // true  规则4 字符串转隐式转换成Number之后再对比
-0 == false              // true  e规则 布尔型隐式转换成Number之后再对比
-1 == true               // true  e规则 布尔型隐式转换成Number之后再对比
+null == undefined       // true  
+null == 0               // false 
+'' == null              // false
+'' == 0                 // true  字符串转隐式转换成Number之后再对比
+'123' == 123            // true  字符串转隐式转换成Number之后再对比
+0 == false              // true  布尔型隐式转换成Number之后再对比
+1 == true               // true  布尔型隐式转换成Number之后再对比
 var a = {
   value: 0,
   valueOf: function() {
@@ -239,21 +262,19 @@ var a = {
   }
 };
 // 注意这里a又可以等于1、2、3
-console.log(a == 1 && a == 2 && a ==3);  //true f规则 Object隐式转换
-// 注：但是执行过3遍之后，再重新执行a==3或之前的数字就是false，因为value已经加上去了，这里需要注意一下
+console.log(a == 1 && a == 2 && a ==3);  //true Object隐式转换
+// 注：但是执行过3遍之后，再重新执行a==3或之前的数字就是false，因为value已经加上去了
 ```
 
-对照着这个规则看完上面的代码和注解之后，你可以再回过头做一下我在讲解“数据类型转换”之前的那 12 道题目，是不是就很容易解决了？
-
-'+' 的隐式类型转换规则
+**'+' 的隐式类型转换规则**
 
 '+' 号操作符，不仅可以用作数字相加，还可以用作字符串拼接。仅当 '+' 号两边都是数字时，进行的是加法运算；如果两边都是字符串，则直接拼接，无须进行隐式类型转换。
 
 除了上述比较常规的情况外，还有一些特殊的规则，如下所示。
 
-如果其中有一个是字符串，另外一个是 undefined、null 或布尔型，则调用 toString() 方法进行字符串拼接；如果是纯对象、数组、正则等，则默认调用对象的转换方法会存在优先级（下一讲会专门介绍），然后再进行拼接。
+如果其中有一个是字符串，另外一个是 undefined、null 或布尔型，则调用 toString() 方法进行字符串拼接；如果是纯对象、数组、正则等，则默认调用对象的转换方法会存在优先级，然后再进行拼接。
 
-如果其中有一个是数字，另外一个是 undefined、null、布尔型或数字，则会将其转换成数字进行加法运算，对象的情况还是参考上一条规则。
+如果其中有一个是数字，另外一个是 undefined、null、布尔型或数字，则会将其转换成数字进行加法运算
 
 如果其中一个是字符串、一个是数字，则按照字符串规则进行拼接。
 
@@ -274,11 +295,9 @@ console.log(a == 1 && a == 2 && a ==3);  //true f规则 Object隐式转换
 '1' + 3           // '13' 规则3，字符串拼接
 ```
 
-整体来看，如果数据中有字符串，JavaScript 类型转换还是更倾向于转换成字符串，因为第三条规则中可以看到，在字符串和数字相加的过程中最后返回的还是字符串，这里需要关注一下。
+整体来看，如果数据中有字符串，JavaScript 类型转换还是更倾向于转换成字符串
 
-了解了 '+' 的转换规则后，我们最后再看一下 Object 的转换规则。
-
-Object 的转换规则
+**Object 的转换规则**
 
 对象转换的规则，会先调用内置的 [ToPrimitive] 函数，其规则逻辑如下：
 
@@ -290,7 +309,7 @@ Object 的转换规则
 
 如果都没有返回基础类型，会报错。
 
-直接理解有些晦涩，还是直接来看代码，你也可以在控制台自己敲一遍来加深印象。
+例如：
 
 ```js
 var obj = {
@@ -309,10 +328,12 @@ console.log(obj + 1); // 输出5
 // 因为有Symbol.toPrimitive，就优先执行这个；如果Symbol.toPrimitive这段代码删掉，则执行valueOf打印结果为3；如果valueOf也去掉，则调用toString返回'31'(字符串拼接)
 // 再看两个特殊的case：
 10 + {}
-// "10[object Object]"，注意：{}会默认调用valueOf是{}，不是基础类型继续转换，调用toString，返回结果"[object Object]"，于是和10进行'+'运算，按照字符串拼接规则来，参考'+'的规则C
+// "10[object Object]"，注意：{}会默认调用valueOf是{}，不是基础类型继续转换，调用toString，返回结果"[object Object]"，于是和10进行'+'运算，按照字符串拼接规则来
 [1,2,undefined,4,5] + 10
-// "1,2,,4,510"，注意[1,2,undefined,4,5]会默认先调用valueOf结果还是这个数组，不是基础数据类型继续转换，也还是调用toString，返回"1,2,,4,5"，然后再和10进行运算，还是按照字符串拼接规则，参考'+'的第3条规则
+// "1,2,,4,510"，注意[1,2,undefined,4,5]会默认先调用valueOf结果还是这个数组，不是基础数据类型继续转换，也还是调用toString，返回"1,2,,4,5"，然后再和10进行运算，还是按照字符串拼接规则
 ```
+
+
 
 # 深浅拷贝
 
