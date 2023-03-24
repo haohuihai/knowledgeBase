@@ -10,7 +10,7 @@
 
 # windows查看端口号
 
-```shell
+```
   # 查看端口的使用情况
   netstat -aon|findstr 8080
   #根据端口对应的pid删除端口的进场
