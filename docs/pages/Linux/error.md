@@ -27,3 +27,32 @@ fileformat=dos 或 fileformat=unix
 
 最后再执行文件 
 #sh>./filename 
+
+![image-20230404163523962](images/image-20230404163523962.png)
+
+1、启动FirewallD服务命令：
+
+systemctl start firewalld.service #开启服务
+systemctl enable firewalld.service #设置开机启动
+2、查看FirewallD防火墙状态：
+
+systemctl status firewalld
+3、现在防火墙 FirewallD 就已经正常运行了
+
+
+
+![image-20230404163723850](images/image-20230404163723850.png) 
+
+想知道更多FirewallD知识请参考：https://www.fujieace.com/firewalld/
+
+![image-20230404163752439](images/image-20230404163752439.png)
+
+
+
+![image-20230404163817342](images/image-20230404163817342.png) 
+
+
+
+
+
+# [Linux 指令篇](https://blog.csdn.net/hu1656/article/details/106086041)
