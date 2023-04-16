@@ -1,5 +1,4 @@
 const path = require('path')
-
 /**
  * @type {import('@vuepress/types').Theme<import('@vuepress/types').DefaultThemeConfig>}
  */
@@ -28,7 +27,7 @@ module.exports = (options, ctx) => {
     plugins: [
       ['@vuepress/active-header-links', options.activeHeaderLinks],
       '@vuepress/search',
-      '@vuepress/plugin-nprogress',
+      '@vuepress/back-to-top',
       ['container', {
         type: 'tip',
         defaultTitle: {

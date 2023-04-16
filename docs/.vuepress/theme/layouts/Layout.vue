@@ -27,6 +27,7 @@
         <slot name="sidebar-bottom" />
       </template>
     </Sidebar>
+    
     <Home v-if="$page.frontmatter.home" />
     <!-- 主页展示区 -->
     <Page
@@ -49,6 +50,8 @@ import Navbar from '@theme/components/Navbar.vue'
 import Page from '@theme/components/Page.vue'
 import Sidebar from '@theme/components/Sidebar.vue'
 import { resolveSidebarItems } from '../util'
+import IndexPost from './IndexPost.vue'
+import Post from './Post.vue'
 
 export default {
   name: 'Layout',
@@ -57,8 +60,10 @@ export default {
     Home,
     Page,
     Sidebar,
-    Navbar
-  },
+    Navbar,
+    Post,
+    IndexPost
+},
 
   data () {
     return {

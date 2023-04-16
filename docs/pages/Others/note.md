@@ -16,3 +16,7 @@
   #根据端口对应的pid删除端口的进场
   taskkill /T /F /PID 12484
 ```
+
+VS code
+
+# VSCode 同时选中多个相同字符 编辑Ctrl+D,Ctrl+Shift+L

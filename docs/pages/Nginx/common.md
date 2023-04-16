@@ -10,4 +10,10 @@ PATH=$PATH:/usr/local/nginx/sbin
 刷新profile  source /etc/profile
 
 
+firewall-cmd --permanent --zone=public --add-port=8080/tcp
+firewall-cmd --permanent --zone=public --list-ports
+firewall-cmd --permanent --zone=public --add-port=80/tcp
+ firewall-cmd --permanent --zone=public --list-ports
+
+firewall-cmd --reload
 

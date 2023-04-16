@@ -16,6 +16,7 @@ module.exports = {
     // 主题配置
     logo: "/images/logo.jpeg",
     sidebarDepth: 0,
+    searchMaxSuggestions: 10,
     nav: [
       // 头部导航
       { text: "官网", link: "http://www.haohuihai.top" },
@@ -276,6 +277,25 @@ module.exports = {
         ]
       }
     ],
+    lastUpdated: '最后更新时间',
   },
+  plugins: [
+    '@vuepress/plugin-nprogress',
+    [
+      '@vuepress/blog',
+      {
+        directories: [
+          {
+            // 当前分类的唯一 ID
+            id: 'post',
+            // 目标文件夹
+            dirname: '_posts',
+            // `entry page` (或者 `list page`) 的路径
+            path: '/post',
+          },
+        ],
+      },
+    ],
+  ],
 
 };
