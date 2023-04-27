@@ -174,9 +174,7 @@ https://blog.csdn.net/lijie0213/article/details/124521239
   + 不要出现node关键字
   + 建议以 '-' 分割单词
 
-## 案例
-
-1. 案例1：编写一个简单的函数, 实现数字相加
+1. 案例：编写一个简单的函数, 实现数字相加
 
 ```javascript
 var n = 10;
@@ -193,7 +191,7 @@ console.log('计算结果是：' + result);
 
 
 
-2. 案例2：编写一个输出'三角形'的程序
+2. 案例：编写一个输出'三角形'的程序
 
 ```javascript
 // process 对象是一个 global （全局变量），提供有关信息，控制当前 Node.js 进程。
@@ -209,11 +207,7 @@ for (var i = 0; i < 10; i++) {
 }
 ```
 
-
-
-
-
-3. 案例3：文件读写案例（带同学们打开官方文档查阅）
+3. 案例：文件读写案例（带同学们打开官方文档查阅）
 
   - 使用到的模块`var fs = require('fs');`
 
@@ -363,7 +357,7 @@ fs.mkdir('./04-其他资料');
 3. 不要使用 `fs.exists(path, callback)` 来判断文件是否存在，直接判断 error 即可
 4. 文件操作时的路径问题
 
-  - 在读写文件的时候 './' 表示的是当前执行node命令的那个路径，不是被执行的js文件的路径
+  - 在读写文件的时候 `./`表示的是当前执行node命令的那个路径，不是被执行的`js`文件的路径
   - __dirname, 表示的永远是"当前被执行的js的目录"
   - __filename, 表示的是"被执行的js的文件名（含路径)"
 
@@ -675,8 +669,6 @@ server.listen(9000, function () {
 
 ```
 
-
-
 ## Common System Errors - 常见错误号
 
 - EACCES (Permission denied)
@@ -922,7 +914,7 @@ Node在加载模块的时候会优先去缓存里面查找，如果找不到，�
 
 ## 系统模块
 
-### nvm（Node Version Manager）
+### nvm
 
 nvm (Linux、Unix、OS X)
 
@@ -1062,8 +1054,6 @@ Node.js 目前支持的编码如下：
 6. hex
 
   - 用两位 16 进制来表示每个字节
-
-
 
 示例代码：
 
