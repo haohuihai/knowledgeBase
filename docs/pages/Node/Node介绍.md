@@ -127,17 +127,91 @@ npm config set cache "node_cache的绝对路径"
 
 ![image-20230406215154764](images/image-20230406215154764.png) 
 
-测试：
+## Linux安装Node
 
-安装express
+基于centos7的安装
+
+下载软件，我一般是放到opt目录下的，所以在本次安装时，下载的目录是`/opt/node/`
+
+下载
+
+```shell
+wget https://nodejs.org/dist/v16.18.1/node-v16.18.1-linux-x64.tar.xz
+```
+
+我们可以到这个文件下面找我们想要版本的包
+
+```shell
+https://nodejs.org/dist/
+```
+
+在这个目录下进行解压
+
+```shell
+tar -xvf node-v16.18.1-linux-x64.tar.xz
+```
+
+创建软连接
+
+```shell
+ln -s /opt/node/node-v16.18.1-linux-x64/bin/node /usr/local/bin/
+ln -s /opt/node/node-v16.18.1-linux-x64/bin/npm /usr/local/bin/
+```
+
+验证：
+
+```shell
+node -v
+npm -v
+```
+
+提示：
+
+`/usr/bin`中装的是系统预装的可执行程序 
+`/usr/local/bin`中是用户放置自己的可执行程序的地方
+
+有人说测试`npm`失败的话要修改配置文件，目前我没有失败，上面就没有修改配置文件的那一步
+
+```shell
+vi /etc/profile
+
+NODE_HOME=/opt/node/node-v16.18.1-linux-x64
+PATH=$NODE_HOME/bin:$PATH
+export NODE_HOME PATH
+```
+
+上面编辑完，让配置文件生效
+
+```shell
+source /etc/profile
+```
+
+如果软链接建立失败，我们去创建软链接的目录下查看以下`ls`
+
+![image-20230322102331770](./images/image-20230322102331770.png) 
+
+会发现创建软链接的那个名称是红色的
+
+使用`ll`进行查看
+
+![image-20230322102431337](./images/image-20230322102431337.png) 
+
+可以看到路径不对，
+
+所以在创建软链接的时候，我们需要使用绝对路径，如上面创建的过程，而不能进入某个目录下，使用相对路径
+
+最后下面的指令都能通过
+
+```shell
+node -v
+npm -v
+```
+
+测试安装express
 
 ```
 npm install express -g
 ```
-
-然后去node_global和node_cache文件夹里面，就能看到有我们安装的依赖包
-
-至此，window中安装Node就已完成
 
 参考资源：
 https://blog.csdn.net/lijie0213/article/details/124521239
@@ -162,7 +236,15 @@ https://blog.csdn.net/lijie0213/article/details/124521239
 
   + 按住 control 键不要放开, 然后按两下 c 键
 
+node.js 的主要依赖的模块：
 
+V8 引擎：主要是 JS 语法的解析，有了它才能识别 JS语法
+
+libuv: c 语⾔实现的⼀个⾼性能异步⾮阻塞 IO 库，⽤来实现 node.js 的事件循环
+
+http-parser/llhttp: 底层处理 http 请求，处理报⽂，解析请求包等内容
+
+openssl: 处理加密算法，各种框架运⽤⼴泛 
 
 
 ## 创建 JavaScript 文件编写程序
@@ -189,7 +271,7 @@ var result = add(m, n);
 console.log('计算结果是：' + result);
 ```
 
-
+执行脚本： `node  filename.js`
 
 2. 案例：编写一个输出'三角形'的程序
 
@@ -710,9 +792,78 @@ server.listen(9000, function () {
 1. 设置 `Content-Type: application/octet-stream`
 2. 设置 `Content-Disposition: attachment; filename=demo.txt`
 
+## NodeJS: Global
+
+ 在交互模式下，声明的变量和创建的函数都是全局对象下的，可以使用global来访问，例如 var a=1;  global.a
+
+ 在脚本模式下，文件中声明的变量和创建的函数不是全局对象下的，不能使用global来访问
+
+ **JS: window**
+
+ 在浏览器下，文件中声明的变量和创建的函数是全局对象下的，可以使用window来访问，例如 `var a=1; window.a`
+
+### console对象
+
+```
+global.console.log() 打印日志
+
+global.console.info()  打印消息
+
+global.console.warn()  打印警告
+
+global.console.error()  打印错误
+
+global.console.time('自定义字符串');  开始计时
+
+global.console.timeEnd('自定义字符串');  结束计时
+```
+
+### 全局函数
+
+`parseInt/parseFloat/encodeURI/decodeURI/isNaN/ isFinite/eval`
+
+定时器 `let timer = setTimeout(callback, time)`、`let timer = setInterval(callback, time)`
+
+清除定时器  `clearTimeout(timer)`、`clearInterval(timer)`
+
+立即执行定时器： `process.nextTick(回调函数)`
+
+看下列的执行顺序：
+
+```js
+setTimeout(() => {
+    console.log('setTimeout')
+},0)
+//立即执行定时器
+//后执行
+console.log('1212')
+var timer=setImmediate(()=>{
+    console.log('立即执行');
+});
+//先执行
+process.nextTick(()=>{
+    console.log('tick');
+});
+console.log('33333')
+
+
+结果：
+1212
+33333
+tick
+setTimeout
+立即执行
+```
+
+
+
+
+
 # 模块
 
 介绍Node的模块时，我们先介绍一下Commonjs规范，这两者是不可分割的，不管缺少哪一个，就不能实现模块的引入；
+
+ 在NodeJS下分为自定义模块、核心模块(官方提供)、第三方模块
 
 ## CommonJS规范
 
@@ -916,11 +1067,14 @@ Node在加载模块的时候会优先去缓存里面查找，如果找不到，�
 
 ### nvm
 
+nvm 的全称就是 node version manager，意思就是能够管理 node 版本的⼀个⼯具，它提供了⼀种直接通过shell 执⾏的⽅式来进⾏安装。简单来说，就是通过将多个 node 版本安装在指定路径，然后通过 nvm 命令切换时，就会切换我们环境变量中 node 命令指定的实际⾏的软件路径。
+
 nvm (Linux、Unix、OS X)
 
   + https://github.com/creationix/nvm
   + 常用命令：
     - nvm install node （安装最新版本的node）
+    - nvm ls available (查看node版本)
     - nvm use node （使用指定版本的node）
 
 
@@ -936,10 +1090,6 @@ nvm-windows (Windows)
     - nvm use 版本号
 
 ### Buffer
-
-思考：Buffer 类型产生的原因？主要用来解决什么问题？
-
-看一下什么是 Buffer? 什么是 Stream?
 
 
 一、类型介绍
@@ -971,6 +1121,18 @@ var buf = Buffer.from('你好世界！ Hello World!~');
 console.log(buf);
 console.log(buf.toString());
 
+// 1.3 通过Buffer.alloc创建一个Buffer
+var buf=Buffer.alloc(5, 'abcde');
+ // 将buffer数据转为普通字符串
+buf.toString()
+
+// 创建两个buffer区域，分别存储两个数字，计算两个数字相加。
+var buf1=Buffer.alloc(2,'12');
+var buf2=Buffer.alloc(1,'5');
+console.log(buf1,buf2);
+var num1=buf1.toString();
+var num2=buf2.toString();
+console.log(Number(num1)+Number(num2));
 ```
 
 
@@ -996,9 +1158,10 @@ console.log(len);
 
 ```javascript
 // Buffer.isBuffer(obj)
-// obj <Object>
-// Returns: <boolean>
-// Returns true if obj is a Buffer, false otherwise.
+
+obj <Object>
+Returns: <boolean>
+Returns true if obj is a Buffer, false otherwise.
 
 ```
 
@@ -1007,6 +1170,7 @@ console.log(len);
 
 ```javascript
 // 根据索引获取 Buffer 中的某个字节（byte、octet）
+
 // buf[index]
 
 ```
@@ -1018,8 +1182,6 @@ console.log(len);
 // buf.length
 // 注意：length 属性不可修改
 ```
-
-
 
 7. 已过时的 API
 
@@ -1035,25 +1197,20 @@ new Buffer(string[, encoding])
 
 
 
-
 三、Buffer 对象与编码
 
 Node.js 目前支持的编码如下：
 
 1. ascii
 2. utf8
-3. utf16le
-
-  - ucs2 是 utf16le 的别名 
+3. utf16le （ucs2 是 utf16le 的别名 ）
 
 4. base64
-5. latin1
-
-  - binary 是 latin1 的别名
+5. latin1 （binary 是 latin1 的别名）
 
 6. hex
 
-  - 用两位 16 进制来表示每个字节
+> 用两位 16 进制来表示每个字节
 
 示例代码：
 
@@ -1065,15 +1222,380 @@ console.log(buf.toString('base64'));
 console.log(buf.toString('utf8'));
 ```
 
-
-
-
-
-四、思考：为什么会有 Buffer 类型？
+**总结：**
 
 1. Buffer 使用来临时存储一些数据（二进制数据）
 2. 当我们要把一大块数据从一个地方传输到另外一个地方的时候可以通过 Buffer 对象进行传输
 3. 通过 Buffer 每次可以传输小部分数据，直到所有数据都传输完毕。
+
+### fs
+
+用于操作服务器的文件(目录)，创建目录、删除目录、读取目录、创建文件、删除文件、写入文件....
+
+ (1)创建目录
+
+```js
+fs.mkdir(path, callback)
+fs.mkdirSync(path)
+```
+
+ (2)移除目录
+
+```js
+fs.rmdir(path, callback)
+```
+
+ (3)读取目录
+
+ ```js
+fs.readdir(path, callback)  —— 异步
+fs.readdirSync(path)    —— 同步
+ ```
+
+> 1. 同步会阻止后续代码的执行，只有执行完以后才会执行后续代码；是通过返回值来获取结果；
+> 2. 异步不会阻止后续代码的执行，在整个程序的最后执行，是通过回调函数来获取结果。常用于一些比较耗时的操作。
+
+ (4)写入文件
+
+```js
+fs.writeFile(path, data, callback)
+```
+
+如果文件不存在，则会创建文件，然后写入数据；如果文件已经存在，则会清空文件的内容，然后写入
+
+> callback的格式
+
+```js
+(err, result) => {
+
+}
+```
+
+ (5)删除文件
+
+```js
+fs.unlink(path, callback)/unlinkSync(path)
+```
+
+ (6)判断文件是否存在
+
+```js
+fs.existsSync(path)
+```
+
+ (7)追加写入数据
+
+```js
+fs.appendFile(path,data,callback)
+
+fs.appendFileSync(path,data)
+```
+
+  如果文件不存在会创建文件，如果文件已经存在，会在末尾追加写入数据。
+
+ (4)读取文件
+
+```js
+fs.readFile(path, callback)/fs.readFileSync(path)
+
+// 读取的数据格式为buffer
+```
+
+### querystring
+
+```js
+const querystring=require('querystring');
+```
+
+查询字符串：浏览器向服务器发送请求，传递数据的一种方式
+
+协议，域名(IP)，端口；比如
+
+` http://www.baidu.com:880/map.html?lid=5&name=dell`
+
+`parse() ` 将查询字符串解析为对象
+
+`stringify()  `将对象转为查询字符串
+
+```js
+//引入查询字符串模块
+const querystring=require('querystring');
+var str='lid=5&name=dell';
+//使用查询字符串模块解析为对象
+var obj=querystring.parse(str);
+console.log(obj);
+// {
+// 	lid:5,
+// 	name:dell
+// }
+
+var emp={
+  eid:1,
+  ename:'tom',
+  salary:8000
+}
+//将对象转为查询字符串，为了将数据发送给服务器端
+var str2=querystring.stringify(emp);
+console.log(str2);
+// 'eid=1&ename=tom&salary=8000'
+
+var str3='ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=电脑';
+var obj3=querystring.parse(str3);
+console.log(obj3);
+{
+  ie: 'utf-8',
+  f: '8',
+  rsv_bp: '0',
+  rsv_idx: '1',
+  tn: 'baidu',
+  wd: '电脑'
+}
+
+```
+
+### URl
+
+parse()  将URL解析为对象
+
+protocol  协议
+
+hostname  主机(域名/ip地址)
+
+port  端口
+
+pathname  文件在服务器上的路径
+
+query 查询字符串
+
+format()  将对象转换成url
+
+query属性对应的是对象格式
+
+```js
+//引入url模块
+const url=require('url');
+var str='http://www.codeboy.com:80/web1811/index.html?name=tom&id=23';
+//将url解析为对象
+var obj=url.parse(str);
+console.log(obj);
+//协议，主机，端口，文件路径，查询字符串
+var obj2={
+    protocol:'http',
+    hostname:'www.codeboy.com',
+    port:80,
+    pathname:'/web1811/index.html',
+    query:{name:'tom',id:23} //使用对象
+}
+
+//将对象转换成url
+var str2=url.format(obj2);
+console.log(str2);
+// http://www.codeboy.com:80/web1811/index.html?name=tom&id=23
+```
+
+
+
+```js
+//引入url模块
+const url=require('url');
+//引入查询字符串模块
+const querystring=require('querystring');
+var str='https://www.tmooc.cn:3000/course/web.html?cname=js&price=5000';
+//先获取到查询字符串
+var obj=url.parse(str);
+var query=obj.query;
+//从查询字符串中获取数据
+var obj2=querystring.parse(query);
+console.log(obj2);
+// { cname: 'js', price: '5000' }
+```
+
+### http协议
+
+ 是浏览器和web服务器之间的通信协议
+
+ (1)通用头信息
+
+  Request URL: 请求的URL，向服务器端获取的内容
+
+  Request Method: 请求的方法  常用的有 get/post  get获取内容，post常用于向服务器端传递安全较高数据
+
+  Status Code: 响应的状态码
+
+  ```
+2**: 服务器成功的响应
+
+3**: 响应的重定向，跳转到另一个URL
+
+4**: 客户端错误
+
+5**: 服务器错误
+  ```
+
+  Remote Address: 请求的服务器的IP地址和端口号
+
+ (2)响应头信息
+
+  Connection: keep-alive; 连接的方式：持续连接
+
+  Content-Type: 响应的文件类型
+
+  Transfer-Encoding: 响应时的传输方式，chunked（分段传输）
+
+ (3)请求头信息
+
+  Accpet: 客户端接受的文件类型有哪些
+
+  Connection: 客户端和服务器端的连接方式
+
+  User-Agent: 客户端使用的浏览器
+
+ (4)请求主体
+
+  可有可无，浏览器端向服务器端传递的数据
+
+**http模块**
+
+ 可以模拟浏览器向服务器端发送请求；也可以创建web服务器
+
+ (1)模拟浏览器
+
+```
+ http.get( url, callback ) 
+ url 请求的url 
+ callback  是回调函数，用来获取服务器端的响应  
+ res 响应的对象  
+ res.statusCode  响应的状态码  
+ res.on('data', (buf)=>{    
+ 通过事件来获取服务器端响应的数据，当有数据传递的时候，自动调用回调函数，把数据放入到buf中，格式为buffer  
+ })
+```
+
+```JS
+const http=require('http');
+http.get('http://www.weather.com.cn/data/sk/101010100.html',(res)=>{
+    console.log(res);
+    console.log(res.statusCode);
+    res.on('data',(buf)=>{
+        console.log(buf.toString());
+    });
+});
+```
+
+ (2)创建web服务器
+
+```
+ var server=http.createServer()  //创建web服务器 
+ server.listen(3000)  //分配端口，监听3000端口的变化 
+ server.on('request', (req,res)=>{   }) 
+ 接收浏览器的请求，是事件的形式，一旦有请求，自动执行  
+ req  请求的对象   
+ url 请求的URL，用于告诉服务器要获取的内容   
+ method  请求的方法，直接在地址栏输入默认都是get   
+ headers  请求的头信息  
+ res 响应的对象   
+ writeHead(状态码, { }) 设置响应的状态码和头信息；如果要跳转需要设置Location属性。  
+ write() 将响应的数据发送到浏览器中   
+ end() 结束响应 
+```
+
+```JS
+const http=require('http');
+//创建web服务器
+var server=http.createServer();
+//监听端口
+server.listen(3000);
+//接收浏览器的请求
+server.on('request',(req,res)=>{
+  //根据请求的URL，来获取响应的内容
+  var url=req.url;
+  console.log(url);
+  switch(url){
+    case '/login':
+	  res.write('this is login page');
+	  break;
+	case '/member':
+      res.write('this is member page');
+	  break;
+	case '/':
+	  res.writeHead(302,{
+	    Location:'/member'
+	  });
+	  break;
+	default:
+      res.write('404 not founbd');
+  }
+  //以上所有的响应，最终都需要结束响应
+  res.end();
+});
+```
+
+### process
+
+```
+process.arch  查看当前CPU的架构  X64
+
+process.platform  查看当前的操作系统  win32
+
+process.env  查看当前的环境变量有哪些
+
+process.version  查看当前nodejs的版本号
+
+process.pid 查看当前的进程编号
+
+process.kill(编号)  杀死某个编号的进程
+```
+
+3. **child_process**
+
+https://zhuanlan.zhihu.com/p/36678971
+
+### path路径系统，
+
+能够处理路径之间的问题
+
+### os操作系统层
+
+例如告诉你当前系统类型及⼀些参数
+
+### crypto加密模块，
+
+能够以标准的加密⽅式对我们的内容进⾏加解密
+
+### 其他模块
+
+ 在NodeJS下，一个文件就是一个模块，文件中的代码默认是被一个构造函数所包含。文件中的函数和变量都不能被直接使用
+
+下面的代码都是NodeJS自动为每个文件添加的
+
+```js
+(function(exports,require,module,__filename,__dirname){ 程序编写的代码})
+```
+
+**__filename** 当前文件的完整路径和文件名称
+
+**__dirname** 当前文件的完整路径
+
+**require** 是一个函数，用于引入模块  `require('./index.js')`
+
+**module** 指代当前的模块 module.exports  当前模块导出的对象（公开的内容），可以供其它的模块使用的属性和方法。
+
+**exports** 等价于module.exports
+
+|          | 以路径开头                                                   | 不以路径开头                                                 |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 文件模块 | require('./circle.js')常用于用户自定义模块，如果后缀名是js是可以省略的 | require('url')常用于引入官方提供的核心模块                   |
+| 目录模块 | require('./Animal')会在当前目录下的Animal中寻找package.json文件中的main属性对应的值，如果不存在该文件，则自动寻找index.js | require('Animal')要求引入的目录出现在node_modules中，如果找不到，则会到上一级目录查找，直到顶层。常用于第三方模块。 |
+
+## 第三方模块
+
+安装方式：
+
+```js
+npm install package
+```
+
+
 
 # 资源
 
