@@ -50,7 +50,7 @@
     </div>
 
     <Content class="theme-default-content custom" />
-
+    
     <div
       v-if="data.footer"
       class="footer"
@@ -63,6 +63,7 @@
       slot-key="footer"
       class="footer"
     />
+    <Content slot-key="doclist" />
   </main>
 </template>
 

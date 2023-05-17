@@ -101,7 +101,7 @@ module.exports = {
       {
         title: "Git",
         collapsable: true,
-        path: "../pages/Git/note",
+        path: "../pages/Git/git",
       },
       {
         title: "Docker",
@@ -154,12 +154,12 @@ module.exports = {
         collapsable: true,
         children: [
           {
-            title: "Node基本",
-            path: "../pages/Node/note",
+            title: "Node由浅入深",
+            path: "../pages/Node/node",
           },
           {
-            title: 'Node搭建服务器',
-            path: '../pages/Node/note1'
+            title: 'Express搭建后端服务',
+            path: '../pages/Node/server'
           },
         ],
       },

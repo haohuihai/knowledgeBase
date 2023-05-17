@@ -40,17 +40,17 @@ service nginx restart
 
 我们安装完Nginx，会有一个默认的Nginx地址，位置在/etc/nginx下面，可以看到下面都存在什么
 
-![image-20230405102629661](images/image-20230405102629661.png) 
+![image-20230405102629661](./images/image-20230405102629661.png) 
 
 我们还存在另外一个目录在/usr/share/nginx/html下面，看看他存在什么
 
-![image-20230405103000486](images/image-20230405103000486.png) 
+![image-20230405103000486](./images/image-20230405103000486.png) 
 
 而日志，默认在 /var/log/nginx，下面去看看
 
 /var/log是系统默认的日志输出的地方，nginx下代表nginx的日志输出的地方
 
-![image-20230405103153206](images/image-20230405103153206.png) 
+![image-20230405103153206](./images/image-20230405103153206.png) 
 
 nginx下有两个日志，分别代码成功和错误的日志，当我们程序正常，去请求内容的时候会走access.log，当程序出现错误，或请求出现意外，会走error.log的内容
 

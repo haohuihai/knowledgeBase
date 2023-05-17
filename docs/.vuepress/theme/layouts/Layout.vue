@@ -15,6 +15,7 @@
       class="sidebar-mask"
       @click="toggleSidebar(false)"
     />
+    
     <!-- 主页侧边栏 -->
     <Sidebar
       :items="sidebarItems"
@@ -41,6 +42,7 @@
         <slot name="page-bottom" />
       </template>
     </Page>
+    <Content slot-key="doclist" />
   </div>
 </template>
 

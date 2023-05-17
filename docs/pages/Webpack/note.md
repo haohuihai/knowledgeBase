@@ -1,4 +1,4 @@
-![image-20230308215948868](images/image-20230308215948868.png) 
+![image-20230308215948868](./images/image-20230308215948868.png) 
 
 导出
 
@@ -11,7 +11,7 @@ export { XXX }
 
 `browser-sync . --files **/*.js`
 
- ![image-20230308220233167](images/image-20230308220233167.png) 
+ ![image-20230308220233167](./images/image-20230308220233167.png) 
 
 可以重命名
 
@@ -161,7 +161,7 @@ writeFileSync("./bar.txt",es module working~')
 
 **Node中使用CommonJS交互**
 
-![image-20230308231442189](images/image-20230308231442189.png) 
+![image-20230308231442189](./images/image-20230308231442189.png) 
 
 ES Module 中可以导入 CommonJS 模块
 CommonJS 中不能导入 ES Module 模块
@@ -170,7 +170,7 @@ CommonJS 始终只会导出一个默认成员
 
 **使用ES Module时在代码中不能找到全局变量的解决办法**
 
-![image-20230308231855996](images/image-20230308231855996.png)
+![image-20230308231855996](./images/image-20230308231855996.png)
 
 **Node版本升级**
 
@@ -202,9 +202,9 @@ yarn babel-node 要执行的文件
 
 如果出现报错，需要转换代码中的新特性，则需要安装插件来转换
 
-![image-20230308235819522](images/image-20230308235819522.png) 
+![image-20230308235819522](./images/image-20230308235819522.png) 
 
-![image-20230308235836057](images/image-20230308235836057.png) 
+![image-20230308235836057](./images/image-20230308235836057.png) 
 
 preset-env是所有ES6的新特性
 

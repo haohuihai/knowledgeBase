@@ -239,7 +239,7 @@ https://zhuanlan.zhihu.com/p/108445764#:~:text=Win10%E8%87%AA%E5%B8%A6%E7%9A%84s
 
 1. 进入控制台；找到服务器，创建一个密钥，之后会返回一个.pem的文件，而这个pem的文件就是服务器返回的私钥，我这里下载的名为test_login.pem
 
-![image-20230204225752717](images/image-20230204225752717.png) 
+![image-20230204225752717](./images/image-20230204225752717.png) 
 
 2. 尝试windows登录服务，进入window的终端
 
@@ -247,7 +247,7 @@ https://zhuanlan.zhihu.com/p/108445764#:~:text=Win10%E8%87%AA%E5%B8%A6%E7%9A%84s
 ssh root@ip -i ./test_login.pem
 ```
 
-![image-20230204230011703](images/image-20230204230011703.png) 
+![image-20230204230011703](./images/image-20230204230011703.png) 
 
 以上表示登录成功
 
@@ -259,9 +259,9 @@ ssh root@ip -i ./test_login.pem
 
 登录成功会有提示
 
-![image-20230204232240055](images/image-20230204232240055.png) 
+![image-20230204232240055](./images/image-20230204232240055.png) 
 
-![image-20230204232327022](images/image-20230204232327022.png) 
+![image-20230204232327022](./images/image-20230204232327022.png) 
 
 使用ssh任然需要密码的问题
 
@@ -329,7 +329,7 @@ where.is   软件名
 
 ## SCP的使用
 
-![image-20230205074549790](images/image-20230205074549790.png) 
+![image-20230205074549790](./images/image-20230205074549790.png) 
 
 使用circleci自动部署前端是在circleci服务上构建好，然后通过将文件上传到服务器上的一种方法
 

@@ -1,8 +1,271 @@
+
+::: slot doclist
+[[toc]]
+:::
+
+# express框架
+
+ 基于NodeJS，用于构建web服务器的框架。
+
+ 官网：www.expressjs.com.cn
+
+ 安装：`npm  install  express`
+
+```js
+const express=require('express');
+//引入下载的模块 
+var server=express();  
+//创建web服务器 
+server.listen(3000); 
+//监听3000端口
+```
+
+### 路由
+
+  浏览器向web服务器发送请求，web服务器会根据请求的URL和请求的方法来做出响应
+
+`  res.send() `
+
+ 响应文本，每个路由中只能使用一次send，路由里面如果不写，页面请求将一直是挂起状态
+
+```JS
+//引入第三方模块express
+const express=require('express');
+//创建web服务器
+var app=express();
+//监听端口
+app.listen(3000);
+
+//路由
+//使用get方法获取url为/login的内容
+//get:请求的方法，可以使用post等...
+//第1个参数：请求的url
+//第2个参数：响应的内容
+app.get('/login',(req,res)=>{
+  console.log('获取了login的请求');
+  //res是响应的对象
+  res.send('这是登录的页面');
+});
+```
+
+ (1)响应对象——res
+
+` res.send()` 发送文本，只能响应一次；如果是数字会认为是状态码
+
+` res.sendFile()` 发送文件到浏览器，必须使用绝对路径`(__dirname) `
+
+` res.redirect()`  响应的重定向(跳转)
+
+ (2)请求对象(req)
+
+`  req.method ` 获取请求的方法
+
+` req.url`  获取请求的url
+
+ `req.headers`获取请求的头信息
+
+`req.query` 获取请求时，以查询字符串传递数据，返回对象
+
+ `req.params`获取路由传递的数据，返回对象
+
+(3)post和get请求
+
+ get请求以查询字符串形式传递数据，服务器使用req.query获取数据，结果是对象；
+
+ post请求是通过表单提交方法传递数据，服务器端通过事件形式来获取数据(后期会有简单方法)
+
+```js
+req.on('data', (buf)=>{ 
+    获取的结果是buffer数据，转成普通字符串后变成了查询字符串，需要使用查询字符串模块解析为对象
+});
+```
+
+示例：
+
+```js
+//创建web服务器
+const express=require('express');
+var server=express();
+server.listen(3000);
+//通过表单传递数据到服务器端
+//请求方法：get，请求的url：/login
+server.get('/login',(req,res)=>{
+    //发送文件mylogin.html到浏览器
+    res.sendFile(__dirname+'/mylogin.html');
+});
+//根据表单中请求来写对应的路由
+//请求方法：get，请求的url：/mylogin
+server.get('/mylogin',(req,res)=>{
+    //获取get方法请求的数据————查询字符串
+    res.send('登录成功，用户名：'+req.query.uname);
+});
+//请求方法：post，请求url：/myreg
+server.post('/myreg',(req,res)=>{
+  //获取post请求的数据
+  //以事件的形式，如果有数据传递自动执行
+  req.on('data',(buf)=>{
+	//buf，服务器端获取的数据为buffer
+	//转换成普通字符串后为  查询字符串
+	//将查询字符串解析为对象
+    var str=buf.toString();
+	var obj=querystring.parse(str);
+  });
+  res.send('注册成功');
+});
+
+//请求方法：get，请求的url：/detail
+// :lid接收浏览器传递数据，名称为lid
+server.get('/detail/:lid',(req,res)=>{
+    //获取浏览器端传递的数据
+    console.log(req.params);
+    res.send('这是商品详情');
+});
+// /shopping/500/dell
+server.get('/shopping/:price/:title',(req,res)=>{
+    console.log(req.params);
+});
+```
+
+(4)使用路由传递数据——路由传参
+
+ 设置路由中接收
+
+```js
+server.get('/detail/:lid', (req,res)=>{  
+    // :lid 设置数据的名称  req.params  //获取路由传递的数据，格式为对象 
+})
+```
+
+ 浏览器传递数据：` http://127.0.0.1:3000/detail/5`
+
+### 路由器
+
+ 路由在使用过程中，不同的模块可能出现相同的URL，把同一个模块下的所有路由挂载到特定的前缀。
+
+ 例如：商品模块下的路由挂载到product，访问形式/product/list，用户模块下的路由挂载到user，访问形式/user/list
+
+ 路由器就是自定义模块(js文件)，把同一个模块下的路由放到一起。
+
+```JS
+const express=require('express');
+var router=express.Router();  //创建空的路由器对象
+router.get('/list', (req,res)=>{}); //往路由器中添加路由
+module.exports=router; //导出路由器
+```
+
+ 在web服务器下使用路由器
+
+```JS
+const productRouter=require('./product.js');
+//引入路由器模块
+server.use('/product', productRouter);
+//把路由器挂载到 /product下，访问形式 /product/list
+```
+
+### 中间件
+
+ 中间件的作用为主要的业务逻辑所服务
+
+ 分为应用级中间件、路由级中间件、内置中间件、第三方中间件、错误级中间件
+
+ (1)应用级中间件
+
+  每一个中间件就是调用一个函数，需要配合其他的中间件或者路由使用
+
+`  server.use( callback )`  拦截所有的路由
+
+ `server.use( '/reg', callback );`拦截特定的路由
+
+```JS
+const express=require('express');
+var server=express();
+server.listen(3000);
+
+//中间件
+server.use((req,res,next)=>{
+    console.log('验证了数据');
+    //res.send('验证未通过');
+    //下一步:调用下一个中间件或者进行主要业务逻辑
+    next();
+});
+//路由
+server.get('/reg',(req,res,next)=>{
+    res.send('注册成功');
+    //调用后边的中间件
+    next();
+});
+//添加路由  get  /detail
+server.get('/detail',(req,res,next)=>{
+    res.send('这是详情');
+    next();
+});
+//中间件
+server.use((req,res)=>{
+    console.log('记录了日志');
+});
+let num=0;
+server.use('/view',(req,res,next)=>{
+    num++;//数字加1
+    //num的数据类型是非数字，++会转为数值型
+    next();
+});
+```
+
+ (2)内置中间件
+
+```js
+server.use(express.static('目录'))
+```
+
+  把静态资源文件托管到某一个目录，如果浏览器请求静态资源，则自动到这个目录下查找。
+
+```js
+const express=require('express');
+var server=express();
+server.listen(3000);
+//托管静态资源(html,css,js,图像...)到public目录下，如果浏览器请求静态资源，自动就会到public下寻找
+server.use(express.static('./public/'));
+
+```
+
+(3).第三方中间件body-parser
+
+ 可以将post请求的数据解析为对象
+
+```js
+const bodyParser=require('body-parser');
+server.use(bodyParser.urlencoded({ extended:false}));
+urlencoded  将post请求的数据解析为对象
+extended:false  不适用第三方的qs模块，而是使用核心模块querystring将数据解析为对象
+```
+
+```js
+const express=require('express');
+//引入body-parser中间件
+const bodyParser=require('body-parser');
+var server=express();
+server.listen(3000);
+//托管静态资源到public
+server.use(express.static('./public'));
+//使用body-parser中间件，将post请求的数据解析为对象
+//extended 是否要使用扩展qs模块解析为对象
+//如果是false，不使用qs，而去使用querystring模块 
+server.use(bodyParser.urlencoded({
+    extended:false
+}));
+//路由
+server.post('/mylogin',(req,res)=>{
+    //获取post请求的数据，前提需要配置好中间件
+    console.log(req.body);
+    res.send('登录成功');
+});
+```
+
 # Node搭建后台服务器
 
 使用express搭建简单的后台服务器
 
-## 文件大致的框架
+## 目录框架
 
 > server
 >
@@ -73,7 +336,6 @@ app.listen(config.serverOptions.port,()=>{//监听端口号
 routes.js路由层的配置
 
 ```javascript
-
 //导入路由控制器层
 let routesController = require(__basename + '/routesController/routesController.js');
 module.exports = (app) => {
@@ -85,7 +347,6 @@ module.exports = (app) => {
 routesController.js控制器层的配置
 
 ```javascript
-
 //routesController.js
 class RoutesController {
     register(req,res){
@@ -151,7 +412,6 @@ exports.mysqlOptions = {
 根据下面方式进行连接
 
 ```javascript
-
 //导入sequelize模块
 let Sequelize = require('sequelize');
 
@@ -283,7 +543,6 @@ global.Model = require(__basename + '/db/model/model.js');
 ```
 
 随便找一个jquery.js文件，并引入到这个html里面
-
 
 
 

@@ -28,7 +28,7 @@ fileformat=dos 或 fileformat=unix
 最后再执行文件 
 #sh>./filename 
 
-![image-20230404163523962](images/image-20230404163523962.png)
+![image-20230404163523962](./images/image-20230404163523962.png)
 
 1、启动FirewallD服务命令：
 
@@ -41,15 +41,15 @@ systemctl status firewalld
 
 
 
-![image-20230404163723850](images/image-20230404163723850.png) 
+![image-20230404163723850](./images/image-20230404163723850.png) 
 
 想知道更多FirewallD知识请参考：https://www.fujieace.com/firewalld/
 
-![image-20230404163752439](images/image-20230404163752439.png)
+![image-20230404163752439](./images/image-20230404163752439.png)
 
 
 
-![image-20230404163817342](images/image-20230404163817342.png) 
+![image-20230404163817342](./images/image-20230404163817342.png) 
 
 
 

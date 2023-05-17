@@ -200,3 +200,21 @@ th, td
       padding-left 0
 
 @require 'mobile.styl'
+@media (max-width: ($MQMobile + 1px))
+  .content__doclist
+    display none
+@media (max-width: 1300px)
+  .content__doclist
+    display none
+
+.content__doclist
+  position fixed
+  top: 80px
+  right: 0
+  width: 300px
+  overflow-x: overlay
+  max-height: calc(100vh - 200px);
+  overflow-y: overlay;
+  .table-of-contents li
+    list-style: none;
+    

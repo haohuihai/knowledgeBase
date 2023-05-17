@@ -11,10 +11,12 @@
     "@vuepress/plugin-back-to-top": "^1.9.9",
     "@vuepress/plugin-blog": "^1.9.4",
     "@vuepress/plugin-nprogress": "^1.9.9",
+    "@vuepress/plugin-register-components": "^1.9.9",
     "@vuepress/plugin-toc": "^2.0.0-beta.61",
     "vuepress": "^1.9.7"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "vuepress-theme-reco": "^1.6.17"
   }
 }
