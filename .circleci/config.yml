@@ -13,22 +13,22 @@ jobs:
       - checkout
       - run: echo "A first hello"
       - run: yarn -v
-      - restore_cache:
-          keys:
-            - dependencies_circle_demo
+      # - restore_cache:
+      #     keys:
+      #       - dependencies_circle_demo
       - run:
           name: Install
           command: yarn
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies_circle_demo
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: dependencies_circle_demo
       - run: 
           name: Build
           command: yarn build
-      - run:
-          name: Prepare shell commands
-          command: chmod +x deploy.sh
+      # - run:
+      #     name: Prepare shell commands
+      #     command: chmod +x deploy.sh
       - run:
           name: Run Deploy to Github pages
           command: ./deploy.sh
