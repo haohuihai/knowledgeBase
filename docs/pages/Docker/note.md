@@ -72,7 +72,7 @@ ssh -V
 
 检查ssh的状态
 
-```shel
+```shell
 systemctl status sshd.service
 ```
 
