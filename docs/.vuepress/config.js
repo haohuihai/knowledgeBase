@@ -212,18 +212,51 @@ module.exports = {
         children: [
           {
             title: "Vue2",
-            path: "../pages/Vue/vueComponent",
+            path: "../pages/Vue/vue2",
           },
           {
             title: "Vue3",
-            path: "../pages/Vue/vue3Base",
+            path: "../pages/Vue/vue3",
+          },
+          {
+            title: "vue-router",
+            path: "../pages/Vue/vueRouter",
+          },
+          {
+            title: "vuex",
+            path: "../pages/Vue/vuex",
           },
         ],
       },
       {
         title: "React",
         collapsable: true,
-        path: '../pages/React/base',
+        children: [
+          {
+            title: "React 学习之初",
+            path: "../pages/React/before",
+          },
+          {
+            title: "React Hooks",
+            path: "../pages/React/hooks",
+          },
+          {
+            title: "React 类",
+            path: "../pages/React/class",
+          },
+          {
+            title: "React Redux",
+            path: "../pages/React/redux",
+          },
+          {
+            title: "React 事件",
+            path: "../pages/React/event",
+          },
+          {
+            title: "React 学习之后",
+            path: "../pages/React/after",
+          }
+        ],
       },
       {
         title: "Swagger",
@@ -273,6 +306,15 @@ module.exports = {
           {
             title: "other",
             path: "../pages/Others/note",
+          }
+        ]
+      },
+      {
+        title: "计算机基础",
+        children: [
+          {
+            title: "other",
+            path: "../pages/computer/note",
           }
         ]
       }
