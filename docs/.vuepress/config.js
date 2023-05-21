@@ -19,16 +19,9 @@ module.exports = {
     searchMaxSuggestions: 10,
     nav: [
       // 头部导航
-      { text: "官网", link: "http://www.haohuihai.top" },
-      { text: "谷粒学院", link: "http://www.gulixueyuan.com/" },
-      {
-        text: "学习路线",
-        items: [
-          { text: "前端", link: "http://www.atguigu.com/web/" },
-          { text: "Java", link: "http://www.atguigu.com/kecheng.shtml" },
-          { text: "大数据", link: "http://www.atguigu.com/bigdata/" },
-        ],
-      },
+      { text: "webpack", link: "https://www.webpackjs.com/" },
+      { text: "React", link: "https://react.dev/" },
+      { text: "Vue", link: "https://vue3js.cn/" }
     ],
     sidebar: [
       // 左侧导航

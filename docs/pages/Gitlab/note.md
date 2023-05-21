@@ -715,11 +715,11 @@ ssh -T  是添加公钥之后进行验证的操作
 
 但是我重新使用ssh拉取代码的时候。发现这个地址变了
 
- ssh://git@101.132.124.188:8022/haohuihai/ceshi.git
+ ssh://git@xxx.xxx.xxx.xxx:8022/haohuihai/ceshi.git
 
 之前是
 
-git@101.132.124.188:8022/haohuihai/ceshi.git
+git@xxx.xxx.xxx.xxx:8022/haohuihai/ceshi.git
 
 居然可以了。想不到
 
@@ -793,7 +793,7 @@ https://blog.csdn.net/m0_46090675/article/details/120853935/
 
 # gitlab帮助
 
-http://101.132.124.188:8090/help/gitlab-basics/README.md
+http://xxx.xxx.xxx.xxx:8090/help/gitlab-basics/README.md
 
 # 翻译的gitlab-ci.yml的配置文件
 
@@ -873,7 +873,7 @@ pages:
     - master
 ```
 
-[更多参考](http://101.132.124.188:8090/help/user/project/pages/index.md)
+[更多参考](http://xxx.xxx.xxx.xxx:8090/help/user/project/pages/index.md)
 
 #### stages
 

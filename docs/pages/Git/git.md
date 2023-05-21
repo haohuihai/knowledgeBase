@@ -825,7 +825,7 @@ git remote set-url origin git@email:username/ProjectName.git
 
 ## 问题
 
-拉去失败时
+拉取失败时
 
 解决方法
 
@@ -851,3 +851,41 @@ git remote set-url origin git@email:username/ProjectName.git
 5 然后将你复制的内容粘贴到key中
 
 仍然在bash.exe中输入ssh -T [git@github.com然后会跳出一堆内容你只需输入yes回车就完事了，然后他会提示你成功了。](mailto:git@github.com然后会跳出一堆内容你只需输入yes回车就完事了，然后他会提示你成功了。)
+
+### 代码提交
+
+在main分支上合并是文档主代码，在gh-pages上进行构建
+
+以后提交代码都提交到main上，或者新开分支，合并到main上
+
+### 一些提交命令
+git回退到某个commit
+
+git reset --hard HEAD^ 回退到上个版本  ^代表前一个，^^代表前两个 一次类推
+
+
+git reset --hard commit_id 退到/进到 指定的commit
+
+git push origin HEAD -- force 强退至远程
+
+git回退到某个commit 推送远程
+
+1.先查询对应的提交历史，使用如下命令：
+
+git log --pretty=oneline
+
+2、版本回退，使用如下命令：
+
+git reset --soft commitID //只删除commitID之后的提交记录log，代码的改动还在。
+
+git reset --hard commitID //彻底删除commitID之后所做的改动，代码也一起回退回来了。
+
+(慎重用，用前最好备份一下代码，或者用git diff 生成一个patch)
+
+3.把当前分支push到远程仓库并且让远程仓库和当前分支保持一致,使用如下命令(假定当前分支为master)：
+
+git push -f origin master
+
+在github设置上面，得设置页面展示分支，也就是构建好之后的分支，在构建的时候默认会创建一个预览的分支，选中创建好的那个预览分支就可以了
+
+
