@@ -2,7 +2,7 @@
 [[toc]]
 :::
 
-Axios的详细使用方法在https://www.axios-http.cn/
+Axios的详细使用方法https://www.axios-http.cn/
 
 这里介绍一下Axios的使用方法，然后通过这些方法来写Axios源码
 Axios可以使用在node和浏览器
@@ -274,8 +274,6 @@ axios.get('/foo/bar', {
 // 取消请求
 controller.abort()
 ```
-
-
 
 # 源码开始
 
@@ -800,5 +798,54 @@ cancel()
 
 ### 11. 如何取消已经发送的请求?
 
+```
+1. 当配置了cancelToken对象时, 保存cancel函数
 
+(1) 创建一个用于将来中断请求的cancelPromise
+
+(2) 并定义了一个用于取消请求的cancel函数
+
+(3) 将cancel函数传递出来
+
+2. 调用cancel()取消请求
+
+(1) 执行cacel函数, 传入错误信息message
+
+(2) 内部会让cancelPromise变为成功, 且成功的值为一个Cancel对象
+
+(3) 在cancelPromise的成功回调中中断请求, 并让发请求的proimse失败, 失败的reason为Cancel对象
+
+ 
+```
+
+**axios的请求/响应数据转换器是什么?**
+
+1. 请求转换器: 对请求头和请求体数据进行特定处理的函数
+
+```js
+if (utils.isObject(data)) {
+  setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+  return JSON.stringify(data);
+}
+```
+
+2. 响应转换器: 将响应体json字符串解析为js对象或数组的函数
+
+```js
+response.data = JSON.parse(response.data)
+```
+
+**axios.create(config)**
+
+```
+1. 根据指定配置创建一个新的axios, 也就就每个新axios都有自己的配置
+
+2. 新axios只是没有取消请求和批量发请求的方法, 其它所有语法都是一致的
+
+3. 为什么要设计这个语法?
+
+(1) 需求: 项目中有部分接口需要的配置与另一部分接口需要的配置不太一样, 如何处理
+
+(2) 解决: 创建2个新axios, 每个都有自己特有的配置, 分别应用到不同要求的接口请求中
+```
 

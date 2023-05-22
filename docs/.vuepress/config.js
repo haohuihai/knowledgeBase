@@ -275,7 +275,7 @@ module.exports = {
           },
           {
             title: "浏览器原理基本知识",
-            path: "../pages/Chrome/note1",
+            path: "../pages/Chrome/note2",
           },
         ],
       },

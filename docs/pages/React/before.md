@@ -178,3 +178,38 @@ function Profile() {
 
 组件会在我们不确定的情况下重新渲染，我们输入相同的数据，他总会得到相同的结果，但是存在另外的干扰因素，会导致我们的页面出现意想不到的bug。即变化的都应该是我们所操作的结果；
 
+# state
+
+当我们在一个组件里面定义普通变量时：
+
+1. **局部变量无法在多次渲染中持久保存。** 当 React 再次渲染这个组件时，它会从头开始渲染——不会考虑之前对局部变量的任何更改。
+2. **更改局部变量不会触发渲染。** React 没有意识到它需要使用新数据再次渲染组件
+
+如果我们需要更新数据后渲染页面，则需要使用到`state`，有以下原因：
+
+1. 每次组件渲染后，总是能保留渲染之间的数据
+2. 修改`state`变量时，可以触发组件重新渲染
+
+以下时使用`state`的方法
+
+```js
+const [index, setIndex] = useState(0)
+```
+
+在这里，`useState`总是返回两项，变量和修改变量值的方法名
+
+> **以 `use` 开头的函数——只能在组件或[自定义 Hook](https://react.docschina.org/learn/reusing-logic-with-custom-hooks) 的最顶层调用**
+
+你不能在条件语句、循环语句或其他嵌套函数内调用 Hook
+
+为什么时`state`，上面已说，初始化和更新`state`时发生了什么？
+
+```js
+const [index, setIndex] = useState(0)
+```
+
+1. **组件进行第一次渲染。** 因为你将 `0` 作为 `index` 的初始值传递给 `useState`，它将返回 `[0, setIndex]`。 React 记住 `0` 是最新的 state 值。
+
+2. **更新了 state**。当用户点击按钮时，它会调用 `setIndex(index + 1)`。 `index` 是 `0`，所以它是 `setIndex(1)`。这告诉 React 现在记住 `index` 是 `1` 并触发下一次渲染。
+
+3. **组件进行第二次渲染**。React 仍然看到 `useState(0)`，但是因为 React *记住* 了你将 `index` 设置为了 `1`，它将返回 `[1, setIndex]`。
