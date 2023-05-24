@@ -8,7 +8,7 @@ tags:
 [[toc]]
 :::
 
-#### 样式表书写位置
+## 样式表书写位置
 
 1. 内嵌样式
 
@@ -32,17 +32,17 @@ tags:
 <div style="width: 200px"></div>
 ```
 
-### 选择器
+## 选择器
 
-选择器 {属性:值； 属性:值;}
+### 基础选择器
 
-#### 基础选择器
+**类型选择器：**
 
-**标签选择器：**
+```
+元素 { 属性：值;}
+```
 
-标签{属性：值;}
-
-特点：标签选择器定义之后，会将页面所有的元素都执行这个标签样式。
+特点：类型选择器定义之后，会将页面所有的元素都执行这个类型样式。
 
 ```css
 div {}
@@ -50,15 +50,20 @@ div {}
 
 **类选择器：**
 
-.名称{属性:值;}
+```
+.类名{ 属性: 值;}
+```
 
-一个标签可以调用多个类选择器。
+一个元素可以调用多个类选择器。
 
-多个标签可以调用同一个类选择器。
+多个元素可以调用同一个类选择器。
 
 ```css
 .box {
-	color:red
+	color: red;
+}
+.box1 {
+    font-size: 18px;
 }
 ```
 
@@ -82,23 +87,27 @@ div {}
 
 **通配符选择器：**
 
-`* {属性:值}`
+```
+* { 属性: 值; }
+```
 
 给所有的标签都使用相同的样式。
 
 ```css
 * {
-	box-boxing: 
+	box-boxing: box-content;
 }
 ```
 
-#### 复合选择器
+### 复合选择器
 
 两个或者两个以上的基础选择器通过不同的方式连接在一起
 
-交集选择器：
+**交集选择器：**
 
-标签+类（ID）选择器{属性：值；}
+```
+类型 + 类 / （ID）选择器  { 属性：值；}
+```
 
 即要满足使用了某个标签，还要满足使用了类（id）选择器。
 
@@ -118,7 +127,9 @@ div #box {
 
 **后代选择器：**
 
-选择器+空格+选择器{属性：值;}
+```
+选择器 + 空格 + 选择器 { 属性：值;}
+```
 
 后代选择器首选要满足包含（嵌套）关系。
 
@@ -128,9 +139,23 @@ div #box {
 
 只要能代表标签，标签、类选择器、ID选择器自由组合。
 
+```html
+<div>
+	<span>你好啊</span>
+</div>
+```
+
+```css
+div span {
+    color: red;
+}
+```
+
 **子代选择器：**
 
-选择器>选择器{属性:值;}
+```
+选择器 > 选择器{ 属性: 值;}
+```
 
 选中直接下一代元素。
 
@@ -143,7 +168,7 @@ p > span {
 }
 ```
 
-```
+```html
 <div>
 	<p><span>p下的span</span></p>
 	<span>div下的span</span>
@@ -152,42 +177,121 @@ p > span {
 
 **并集选择器：**
 
-选择器+，+选择器+，选择器{属性:值;}
+```
+选择器，选择器，选择器 { 属性: 值;}
+```
 
-#### 属性选择器
+通过`,`分隔的选择器，每一个选择器都会适配对应的样式
 
-| 选择器        | 含义                                |
-| ------------- | ----------------------------------- |
-| E[attr]       | 存在attr属性即可                    |
-| E[attr=val]   | 属性值完全等于val                   |
-| E[attr\*=val] | 属性值里包含val字符并且在“任意”位置 |
-| E[attr^=val]  | 属性值里包含val字符并且在“开始”位置 |
-| E[attr$=val]  | 属性值里包含val字符并且在“结束”位置 |
+```html
+<div class="one">
+   你好啊
+</div>
+<div class="two">
+    我很好
+</div>
+```
 
-#### 伪类
+```css
+.one, .two {
+    color: red;
+}
+```
 
-除了以前学过的:link、:active、:visited、:hover，CSS3又新增了其它的伪类选择器。
+`one `和`two`类的文本都会变为红色
+
+通用兄弟
+
+匹配不行相邻的的兄弟元素
+
+```css
+h1 ~ p {
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    padding: .5em;
+}
+```
+
+```html
+<article>
+    <h1>A heading</h1>
+    <p>I am a paragraph.</p>
+    <div>I am a div</div>
+    <p>I am another paragraph.</p>
+</article>
+    
+```
+
+上述的结果是`p`元素都会被选中
+
+### 属性选择器
+
+```html
+<a href="www.baidu.coom"></a>
+<div class="two hellow"></div>
+```
+
+| 选择器        | 示例                | 含义                                |
+| ------------- | ------------------- | ----------------------------------- |
+| E[attr]       | a[href]             | 存在attr属性即可                    |
+| E[attr=val]   | a[href="xxx"]       | 属性值完全等于val                   |
+| E[attr\*=val] | div[class="two"]    | 属性值里包含val字符                 |
+| E[attr^=val]  | div[class="two"]    | 属性值里包含val字符并且在“开始”位置 |
+| E[attr$=val]  | div[class="hellow"] | 属性值里包含val字符并且在“结束”位置 |
+
+**大小写敏感**
+
+如果你想在大小写不敏感的情况下，匹配属性值的话，你可以在闭合括号之前，使用`i`值
+
+```html
+<ul>
+    <li class="a">Item 1</li>
+    <li class="A">Item 2</li>
+    <li class="Ab">Item 3</li>
+</ul>
+```
+
+```css
+li[class^="a" i] {
+    color: red;
+}
+```
+
+以上写法均匹配到了`li`元素
+
+### 伪类
+
+伪类是选择器的一种，它用于选择处于特定状态的元素，比如当它们是这一类型的第一个元素时，或者是当鼠标指针悬浮在元素上面的时候，伪类就是开头为冒号的关键字：
+
+```css
+:hover {}
+```
+
+除了以前学过的:link、:active、:visited、:hoverd等用户行为类，CSS3又新增了其它的伪类选择器。
 
 1、结构(位置)伪类
 
 以某元素（E）相对于其父元素或兄弟元素的位置来获取无素；
 
-| 选择器                | 含义                            |
-| --------------------- | ------------------------------- |
-| E:first-child         | 其父元素的第1个子元素           |
-| E:last-child          | 其父元素的最后1个子元素         |
-| E:nth-child(n)        | 其父元素的第n个子元素           |
-| E:nth-last-child(n)   | 其父元素的第n个子元素（倒着数） |
-| E:root                | 文档的根元素                    |
-| E:empty               | 无子元素的元素                  |
-| E:first-letter        | 元素的首字母                    |
-| E:first-line          | 元素的首行                      |
-| E:only-child          | 父元素仅有该元素的元素          |
-| E:nth-of-type(n)      | 标签中指定顺序索引的标签        |
-| E:nth-last-of-type(n) | 标签中指定逆序索引的标签        |
-| E:first-of-type       | 标签中为首的标签                |
-| E:last-of-type        | 标签中为尾标签                  |
-| E:only-of-type        | 元素仅有该标签的标签            |
+| 选择器                | 含义                                     |
+| --------------------- | ---------------------------------------- |
+| E:first-child         | 其父元素的第1个子元素                    |
+| E:last-child          | 其父元素的最后1个子元素                  |
+| E:nth-child(n)        | 其父元素的第n个子元素                    |
+| E:nth-last-child(n)   | 其父元素的第n个子元素（倒着数，从1开始） |
+| E:root                | 文档的根元素                             |
+| E:empty               | 无子元素的元素                           |
+| E:first-letter        | 元素的首字母                             |
+| E:first-line          | 元素的首行                               |
+| E:first               | 匹配分页媒体的第一页。                   |
+| E:left                | 在分页媒体中，匹配左手边的页             |
+| E:only-child          | 父元素仅有该元素的元素                   |
+| E:nth-of-type(n)      | 标签中指定顺序索引的标签                 |
+| E:nth-last-of-type(n) | 标签中指定逆序索引的标签                 |
+| E:first-of-type       | 标签中为首的标签                         |
+| E:last-of-type        | 标签中为尾标签                           |
+| E:only-of-type        | 元素仅有该标签的标签                     |
 
 n遵循线性变化，其取值0、1、2、3、4、... 
 
@@ -195,63 +299,96 @@ n可是多种形式：nth-child(2n+0)、nth-child(2n+1)、nth-child(-1n+3)等；
 
 > 指E元素的父元素，并对应位置的子元素必须是E
 
-目标伪类
+2、目标伪类
 
-E:target 结合锚点进行使用，处于当前锚点的元素会被选中；
+`E:target `结合锚点进行使用，处于当前锚点的元素会被选中；
 
-排除伪类
+3、排除伪类
 
-E:not(selector) 除selector（任意选择器）外的元素会被选中；
+`E:not(selector) ` 除selector（任意选择器）外的元素会被选中；
 
-#### 伪元素
+### 伪元素
 
-1、E::first-letter文本的第一个单词或字（如中文、日文、韩文等）
+伪元素开头为双冒号`::`
 
-2、E::first-line 文本第一行；
+```
+::before
+```
 
-3、E::selection 可改变选中文本的样式；
+1、`E::first-letter`文本的第一个单词或字（如中文、日文、韩文等）
 
-4、E::before和E::after
+2、`E::first-line` 文本第一行；
 
-在E元素内部的开始位置和结束位创建一个元素，该元素为行内元素，且必须要结合content属性使用。
+3、`E::selection` 匹配文档中被选择的那部分
 
-E:after、E:before 在旧版本里是伪元素，CSS3的规范里“:”用来表示伪类，“::”用来表示伪元素，但是在高版本浏览器下E:after、E:before会被自动识别为E::after、E::before，这样做的目的是用来做兼容处理。
+4、`E::before`和`E::after`
 
-#### 状态伪类
+`E:after`、`E:before `在旧版本里是伪元素，CSS3的规范里“:”用来表示伪类，“::”用来表示伪元素，但是在高版本浏览器下`E:after`、`E:before`会被自动识别`E::after`、`E::before`，这样做的目的是用来做兼容处理。他们和`content`属性一起使用
 
-| 选择器         | 描述                   |
-| -------------- | ---------------------- |
-| E:target       | 当前锚点的元素         |
-| E:read-write   | 可读可写的表单元素     |
-| E:blank        | 输入为空的表单元素     |
-| E:current()    | 浏览中的元素           |
-| E:link         | 未访问的链接元素       |
-| E:visited      | 已访问的链接元素       |
-| E:focus        | 输入聚焦的表单元素     |
-| E:required     | 输入必填的表单元素     |
-| E:valid        | 输入合法的表单元素     |
-| E:invalid      | 输入非法的表单元素     |
-| E:in-range     | 输入范围以内的表单元素 |
-| E:out-of-range | 输入范围以外的表单元素 |
-| E:checked      | 选项选中的表单元素     |
-| E:optional     | 选项可选的表单元素     |
-| E:enabled      | 事件启用的表单元素     |
-| E:disabled     | 事件禁用的表单元素     |
-| E:read-only    | 只读的表单元素         |
-| E:past()       | 已浏览的元素           |
-| E:future()     | 未浏览的元素           |
+```html
+<p class="box">Content in the box in my HTML page.</p>
+```
 
-#### 条件伪类
+```css
+.box::after {
+    content: " ➥";
+}
+```
 
-| 选择器   | 描述                           |
-| -------- | ------------------------------ |
-| E:lang() | 基于元素语言来匹配页面元素     |
-| E:dir()  | 匹配特定文字书写方向的元素     |
-| E:has()  | 匹配包含指定元素的元素         |
-| E:is()   | 匹配指定选择器列表里的元素     |
-| E:not()  | 用来匹配不符合一组选择器的元素 |
+组合伪类和伪元素
 
-### 文本元素
+```html
+<article>
+    <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo
+            melon azuki bean garlic.</p>
+
+    <p>Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean collard
+            greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</p>
+</article>
+```
+
+```css
+article p:first-child::first-line {
+  font-size: 120%;
+  font-weight: bold;
+}
+```
+
+上述结果是加粗第一段第一行
+
+**伪类列表**
+
+| 选择器         | 描述                               |
+| -------------- | ---------------------------------- |
+| E:target       | 当前锚点的元素                     |
+| E:read-write   | 可读可写的表单元素                 |
+| E:blank        | 输入为空的表单元素                 |
+| E:current()    | 匹配正在展示的元素，或者其上级元素 |
+| E:link         | 未访问的链接元素                   |
+| E:visited      | 已访问的链接元素                   |
+| E:focus        | 输入聚焦的表单元素                 |
+| E:required     | 输入必填的表单元素                 |
+| E:valid        | 输入合法的表单元素                 |
+| E:invalid      | 输入非法的表单元素                 |
+| E:in-range     | 输入范围以内的表单元素             |
+| E:out-of-range | 输入范围以外的表单元素             |
+| E:checked      | 选项选中的表单元素                 |
+| E:optional     | 选项可选的表单元素                 |
+| E:enabled      | 事件启用的表单元素                 |
+| E:disabled     | 事件禁用的表单元素                 |
+| E:read-only    | 匹配用户不可更改的元素             |
+| E:read-write   | 匹配用户可更改的元素               |
+| E:past()       | 已浏览的元素                       |
+| E:future()     | 未浏览的元素                       |
+| E:playing      | 匹配播放时的媒体资源               |
+| E:paused       | 匹配正在暂停的媒体资源             |
+| E:lang()       | 基于元素语言来匹配页面元素         |
+| E:dir()        | 匹配特定文字书写方向的元素         |
+| E:has()        | 匹配包含指定元素的元素             |
+| E:is()         | 匹配指定选择器列表里的任何元素     |
+| E:not()        | 用来匹配不符合一组选择器的元素     |
+
+## 文本元素
 
 属性：
 
@@ -392,9 +529,7 @@ vertical-align 不影响块级元素中的内容对齐，它只针对于**行内
 
 ![image-20230220220302512](./images/image-20230220220302512.png) 
 
-
-
-### 颜色
+## 颜色
 
 **颜色的显示方式：**
 
@@ -436,7 +571,7 @@ RGBA、HSLA可应用于所有使用颜色的地方。
 
 2 、transparent 不可调节透明度，始终完全透明
 
-### 盒子模型
+## 盒子模型
 
 所谓盒子模型就是把HTML页面中的元素看作是一个矩形的盒子，也就是一个盛装内容的容器。每个矩形都由元素的内容、内边距（padding）、边框（border）和外边距（margin）组成。
 
@@ -454,9 +589,7 @@ CSS3中可以通过box-sizing 来指定盒模型，即可指定为content-box、
 
 css中盒子模型由三部分组成: 边框（border） 内边距（padding） 外边距（margin） 
 
-
-
-**边框**  border
+## 边框
 
 ```css
 border-top-style:  solid  实线 
@@ -572,9 +705,9 @@ margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 
 标准流：块级元素纵向有序排列，行内块（行内）元素横向有序排列
 
-### 浮动
+## 浮动
 
-语法：float:left  |  right
+语s法：float:left  |  right
 
 设置了浮动的元素，脱离标准流
 
@@ -634,7 +767,7 @@ margin: 20px  30px  40px  50px; 上20px  右30px  下40px  左50px
 
 
 
-**Overflow**
+## **Overflow**
 
 overflow 属性规定当内容溢出元素框时发生的事情。
 
@@ -645,7 +778,7 @@ overflow 属性规定当内容溢出元素框时发生的事情。
 | overflow: scroll  | 内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。 |
 | overflow: auto    | 如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。 |
 
-### 定位
+## 定位
 
 定位是通过定位模式 + 偏移量使得本应该在标准流当中的盒子发生位置上的变化
 
@@ -724,7 +857,7 @@ vertical-align:middle  常与 display:inline-block 配合使用， 表格对此�
 
 ![image-20220624230535041](./images/image-20220624230535041.png) 
 
-### 可见性
+## 可见性
 
 | 属性               | **作用**         |
 | ------------------ | ---------------- |
@@ -750,7 +883,7 @@ visibility: hidden;    元素隐藏占位置
 
 使用padding撑开盒子，overflow：hidden 移除内容
 
-### 鼠标样式
+## 鼠标样式
 
 设置或检索在对象上移动的鼠标指针采用何种系统预定义的光标形状。
 
@@ -762,71 +895,7 @@ visibility: hidden;    元素隐藏占位置
 | **text**        | 文本       |
 | **not-allowed** | 禁止       |
 
-### 边框
-
-#### 边框圆角
-
-border-radius
-
-圆角处理时，脑中要形成圆、圆心、横轴、纵轴的概念，正圆是椭圆的一种特殊情况。
-
-分别设置横纵轴半径，以“/”进行分隔，遵循“1，2，3，4”规则，“/”前面的1~4个用来设置横轴半径（分别对应横轴1、2、3、4位置 ），“/”后面1~4个参数用来设置纵轴半径（分别对应纵轴1、2、3、4位置 ）。
-
-支持简写模式，具体如下：
-
-1、border-radius: 10px; 表示四个角的横纵轴半径都为10px；
-
-2、border-radius: 10px 5px; 表示1和3角横纵轴半径都为10px，2和4角横纵轴半径为5px；
-
-3、border-radius: 10px 5px 8px; 表示1角模纵轴半径都为10px，2和4角横纵轴半径都为8px，3角的横纵轴半径都为8px；
-
-4、border-radius: 10px 8px 6px 4px; 表示1角横纵轴半径都为10px，表示2角横纵轴半径都为8px，表示3角横纵轴半径都为6px，表示4角横纵轴半径都为6px；
-
-#### 边框阴影
-
-box-shadow
-
-与文字阴影类似，可分别设置盒子阴影偏移量、模糊度、颜色（可设透明度）。
-
-如box-shadow: 5px 5px 5px #CCC
-
-1、水平偏移量 正值向右 负值向左；
-
-2、垂直偏移量 正值向下 负值向上；
-
-3、模糊度是不能为负值；
-
-4、inset可以设置内阴影；
-
-> 设置边框阴影不会改变盒子的大小，即不会影响其兄弟元素的布局。可以设置多重边框阴影，实现更好的效果，增强立体感，符合渐进增强
-
-#### 边框图片
-
-border-image
-
-设置的图片将会被“切割”成九宫格形式，然后进行设置。
-
-最少“4刀”便可以将一个图片切成9部分，“切割”完成后生成虚拟的9块图形，
-
-将一个盒子想象是由9部分组成的，分别是左上角、上边框、右上角、右边框、右下角、下边框、左下角、左边框、中间，那么浏览器会将切割好的9张虚拟图片分别对应到盒子的各个部分上。
-
-其中四个角位置、形状保持不变，中心位置水平垂直两个方向平铺或拉伸，
-
-```
-border-image-source 指定图片路径
-
-border-image-repeat    指定裁切好的虚拟图片的平铺方式
-
-a) round会自动调整尺寸，完整显示边框图片
-
-b) repeat 单纯平铺,多余部分，会被“裁切”而不能完整显示。
-
-3border-image-slice
-
-4border-image-width
-```
-
-### 轮廓线 outline
+## 轮廓线 outline
 
  是绘制于元素周围的一条线，位于边框边缘的外围，可起到突出元素的作用。 
 
@@ -834,15 +903,13 @@ b) repeat 单纯平铺,多余部分，会被“裁切”而不能完整显示。
  outline : outline-color ||outline-style || outline-width 
 ```
 
- 但是我们都不关心可以设置多少，我们平时都是去掉的。 li  
+ 但是我们都不关心可以设置多少，我们平时都是去掉的。
 
-最直接的写法是 ：  outline: 0;   或者  outline: none;
+最直接的写法是 ： `outline: 0; `  或者  `outline: none;`
 
 ```html
  <input  type="text"  style="outline: 0;"/>
 ```
-
-
 
 **CSS 精灵工作原理**
 CSS 精灵其实是将网页中的一些背景图像整合到一张大图中（精灵图）。然而，各个网页元素通常只需要精灵图中不同位置的某个小图，要想精确定位到精灵图中的某个小图，就需要使用CSS的`background-image`、`background-repeat`和`background-position`属性进行背景定位，其中最关键的是使用`background-position`属性精确地定位。
@@ -934,6 +1001,397 @@ CSS 精灵其实是将网页中的一些背景图像整合到一张大图中（�
 background: transparent url(image.jpg) repeat-y  scroll center top ;
 ```
 
+## box-shadow
+
+`box-shadow` 是一种 CSS 属性，可以用来向一个元素添加一个或多个阴影。它的语法如下：
+
+```css
+box-shadow: h-offset v-offset blur spread color inset;
+```
+
+其中：
+
+- `h-offset`：横向偏移量，可以是正数也可以是负数，表示阴影相对于元素的水平位置。
+- `v-offset`：纵向偏移量，可以是正数也可以是负数，表示阴影相对于元素的垂直位置。
+- `blur`：模糊半径，用来控制阴影的模糊程度，值越大阴影越模糊。
+- `spread`：扩散半径，用来控制阴影的大小，如果为正数，阴影会扩大；如果为负数，阴影会缩小。
+- `color`：阴影颜色，可以使用任何合法的 CSS 颜色值。
+- `inset`：可选属性，用来指定阴影是否在元素内部而不是外部。
+
+以下是一个示例，展示了如何使用 `box-shadow` 为一个 div 元素添加阴影效果：
+
+```css
+div {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+```
+
+这将在 div 元素的右下角添加一个模糊半径为 4 像素、颜色为黑色透明度为 0.3 的阴影。
+
+技巧：
+
+- 可以使用 `,` 分隔多个阴影，来为元素添加多个阴影效果；
+- 如果要制作带有内阴影的效果，需要在 `box-shadow` 后面添加 `inset` 属性，如：`box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);`
+- 可以使用 `rgba()` 函数来设置阴影颜色，这样可以指定颜色和透明度；
+- 在设置多个阴影时，建议将模糊半径和扩散半径较小的阴影放在后面，这样可以避免阴影出现重叠或者覆盖的情况。
+
+添加多个投影，使用逗号隔开即可
+
+```
+box-shadow: 
+
+  X轴偏移量 Y轴偏移量 [阴影模糊半径] [阴影扩展半径] [阴影颜色] [投影方式],
+
+  X轴偏移量 Y轴偏移量 [阴影模糊半径] [阴影扩展半径] [阴影颜色] [投影方式];
+```
+
+注意：inset 可以写在参数的第一个或最后一个，其它位置是无效的。
+
+设置边框阴影不会改变盒子的大小，即不会影响其兄弟元素的布局。可以设置多重边框阴影，实现更好的效果，增强立体感，符合渐进增强
+
+阴影模糊半径与阴影扩展半径的区别
+
+阴影模糊半径：此参数可选，其值只能是为正值，如果其值为0时，表示阴影不具有模糊效果，其值越大阴影的边缘就越模糊；
+
+阴影扩展半径：此参数可选，其值可以是正负值，如果值为正，则整个阴影都延展扩大，反之值为负值时，则缩小。一个-5px的扩张半径会把投影的宽度和高度各减少10px（即每边各5px）
+
+多边投影
+
+只需把阴影藏进一侧，另一侧自然露出就好。因此，扩张半径不应设为模糊半径的相反值，而应该是这个相反值的一半。
+
+需要指定两个偏移量，因为我们希望投影在水平和垂直方向上同时移动。它们的值需要大于或等于模糊半径的一半，因为我们希望把投影藏进另外两条边之内。
+
+```css
+.boxshadow-outset{
+    width:100px;
+	height:100px;
+    box-shadow: 4px 4px  6px #666, 4px -4px 6px #456 inset; 
+}
+.boxshadow-inset{
+    width:100px;
+    height:100px;
+    box-shadow:4px 4px 6px #666 inset; 
+}
+.boxshadow-multi{
+    width:100px;
+    height:100px;
+    box-shadow:4px 2px 6px #f00, -4px -2px 6px #000, 0px 0px 12px 5px #33CC00 inset;
+}
+```
+
+```html
+<h2>外阴影</h2>
+<div class="boxshadow-outset">
+</div>
+<br />
+<h2>内阴影</h2>
+<div class="boxshadow-inset">
+</div>
+<br />
+<h2>多阴影</h2>
+<div class="boxshadow-multi">
+</div>
+```
+
+## border-radius
+
+圆角处理时，脑中要形成圆、圆心、横轴、纵轴的概念，正圆是椭圆的一种特殊情况。
+
+分别设置横纵轴半径，以`/`进行分隔，遵循`1，2，3，4`规则，`/`前面的1~4个用来设置横轴半径（分别对应横轴1、2、3、4位置 ），``后面1~4个参数用来设置纵轴半径（分别对应纵轴1、2、3、4位置 ）。
+
+支持简写模式，具体如下：
+
+1、`border-radius: 10px; `表示四个角的横纵轴半径都为10px；
+
+2、`border-radius: 10px 5px; `表示1和3角横纵轴半径都为10px，2和4角横纵轴半径为5px；
+
+3、`border-radius: 10px 5px 8px; `表示1角模纵轴半径都为10px，2和4角横纵轴半径都为8px，3角的横纵轴半径都为8px；
+
+4、`border-radius: 10px 8px 6px 4px; `表示1角横纵轴半径都为10px，表示2角横纵轴半径都为8px，表示3角横纵轴半径都为6px，表示4角横纵轴半径都为6px；
+
+直观的看就是下面的描述：
+
+```
+其值可以为多个，最多为4个；
+      四个值时：分别为左上，右上，右下，左下，
+      两个值时：左上-右下  右上-左下
+      三个值时：左上 右上-坐下  右下
+      一个值时：四个角都为同样的，
+```
+
+```css
+div.circle {
+    height: 100px;
+    /*与width设置一致*/
+    width: 100px;
+    background: #9da;
+    border-radius: 50px;
+    /*四个圆角值都设置为宽度或高度值的一半*/
+}
+
+div.semi-circle {
+    height: 100px;
+    width: 50px;
+    background: #9da;
+    border-radius: 20px 10px;
+}
+```
+
+## border-image
+
+设置的图片将会被“切割”成九宫格形式，然后进行设置。
+
+最少“4刀”便可以将一个图片切成9部分，“切割”完成后生成虚拟的9块图形，
+
+将一个盒子想象是由9部分组成的，分别是左上角、上边框、右上角、右边框、右下角、下边框、左下角、左边框、中间，那么浏览器会将切割好的9张虚拟图片分别对应到盒子的各个部分上。
+
+其中四个角位置、形状保持不变，中心位置水平垂直两个方向平铺或拉伸，
+
+定义要使用的边框图像。可以使用以下属性进行设置：
+
+`border-image-source - `设置要用作边框的图像的路径。
+
+`border-image-slice - `定义如何切割图像以适应边框。例如，可以设置一个数字表示每个边缘上的像素数，也可以使用百分比表示法（例如50%）。
+
+`border-image-width - `定义边框图像的宽度。默认情况下，边框图像被拉伸以填充整个边框区域，但您可以使用此属性来更改其大小。
+
+`border-image-repeat - `定义在边框周围重复图像的方式。默认情况下，图像将在边框周围平铺。
+
+ 有几个参数：`no-repeat round stretch repeat`
+
+将`border-image`属性设置为`border-image: <source> <slice> <width> <repeat>`。在这里，您可以指定上述属性的值，以便将图像设置为元素的边框。
+
+下面是一个示例CSS代码块，展示了如何使用border-image属性：
+
+```css
+.my-element {
+     border-image: url(border.png) 30 repeat;
+     border-width: 30px;
+}
+```
+
+在这个例子中，我们将`border-image`设置为一个名为border.png的图像，使用`border-image-slice`切割边框，
+
+使用border-image-width属性控制边框图像的大小，最后使用border-image-repeat重复边框图像。同时，border-width属性定义了边框的宽度
+
+```css
+.border_image {
+    margin:0 auto;
+    height:100px;
+    line-height:100px;
+    text-align:center;
+    font-size:30px;
+    width:450px;
+    border:15px solid #ccc;
+    border-image: url('http://img.mukewang.com/52e22a1c0001406e03040221.jpg') 70  repeat;
+}
+```
+
+```html
+<div class="border_image"></div>
+```
+
+## 颜色渐变
+
+**线性渐变**
+
+```css
+background-image:linear-gradient(to left top, #fff,#999);
+```
+
+![image-20230523222507224](./images/image-20230523222507224.png)
+
+| 角度   | 用英文      | 作用           |
+| ------ | ----------- | -------------- |
+| 0deg   | to top      | 从下向上       |
+| 90deg  | to right    | 从左向右       |
+| 180deg | to bottom   | 从上向下       |
+| 270deg | to left     | 从右向左       |
+|        | to top left | 右下角到左上角 |
+|        | to toright  | 左下角到右上角 |
+
+CSS线性渐变是一种可以用来为元素的背景、边框等属性添加平滑颜色过渡效果的方式，可以通过指定渐变的起始点和结束点，以及沿着渐变轴线上的颜色分布来创建。
+
+要使用 CSS 线性渐变，我们需要使用 linear-gradient() 函数，并在其中定义一组颜色值。该函数的语法如下：
+
+```css
+background: linear-gradient(direction, color-stop1, color-stop2, ...);
+```
+
+其中，direction 表示渐变的方向，可以使用角度或关键字（如 to top 或 to right）进行定义；color-stop 表示渐变中每个颜色的位置和颜色值。位置可以使用百分比或关键字（如 left 或 top）进行定义。
+
+以下是一个示例 CSS 代码，它演示了如何在一个 div 元素的背景上应用一条从左到右的线性渐变：
+
+```css
+div {
+    background: linear-gradient(to right, #FF0000, #0000FF);
+}
+```
+
+这将生成一个从红色到蓝色的渐变背景，从左侧向右侧渐变。
+
+您还可以使用多个 color-stop 值来定义更复杂的渐变效果，如下所示：
+
+```css
+div {
+    background: linear-gradient(to right, #FF0000, #FFFF00, #0000FF);
+}
+```
+
+这将生成一个从红色到黄色再到蓝色的渐变背景，从左侧向右侧渐变。
+
+需要注意的是，在某些老版本的浏览器中，CSS 线性渐变可能不被支持。如果您的网站需要在旧版浏览器上运行，请确保提供替代方案或考虑使用其他背景属性来实现相似的效果。
+
+**径向渐变**
+
+CSS中的径向渐变是指从中心向外辐射的颜色平滑过渡。以下是一个示例：
+
+```css
+background: radial-gradient(red, yellow, green);
+```
+
+这将在元素的背景中创建一个从红色到黄色到绿色的径向渐变。
+
+您还可以使用关键字，例如`at`和`circle`，来更好地控制径向渐变的位置和形状。例如，以下代码将在元素的中心创建一个圆形径向渐变：
+
+```
+background: radial-gradient(circle at center, red, yellow, green);
+```
+
+关键字`circle`指定了渐变的形状，`at center`指定了渐变的位置为中心。
+
+CSS渐变还支持使用`ellipse`来指定椭圆形状的径向渐变。例如，以下代码将创建一个沿着元素的x轴和y轴的椭圆形径向渐变：
+
+```
+background: radial-gradient(ellipse at center, red, yellow, green);
+```
+
+## 文本省略
+
+**text-overflow**用来设置是否使用一个**省略标记**（...）标示对象内文本的溢出。
+
+```css
+text-overflow: clip | ellipsis
+```
+
+clip：表示剪切
+ellipis: 表示显示 省略标记
+
+但是**text-overflow**只是用来说明文字溢出时用什么方式显示，要实现溢出时产生**省略号**的效果，还须定义**强制文本在一行内显示**（white-space:nowrap）及**溢出内容为隐藏**（overflow:hidden），只有这样才能实现**溢出文本显示省略号**的效果，代码如下
+
+```css
+text-overflow:ellipsis; 
+overflow:hidden; 
+white-space:nowrap; 
+```
+
+同时，**word-wrap**也可以用来设置**文本行为**，当前行超过指定容器的边界时是否断开转行。
+
+```css
+word-wrap: normal | break-word
+```
+
+normal: 表示控制连续文本换行
+break-word:表示内容在边界内换行
+
+**normal**为浏览器默认值，**break-word**设置在**长单词**或 **URL地址**内部进行换行，此属性不常用，用浏览器默认值即可。
+
+## text-show
+
+text-shadow可以用来设置文本的阴影效果。
+
+**语法：**
+
+```css
+text-shadow: X-Offset Y-Offset blur color;
+```
+
+X-Offset：表示阴影的水平偏移距离，其值为正值时阴影向右偏移，反之向左偏移；   
+
+Y-Offset：是指阴影的垂直偏移距离，如果其值是正值时，阴影向下偏移，反之向上偏移；
+
+Blur：是指阴影的模糊程度，其值不能是负值，如果值越大，阴影越模糊，反之阴影越清晰，如果不需要阴影模糊可以将Blur值设置为0；
+
+Color：是指阴影的颜色，其可以使用rgba色。
+
+比如，我们可以用下面代码实现设置阴影效果。
+
+```css
+text-shadow: 0 1px 1px #fff
+```
+
+## 背景
+
+##  background-origin
+
+设置元素背景图片的**原始起始位置**。
+
+```css
+background-origin ： border-box | padding-box | content-box;
+```
+
+参数分别表示背景图片是从**边框**，还是**内边距（默认值）**，或者是**内容区域**开始显示。
+
+![image-20230523233330383](./images/image-20230523233330383.png) 
+
+**需要注意的是**，如果背景不是**no-repeat**，这个属性无效，它会从边框开始显示。
+
+## background-clip
+
+用来将背景图片做适当的**裁剪**以适应实际需要。
+
+```css
+background-clip ： border-box | padding-box | content-box | no-clip
+```
+
+参数分别表示从**边框、**或**内填充**，或者**内容区域**向外裁剪背景。**no-clip**表示不裁切，和**参数border-box**显示同样的效果。`backgroud-clip`默认值为**border-box**。
+
+![image-20230523233542714](./images/image-20230523233542714.png) 
+
+根据所选，展示选择后对应里面的内容
+
+## background-size
+
+设置背景图片的大小，以**长度值**或**百分比**显示，还可以通过**cover**和**contain**来对图片进行伸缩。
+
+```css
+background-size: auto | <长度值> | <百分比> | cover | contain
+```
+
+1、`auto`：默认值，不改变背景图片的原始高度和宽度；
+
+2、`<长度值>`：成对出现如200px 50px，将背景图片宽高依次设置为前面两个值，当设置一个值时，将其作为图片宽度值来**等比缩放**；
+
+3、`<百分比>`：0％~100％之间的任何值，将背景图片宽高依次设置为所在元素宽高乘以前面百分比得出的数值，当设置一个值时同上；
+
+4、`cover`：顾名思义为**覆盖**，即将背景图片等比缩放以**填满整个容器**；
+
+5、`contain`：容纳，即将背景图片等比缩放至**某一边紧贴容器边缘为止**。
+
+## 多重背景
+
+我们可以使用逗号分隔的方式加入多个图片，其他属性也对应的使用逗号分隔开
+
+```css
+.demo{
+    width: 300px;
+    height: 140px;
+    border: 1px solid #999;
+    background-image: 										url(http://img.mukewang.com/54cf2365000140e600740095.jpg),
+        url(http://img.mukewang.com/54cf238a0001728d00740095.jpg),
+        url(http://img.mukewang.com/54cf23b60001fd9700740096.jpg);
+    background-position: left top , 100px 0, 120px 0;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    margin:0 0 20px 0;
+}
+```
+
+```html
+<div class="demo"></div>
+```
+
+
+
 ### 图片
 
 我们可以给图片设置圆角（`border-radius`）、阴影(`text-shadow`)、边框(`border`)
@@ -960,9 +1418,7 @@ img {
 }
 ```
 
-
-
-### 渐变
+## 渐变
 
 渐变是CSS3当中比较丰富多彩的一个特性，通过渐变我们可以实现许多炫丽的效果，有效的减少图片的使用数量，并且具有很强的适应性和可扩展性。
 
@@ -1016,7 +1472,7 @@ e) 渐变范围
 
 其半径可以不等，即可以是椭圆，如background-image: radial-gradient(120px 100px at 0 0 yellow green)会是一个椭圆形（横轴120px、纵轴100px）的渐变。
 
-###  过渡
+## 过渡
 
 transition属性拆解如下表：
 
@@ -1027,7 +1483,7 @@ transition属性拆解如下表：
 | transition-timing-function |      | 设置过渡速度 |
 | transition-delay           |      | 设置过渡延时 |
 
-###  2D转换
+## 2D转换
 
 转换是CSS3中具有颠覆性的特征之一，可以实现元素的位移、旋转、变形、缩放，甚至支持矩阵方式，配合过渡和即将学习的动画知识，可以取代大量之前只能靠Flash才可以实现的效果。
 
@@ -1059,7 +1515,7 @@ b) 调整顺序可以解决，把旋转放到最后
 
 我们可以同时使用多个转换，其格式为：transform: translate() rotate() scale() ...等，其顺序会影响转换的效果。
 
-###  3D转换
+## 3D转换
 
 **1、左手坐标系**
 
@@ -1107,7 +1563,7 @@ preserve-3d：保留3D空间
 
 [**参考文档**](http://isux.tencent.com/css3/index.html?transform)
 
-###  动画
+## 动画
 
 动画是CSS3中具有颠覆性的特征之一，可通过设置多个节点来精确控制一个或一组动画，常用来实现复杂的动画效果。
 
@@ -1204,3 +1660,12 @@ h、order控制子项目的排列顺序，正序方式排序，从小到大
 
 ### 网格布局
 
+
+
+# 固定宽度被挤压 flex为1的元素宽度超出父元素
+
+当子元素设置固定宽度，如果整体宽度不足时，会把固定宽度给压缩，解决方法: 给固定宽度的元素添加flex-shrink:0。
+flex-shrink：指定了 flex 元素的收缩规则。
+
+设置右边元素flex：1，当右边元素宽度超过父元素时，会造成右边宽度溢出。
+解决方案：给右侧设置了flex:1;的元素，同时设置width:0
