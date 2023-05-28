@@ -274,38 +274,122 @@ li[class^="a" i] {
 
 以某元素（E）相对于其父元素或兄弟元素的位置来获取无素；
 
-| 选择器                | 含义                                     |
-| --------------------- | ---------------------------------------- |
-| E:first-child         | 其父元素的第1个子元素                    |
-| E:last-child          | 其父元素的最后1个子元素                  |
-| E:nth-child(n)        | 其父元素的第n个子元素                    |
-| E:nth-last-child(n)   | 其父元素的第n个子元素（倒着数，从1开始） |
-| E:root                | 文档的根元素                             |
-| E:empty               | 无子元素的元素                           |
-| E:first-letter        | 元素的首字母                             |
-| E:first-line          | 元素的首行                               |
-| E:first               | 匹配分页媒体的第一页。                   |
-| E:left                | 在分页媒体中，匹配左手边的页             |
-| E:only-child          | 父元素仅有该元素的元素                   |
-| E:nth-of-type(n)      | 标签中指定顺序索引的标签                 |
-| E:nth-last-of-type(n) | 标签中指定逆序索引的标签                 |
-| E:first-of-type       | 标签中为首的标签                         |
-| E:last-of-type        | 标签中为尾标签                           |
-| E:only-of-type        | 元素仅有该标签的标签                     |
+| 选择器                | 含义                                                       |
+| --------------------- | ---------------------------------------------------------- |
+| E:first-child         | 其父元素的第1个子元素(不是后代元素)                        |
+| E:last-child          | 其父元素的最后1个子元素(不是后代元素)                      |
+| E:nth-child(n)        | 其父元素的第n个子元素(不是后代元素)                        |
+| E:nth-last-child(n)   | 其父元素的倒数第n个子元素（倒着数，从1开始）(不是后代元素) |
+| E:root                | 文档的根元素 HTML里面为`<html>`                            |
+| E:empty               | 无子元素的元素（空格和注释也会匹配到）                     |
+| E:first-letter        | 元素的首字母                                               |
+| E:first-line          | 元素的首行                                                 |
+| E:first               | 匹配分页媒体的第一页。                                     |
+| E:left                | 在分页媒体中，匹配左手边的页                               |
+| E:only-child          | 父元素仅有E元素的元素                                      |
+| E:nth-of-type(n)      | 元素中指定索引的E元素                                      |
+| E:nth-last-of-type(n) | 元素中指定逆序索引的E元素                                  |
+| E:first-of-type       | 元素中指定的第一个E元素                                    |
+| E:last-of-type        | 元素中指定的最后一个E元素                                  |
+| E:only-of-type        | 元素中仅有E元素的元素                                      |
 
 n遵循线性变化，其取值0、1、2、3、4、... 
 
 n可是多种形式：nth-child(2n+0)、nth-child(2n+1)、nth-child(-1n+3)等；
 
-> 指E元素的父元素，并对应位置的子元素必须是E
+例子：
+
+```html
+<div class="wrapper">
+  <p>我是第一个段落</p> // 1
+  <p>我是第二个段落</p> // 2
+  <div>我是第一个Div元素</div> // 3
+  <div>我是第二个Div元素</div> // 4
+  <p>我是第三个段落</p> // 5
+  <p>我是第四个段落</p> // 6
+  <div>我是第三个Div元素</div> // 7
+  <div>我是第四个Div元素</div> // 8
+   <span>我是span标签</span> // 9
+   <div><span>测试</span> <p>测试2</p></div>  // 10
+    <div><span>测试</span> <span>测试2</span></div>  // 11
+     <div><span>测试</span></div>  // 12
+</div>
+```
+
+```css
+/*标记为1的背景为橙色*/
+.wrapper > p:first-of-type {
+  background: orange;
+}
+/*标记为6的背景为粉色*/
+.wrapper > p:last-of-type {
+  background: pink;
+}
+/*标记为4的背景为黄色*/
+.wrapper > div:nth-of-type(2) {
+  background: red;
+}
+/*标记为7的背景为黄色*/
+.wrapper > div:nth-last-of-type(2) {
+  background: yellow;
+}
+/*标记为9的字体大写变为20px, .wrapper下只要一个span时才会生效，当span换做p时不生效*/
+.wrapper > span:only-of-type {
+  font-size: 20px;
+}
+
+/*使用该样式时，10 11 不生效。12生效*/
+.wrapper > div span:only-child {
+  font-size: 30px;
+}
+
+```
+
+
 
 2、目标伪类
 
 `E:target `结合锚点进行使用，处于当前锚点的元素会被选中；
 
+```html
+<h2><a href="#brand">Brand</a></h2>
+<div class="menuSection" id="brand">
+  <p>scroll current</p>
+</div>
+```
+
+```css
+.menuSection{
+  display: none;
+}
+/*这里的:target就是指id="brand"的div对象*/
+:target{
+  display:block;
+}
+```
+
+触发元素的URL中通常会包含一个`#`号，如上面所示，当我点击Brand的时候，会匹配到id为brand的元素，定位到当前元素，然后触发`:target`,  
+
+如果出现多个url时，会去匹配当前元素`href`的值和目标`id`值相同的元素
+
 3、排除伪类
 
-`E:not(selector) ` 除selector（任意选择器）外的元素会被选中；
+`E:not(selector) ` 可以选择除某个元素之外的所有元素；
+
+```css
+form {
+  width: 200px;
+  margin: 20px auto;
+}
+div {
+  margin-bottom: 20px;
+}
+input:not([type="submit"]){
+  border:1px solid red;
+}
+```
+
+以上代码表示排除了form表单中的submit按钮；
 
 ### 伪元素
 
@@ -334,6 +418,21 @@ n可是多种形式：nth-child(2n+0)、nth-child(2n+1)、nth-child(-1n+3)等；
     content: " ➥";
 }
 ```
+
+也可以使用`::after`、`::before `来清除浮动
+
+```css
+.clearfix::before, .clearfix::after{
+    content: ".";
+    display: block;
+    hight: 0;
+    visibility: hidden;
+}
+.clearfix:after{ clear: both}
+.clearfix { zoom: 1;}
+```
+
+
 
 组合伪类和伪元素
 
@@ -387,6 +486,123 @@ article p:first-child::first-line {
 | E:has()        | 匹配包含指定元素的元素             |
 | E:is()         | 匹配指定选择器列表里的任何元素     |
 | E:not()        | 用来匹配不符合一组选择器的元素     |
+
+例子：
+
+```html
+<div>
+    <label for="enabled">可用输入框:</label>
+    <input type="text" id="enabled" />
+  </div>
+
+  <div>
+    <label for="disabled">禁用输入框:</label>
+    <input type="text" id="disabled" disabled="disabled" />
+  </div>
+***********************
+ <input type="radio" checked="checked"  id="boy" name="1" /><span></span>
+
+***********************
+<textarea name="comment" id="" cols="30" rows="10" readonly="readonly"></textarea>
+```
+
+```css
+input[type="text"]:enabled {
+  border: 1px solid #f36;
+  box-shadow: 0 0 5px #f36;
+}
+
+input[type="text"]:disabled{
+  box-shadow: none;
+}
+
+***********************
+/* 给选中的radio背景设为红色 */
+input[type="radio"]:checked + span {
+  background: red;
+}
+
+***********************
+/* textarea 为只读的文本框设置样式*/
+textarea:read-only {
+  border: 1px solid #ccc;
+  height: 50px;
+  resize: none;
+  background: #eee;
+}
+```
+
+### 优先级
+
+1、同一元素引用了多个样式时，排在后面的样式属性的优先级高；
+
+```html
+<div class="one two"></div>
+<!-- two类的优先级高于one类-->
+```
+
+2、样式选择器的类型不同时，优先级顺序为：id 选择器 > class 选择器 > 标签选择器；
+
+```html
+<div class="one" id="two">你好吗</div>
+```
+
+```css
+.one {
+    color: red;
+}
+.two {
+    color: green;
+}
+div {
+    color: yellow;
+}
+/* 此时"你好吗"字体的颜色为红色*/
+```
+
+3、标签之间存在层级包含关系时，后代元素会继承祖先元素的样式。如果后代元素定义了与祖先元素相同的样式，则祖先元素的相同的样式属性会被覆盖；继承的样式的优先级比较低，至少比标签选择器的优先级低；
+
+```html
+<div class="one">
+    <span>我继承了div的color</span>
+</div>
+<div class="two">
+    <span>我有自己的color</span>
+</div>
+```
+
+```css
+.one {
+    color: red;
+}
+.two {
+    color: green;
+}
+.two  span {
+    color: blue;
+}
+```
+
+4、带有!important 标记的样式属性的优先级最高；
+
+```html
+<div class="one" id="two">你好吗</div>
+```
+
+```css
+.one {
+    color: red;
+}
+.two {
+    color: green !important;
+}
+div {
+    color: yellow;
+}
+/* 此时"你好吗"字体的颜色为绿色*/
+```
+
+5、样式表的来源不同时，优先级顺序为：内联样式 > 内部样式 > 外部样式 > 浏览器用户自定义样式 > 浏览器默认样式
 
 ## 文本元素
 
@@ -927,80 +1143,6 @@ CSS 精灵其实是将网页中的一些背景图像整合到一张大图中（�
 | *      | 0个或多个  |                                                              |
 | {}     | 范围       |                                                              |
 
-### 背景
-
- **1、background-size**
-
-通过background-size设置背景图片的尺寸，就像我们设置img的尺寸一样，在移动Web开发中做屏幕适配应用非常广泛。
-
-**其参数设置如下：**
-
-- 可以设置长度单位(px)或百分比（设置百分比时，参照盒子的宽高）
-
-- 设置为cover时，会自动调整缩放比例，保证图片始终填充满背景区域，如有溢出部分则会被隐藏。
-
-- 设置为contain会自动调整缩放比例，保证图片始终完整显示在背景区域。 
-
-**2、background-origin**
-
-通过background-origin可以设置背景图片定位(background-position)的参照原点。
-
-**参数设置如下：**
-
-- border-box以边框做为参考原点；
-
-- padding-box以内边距做为参考原点；
-
-- content-box以内容区做为参考点；
-
-**3、background-clip**
-
-通过background-clip，可以设置对背景区域进行裁切，即改变背景区域的大小。
-
-**其参数设置如下：**
-
-- border-box裁切边框以内为背景区域；
-
-- padding-box裁切内边距以内为背景区域；
-
-- content-box裁切内容区做为背景区域；
-
-**4、多背景**
-
-以逗号分隔可以设置多背景，可用于自适应布局
-
-**5、背景其他属性**
-
-| 背景属性    | 默认值      | 可选                                        | 描述                 |
-| ----------- | ----------- | ------------------------------------------- | -------------------- |
-| -color      | transparent | 各种颜色值                                  | 背景颜色             |
-| -image      | none        | none \| url                                 | 背景图片             |
-| -repeat     | repeat      | repeat \| no-repeat \| repeat-x \| repeat-y | 背景平铺             |
-| -position   |             | length \|\| length  position \|\| position  | 背景定位             |
-| -attachment |             | scroll \| fixed                             | 背景是滚动的还是固定 |
-
-**background-position**
-
-- 必须先指定background-image属性
-- position 后面是x坐标和y坐标。 可以使用方位名词或者 精确单位。
-- 如果指定两个值，两个值都是方位名字，则两个值前后顺序无关，比如left  top和top  left效果一致
-- 如果只指定了一个方位名词，另一个值默认居中对齐。
-- 如果position 后面是精确坐标， 那么第一个，肯定是 x  第二的一定是y
-- 如果只指定一个数值,那该数值一定是x坐标，另一个默认垂直居中
-- 如果指定的两个值是 精确单位和方位名字混合使用，则第一个值是x坐标，第二个值是y坐标
-
-**background-attachment**
-
-- scroll  背景图像是随对象内容滚动
-
-- fixed: 背景图像固定
-
-**背景简写**
-
-```css
-background: transparent url(image.jpg) repeat-y  scroll center top ;
-```
-
 ## box-shadow
 
 `box-shadow` 是一种 CSS 属性，可以用来向一个元素添加一个或多个阴影。它的语法如下：
@@ -1322,7 +1464,7 @@ text-shadow: 0 1px 1px #fff
 
 ## 背景
 
-##  background-origin
+**background-origin**
 
 设置元素背景图片的**原始起始位置**。
 
@@ -1336,7 +1478,7 @@ background-origin ： border-box | padding-box | content-box;
 
 **需要注意的是**，如果背景不是**no-repeat**，这个属性无效，它会从边框开始显示。
 
-## background-clip
+**background-clip**
 
 用来将背景图片做适当的**裁剪**以适应实际需要。
 
@@ -1344,13 +1486,13 @@ background-origin ： border-box | padding-box | content-box;
 background-clip ： border-box | padding-box | content-box | no-clip
 ```
 
-参数分别表示从**边框、**或**内填充**，或者**内容区域**向外裁剪背景。**no-clip**表示不裁切，和**参数border-box**显示同样的效果。`backgroud-clip`默认值为**border-box**。
+参数分别表示从**边框、**或**内边距**，或者**内容区域**向外裁剪背景。**no-clip**表示不裁切，和**参数border-box**显示同样的效果。`backgroud-clip`默认值为**border-box**。
 
 ![image-20230523233542714](./images/image-20230523233542714.png) 
 
 根据所选，展示选择后对应里面的内容
 
-## background-size
+**background-size**
 
 设置背景图片的大小，以**长度值**或**百分比**显示，还可以通过**cover**和**contain**来对图片进行伸缩。
 
@@ -1368,7 +1510,7 @@ background-size: auto | <长度值> | <百分比> | cover | contain
 
 5、`contain`：容纳，即将背景图片等比缩放至**某一边紧贴容器边缘为止**。
 
-## 多重背景
+**多重背景**
 
 我们可以使用逗号分隔的方式加入多个图片，其他属性也对应的使用逗号分隔开
 
@@ -1390,9 +1532,39 @@ background-size: auto | <长度值> | <百分比> | cover | contain
 <div class="demo"></div>
 ```
 
+**背景其他属性**
 
+| 背景属性    | 默认值      | 可选                                        | 描述                 |
+| ----------- | ----------- | ------------------------------------------- | -------------------- |
+| -color      | transparent | 各种颜色值                                  | 背景颜色             |
+| -image      | none        | none \| url                                 | 背景图片             |
+| -repeat     | repeat      | repeat \| no-repeat \| repeat-x \| repeat-y | 背景平铺             |
+| -position   |             | length \|\| length  position \|\| position  | 背景定位             |
+| -attachment |             | scroll \| fixed                             | 背景是滚动的还是固定 |
 
-### 图片
+**background-position**
+
+- 必须先指定background-image属性
+- position 后面是x坐标和y坐标。 可以使用方位名词或者 精确单位。
+- 如果指定两个值，两个值都是方位名字，则两个值前后顺序无关，比如left  top和top  left效果一致
+- 如果只指定了一个方位名词，另一个值默认居中对齐。
+- 如果position 后面是精确坐标， 那么第一个，肯定是 x  第二的一定是y
+- 如果只指定一个数值,那该数值一定是x坐标，另一个默认垂直居中
+- 如果指定的两个值是 精确单位和方位名字混合使用，则第一个值是x坐标，第二个值是y坐标
+
+**background-attachment**
+
+- scroll  背景图像是随对象内容滚动
+
+- fixed: 背景图像固定
+
+**背景简写**
+
+```css
+background: transparent url(image.jpg) repeat-y  scroll center top ;
+```
+
+## 图片
 
 我们可以给图片设置圆角（`border-radius`）、阴影(`text-shadow`)、边框(`border`)
 
@@ -1474,48 +1646,338 @@ e) 渐变范围
 
 ## 过渡
 
-transition属性拆解如下表：
+transition是一个复合属性，其属性可拆解如下表：
 
-| 属性                       | 示例 | 含义         |
-| -------------------------- | ---- | ------------ |
-| transition-property        |      | 设置过渡属性 |
-| transition-duration        |      | 设置过渡时间 |
-| transition-timing-function |      | 设置过渡速度 |
-| transition-delay           |      | 设置过渡延时 |
+| 属性                       | 含义                        |
+| -------------------------- | --------------------------- |
+| transition-property        | 设置过渡属性（默认为all）   |
+| transition-duration        | 设置过渡持续时间（默认为0） |
+| transition-timing-function | 设置过渡函数（默认为ease）  |
+| transition-delay           | 设置过渡延时（默认为0）     |
+
+```css
+transition: transition-property transition-duration transition-timing-function transition-delay;
+```
+
+复合属性中的每个子属性通过空格分隔，不能用逗号，逗号表示不同属性表示多个过渡，`transition-duration`是必填，并且不能为0，如果`transition-duration`， `transition-delay`表示的时间同时出现时，第一个时间表示`transition-duration`，第二个表示  `transition-delay`，若只出现一个时，表示`transition-duration`
+
+**`transition-property`**
+
+值：`none | all | proterty`
+
+`none`: 不指定任何样式
+
+`all`: 默认值，表示指定元素支持 所有属性
+
+`protery`: 指定过渡的属性
+
+可过渡的CSS属性有：
+
+颜色：`color background-color border-color outline-color`
+
+位置：`backround-position left right top bottom`
+
+长度：`max-height min-height max-width min-width height width; border-width margin padding outline-width outline-offset ;font-size line-height text-indent vertical-align;border-spacing letter-spacing word-spacing`
+
+数字：`opacity visibility z-index font-weight zoom`
+
+组合：`text-shadow transform box-shadow clip`
+
+其他：`gradient`
+
+**`transition-timing-function`**
+
+用于指定CSS过渡效果的时间函数，它控制在过渡期间属性值的变化方式。该属性可以应用于`transition`属性或`transition-property`属性中的每个属性，或者在`transition`简写属性中作为第三个值。
+
+`transition-timing-function`属性可以接受以下几种不同的值：
+
+- `ease`：默认值。表示过渡效果开始缓慢，然后加速，最后再次缓慢结束。
+- `linear`：表示过渡效果在整个过程中保持匀速。
+- `ease-in`：表示过渡效果开始缓慢，然后逐渐加速。
+- `ease-out`：表示过渡效果开始较快，然后逐渐减速。
+- `ease-in-out`：表示过渡效果开始缓慢，然后加速，再减速结束。
+- `step-start`：表示过渡效果在开始时立即跳转到结束状态。
+- `step-end`：表示过渡效果在结束时立即跳转到结束状态。
+- `steps(<number>)`：表示过渡效果在指定数量的步骤中跳转，步骤的数量由`<number>`指定。
+- `cubic-bezier(<x1>, <y1>, <x2>, <y2>)`：自定义贝塞尔曲线函数，通过控制点`<x1>`、`<y1>`和`<x2>`、`<y2>`来定义过渡效果的时间曲线。这些值应在0到1之间。
+
+1、steps函数
+
+该值可用于创建离散的过渡效果，其中属性值在每个步骤之间突然变化，而不是平滑地过渡。每个步骤的变化是离散的，不会产生中间值。
+
+`<number>`参数是一个正整数，指定了过渡过程中的步骤数量。较大的数字将导致更多的离散步骤，从而产生更突然的变化。
+
+以下是一个示例，展示如何使用`steps(<number>)`来创建离散的过渡效果：
+
+```css
+.element {
+  transition-property: background-color;
+  transition-duration: 1s;
+  transition-timing-function: steps(5);
+}
+```
+
+上述示例将元素的背景颜色在1秒的时间内通过5个离散的步骤进行过渡。在每个步骤之间，背景颜色突然发生变化，而不是平滑过渡。
+
+2、`cubic-bezier`
+
+贝塞尔曲线是一种数学曲线，由控制点来定义曲线的形状。`cubic-bezier`函数接受四个参数，分别表示两个控制点的坐标。
+
+```css
+cubic-bezier(<x1>, <y1>, <x2>, <y2>)
+```
+
+参数`<x1>`和`<y1>`是第一个控制点的坐标，位于0到1之间。参数`<x2>`和`<y2>`是第二个控制点的坐标，也位于0到1之间。这些参数定义了贝塞尔曲线的形状，进而定义了过渡效果的时间曲线。
+
+- `<x1>`和`<x2>`控制了曲线的水平形状，0表示左边，1表示右边。
+- `<y1>`和`<y2>`控制了曲线的垂直形状，0表示顶部，1表示底部。
+
+使用`cubic-bezier`函数创建自定义的时间函数：
+
+```css
+.element {
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+```
+
+上述示例使用`cubic-bezier`函数定义了一个自定义的时间函数，使元素的不透明度属性在1秒的时间内以特定的曲线过渡
+
+**`transition-duration`**
+
+该属性表示整个过渡持续多长时间；
+
+单位为s（秒）或ms（毫秒），初始值为0s。不能为0，必须要带参数。
+
+**`transition-delay`**
+
+该属性表示延迟多少时间后开始过渡
+
+单位为ms（毫秒）或s（秒）;
+
+![](./images/transition-timing-function.jpg) 
 
 ## 2D转换
 
-转换是CSS3中具有颠覆性的特征之一，可以实现元素的位移、旋转、变形、缩放，甚至支持矩阵方式，配合过渡和即将学习的动画知识，可以取代大量之前只能靠Flash才可以实现的效果。
+转换是CSS3中具有颠覆性的特征之一，可以实现元素的位移、旋转、变形、缩放，甚至支持矩阵方式
 
-1、移动 translate(x, y) 可以改变元素的位置，x、y可为负值；
+1、移动` translate(x, y) `可以改变元素的位置，`x`、`y`可为负值；
 
-a) 移动位置相当于自身原来位置
+- 移动位置相当于自身原来位置
 
-b)  y轴正方向朝下
+- y轴正方向朝下
 
-c) 除了可以像素值，也可以是百分比，相对于自身的宽度或高度
+- 除了可以像素值，也可以是百分比，相对于自身的宽度或高度
 
-2、缩放 scale(x, y) 可以对元素进行水平和垂直方向的缩放，x、y的取值可为小数；
+2、缩放` scale(x, y) `可以对元素进行水平和垂直方向的缩放，`x`、`y`的取值可为小数；
 
-3、旋转 rotate(deg) 可以对元素进行旋转，正值为顺时针，负值为逆时针；
+```css
+transform: scale(2,3); 
+```
 
-a) 当元素旋转以后，坐标轴也跟着发生的转变
+`scale（2,3）`转变宽度为原来的大小的2倍，和其原始大小3倍的高度。
 
-b) 调整顺序可以解决，把旋转放到最后
+3、旋转 `rotate(deg) `可以对元素进行旋转，正值为顺时针，负值为逆时针；
 
-4、倾斜 skew(deg, deg) 可以使元素按一定的角度进行倾斜，可为负值，第二个参数不写默认为0。
+- `transform: rotate(45deg);`
 
-5、矩阵matrix() 把所有的2D转换组合到一起，需要6个参数（了解）。
+4、倾斜 `skew(deg, deg)` 可以使元素按一定的角度进行倾斜，可为负值，表示向相反方向倾斜。第二个参数不写默认为0。
+
+- `skewX(<angle>)`;表示只在X轴(水平方向)倾斜。
+- `skewY(<angle>)`;表示只在Y轴(垂直方向)倾斜。
+
+```css
+transform:skew(<angle> [,<angle>]);
+```
+
+```css
+.box {
+	transform:skew(30deg,20deg);
+}
+```
+
+5、矩阵`matrix() `把所有的2D转换组合到一起，需要6个参数，包含旋转，缩放，移动（平移）和倾斜功能
 
 [关于矩阵的学习资料](http://www.zhangxinxu.com/wordpress/2012/06/css3-transform-matrix-矩阵/comment-page-2/)
 
 6、transform-origin可以调整元素转换的原点
 
+我们可以同时使用多个转换，其格式为：`transform: translate() rotate() scale() ...`等，其顺序会影响转换的效果。
 
+## 动画
 
-我们可以同时使用多个转换，其格式为：transform: translate() rotate() scale() ...等，其顺序会影响转换的效果。
+CSS的`@keyframes`规则用于创建动画序列，通过定义关键帧和每个关键帧的样式，实现元素在一段时间内的动画效果。
+
+使用`@keyframes`规则，您可以指定动画序列中的关键帧，即动画的起始状态、中间状态和结束状态，并为每个关键帧定义相应的样式。每个关键帧由一个百分比值（0%到100%）或关键词（如`from`和`to`）来表示。
+
+当在 **@keyframes** 创建动画，把它绑定到一个选择器，否则动画不会有任何效果。
+
+指定至少这两个CSS3的动画属性绑定向一个选择器：
+
+- 规定动画的名称
+- 规定动画的时长
+
+```html
+<div></div>
+```
+
+```css
+div
+{
+	width: 100px;
+	height: 100px;
+	background: red;
+	animation: myfirst 5s;
+}
+
+@keyframes myfirst
+{
+	from {background:red;}
+	to {background:yellow;}
+}
+```
+
+把 "myfirst" 动画捆绑到 div 元素，时长：5 秒；
+
+下面的表格列出了 `@keyframes` 规则和所有动画属性：
+
+| 属性                      | 描述                                                         |
+| :------------------------ | :----------------------------------------------------------- |
+| @keyframes                | 规定动画。                                                   |
+| animation                 | 所有动画属性的简写属性。                                     |
+| animation-name            | 规定 @keyframes 动画的名称。                                 |
+| animation-duration        | 规定动画完成一个周期所花费的秒或毫秒。默认是 0。             |
+| animation-timing-function | 规定动画的速度曲线。默认是 "ease"。（和transition中的transition-timing-function一样） |
+| animation-fill-mode       | 规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。 |
+| animation-delay           | 规定动画何时开始。默认是 0。                                 |
+| animation-iteration-count | 规定动画被播放的次数。默认是 1。                             |
+| animation-direction       | 规定动画是否在下一周期逆向地播放。默认是 "normal"。          |
+| animation-play-state      | 规定动画是否正在运行或暂停。默认是 "running"，暂停是"paused"。 |
+
+**animation-direction**
+
+`alternate`：动画播放在第偶数次向前播放，第奇数次向反方向播放。
+
+`normal`：动画的每次循环都是向前播放
+
+**animation-iteration-count**
+
+`animation-iteration-count`属性让动画只播放5次，代码为：
+
+```css
+animation-iteration-count:5;
+```
+
+可以设置为`infinite` 表示无限次循环
+
+**animation-play-state**
+
+让暂停的span元素动起来
+
+```html
+<div><span></span></div>
+```
+
+```css
+div:hover span {
+  animation-play-state: running;
+}
+span {
+  ...动画
+  animation-play-state:paused;
+}
+```
+
+**animation-fill-mode**：
+
+- `none`： 默认值，表示动画将按预期进行和结束，在动画完成其最后一帧时，动画会反转到初始帧处
+- `forwards`：表示动画在结束后继续应用最后的关键帧的位置
+- `backwards`：会在向元素应用动画样式时迅速应用动画的初始帧
+- `both`: 元素动画同时具有forwards和backwards效果
+
+```html
+<div></div>
+```
+
+```css
+@keyframes redToBlue{
+  from{
+    background: red;
+  }
+  20%{
+      background:green;
+  }
+  40%{
+      background:lime;
+  }
+  60%{
+      background:yellow;
+  }
+  to{
+    background:blue;
+  }
+}
+
+div {
+  width: 200px;
+  height: 200px;
+  background: red;
+  margin: 20px auto;
+  animation-name:redToBlue;
+  animation-duration: 20s;
+  animation-timing-function: ease;
+  animation-delay: 1s;
+  animation-fill-mode: none;  // 该属性为none时，完成动画的最后一帧回到初始帧，red
+  animation-fill-mode: forwards;  // 完成动画的最后一帧，停止在最后一帧的样式上，blue
+  animation-fill-mode: backwards; // 迅速为动画设置初始帧
+  
+}
+```
+
+示例：
+
+```html
+<div></div>
+```
+
+```css
+div
+{
+	width:100px;
+	height:100px;
+	background:red;
+	position:relative;
+	animation-name:myfirst;
+	animation-duration:5s;
+	animation-timing-function:linear;
+	animation-delay:2s;
+	animation-iteration-count:infinite;
+	animation-direction:alternate;
+	animation-play-state:running;
+}
+
+@keyframes myfirst
+{
+	0%   {background:red; left:0px; top:0px;}
+	25%  {background:yellow; left:200px; top:0px;}
+	50%  {background:blue; left:200px; top:200px;}
+	75%  {background:green; left:0px; top:200px;}
+	100% {background:red; left:0px; top:0px;}
+}
+```
+
+可以使用简写属性：
+
+```css
+div {
+    animation: myfirst 5s linear 2s infinite alternate;
+}
+```
 
 ## 3D转换
+
+CSS的3D转换（3D Transformations）允许您在三维空间中对元素进行变换，包括平移、旋转、缩放和倾斜等操作。这些转换效果可以通过CSS的`transform`属性来实现。
 
 **1、左手坐标系**
 
@@ -1541,7 +2003,39 @@ CSS3中的3D坐标系与上述的3D坐标系是有一定区别的，相当于其
 
 a) 作为一个属性，设置给父元素，作用于所有3D转换的子元素
 
- b) 作为transform属性的一个值，做用于元素自身
+ b) 作为`transform`属性的一个值，做用于元素自身
+
+```html
+<div class="container">
+  <div class="box">
+    <h1>透视效果</h1>
+    <p>这是一个文本块</p>
+  </div>
+</div>
+```
+
+```css
+.container {
+  perspective: 800px;
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.box {
+  width: 200px;
+  height: 200px;
+  background-color: lightblue;
+  transform: rotateY(30deg);
+  transform-origin: center;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+```
+
+![image-20230528230230137](./images/image-20230528230230137.png) 
 
 **5、理解透视距离**
 
@@ -1551,23 +2045,145 @@ a) 作为一个属性，设置给父元素，作用于所有3D转换的子元素
 
 设置内嵌的元素在 3D 空间如何呈现，这些子元素必须为转换原素。
 
-flat：所有子元素在 2D 平面呈现
+`flat`：所有子元素在 2D 平面呈现
 
-preserve-3d：保留3D空间
+`preserve-3d`：保留3D空间
 
-3D元素构建是指某个图形是由多个元素构成的，可以给这些元素的父元素设置transform-style: preserve-3d来使其变成一个真正的3D图形。
+3D元素构建是指某个图形是由多个元素构成的，可以给这些元素的父元素设置`transform-style: preserve-3d`来使其变成一个真正的3D图形。
+
+```html
+<div id="div1">
+  <div id="div2">HELLO
+  	<div id="div3">YELLOW</div>
+  </div>
+</div>
+```
+
+```css
+#div1 {
+	position: relative;
+	height: 200px;
+	width: 200px;
+	margin: 100px;
+	padding:10px;
+	border: 1px solid black;
+}
+
+#div2 {
+	padding:50px;
+	position: absolute;
+	border: 1px solid black;
+	background-color: red;
+	transform: rotateY(60deg);
+    /*将父元素设置为3图形*/
+	transform-style: preserve-3d; 
+}
+
+#div3 {
+	padding:40px;
+	position: absolute;
+	border: 1px solid black;
+	background-color: yellow;
+	transform: rotateY(-60deg);
+}
+```
+
+以上代码表示让转换的子元素保留3D转换
 
 **7、backface-visibility**
 
 设置元素背面是否可见
 
+```html
+<div class="container">
+  <div class="box">
+    <h1>正面</h1>
+    <p>这是正面内容</p>
+  </div>
+</div>
+```
+
+```css
+.container {
+  perspective: 800px;
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.box {
+  width: 200px;
+  height: 200px;
+  background-color: lightblue;
+  // 将正面以y轴为旋转轴旋转180°后，展示出来的为背面
+  transform: rotateY(180deg);
+  transform-origin: center;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+   // 通过设置这个属性，该元素的背面不可见
+  backface-visibility: hidden;
+}
+```
+
+**8、transform-origin**
+
+设置旋转元素的基点位置
+
+2D转换元素可以改变元素的X和Y轴。 3D转换元素，还可以更改元素的Z轴。
+
+[演示案例](https://www.runoob.com/try/try.php?filename=trycss3_transform-origin_inuse).
+
+下面是一些常用的3D转换函数和示例：
+
+1. 平移（Translate）：`translate3d(x, y, z)`函数可以将元素沿 x、y 和 z 轴进行平移。例如，`translate3d(100px, -50px, 0)`表示将元素向右平移100像素，向上平移50像素，z 轴平移为0。
+
+```css
+.element {
+  transform: translate3d(100px, -50px, 0);
+}
+```
+
+2. 旋转（Rotate）：`rotate3d(x, y, z, angle)`函数可以围绕 x、y 和 z 轴进行旋转。例如，`rotate3d(1, 0, 0, 45deg)`表示绕 x 轴顺时针旋转45度。
+
+```css
+.element {
+  transform: rotate3d(1, 0, 0, 45deg);
+}
+```
+
+3. 缩放（Scale）：`scale3d(x, y, z)`函数可以在 x、y 和 z 轴上对元素进行缩放。例如，`scale3d(1.5, 1, 1)`表示在 x 轴方向上将元素放大1.5倍，而在 y 和 z 轴上保持不变。
+
+```css
+.element {
+  transform: scale3d(1.5, 1, 1);
+}
+```
+
+4. 倾斜（Skew）：`skewX(angle)`和`skewY(angle)`函数可以分别在 x 和 y 轴上对元素进行倾斜。例如，`skewX(30deg)`表示在 x 轴上以30度角进行倾斜。
+
+```css
+.element {
+  transform: skewX(30deg);
+}
+```
+
+5. 透视（Perspective）：`perspective(value)`函数用于创建透视效果，使元素看起来有深度感。透视值越小，元素离观察者越近，深度感越强。
+
+```css
+.element {
+  perspective: 1000px;
+}
+```
+
+这些3D转换函数可以结合使用，并通过组合不同的转换来实现复杂的效果。同时，也可以在`transform`属性中添加过渡效果（使用`transition`属性）或动画（使用`@keyframes`规则），以创建平滑的动画过渡或自定义的动画序列。
+
+
+
 [**参考文档**](http://isux.tencent.com/css3/index.html?transform)
 
-## 动画
-
-动画是CSS3中具有颠覆性的特征之一，可通过设置多个节点来精确控制一个或一组动画，常用来实现复杂的动画效果。
-
-#### CSS3动画库
+**CSS3动画库**
 
 animate.css
 
@@ -1577,7 +2193,7 @@ a、通过@keyframes指定动画序列；
 
 b、通过百分比将动画序列分割成多个节点；
 
-c、在各节点中分别定义各属性
+c、在各节点中分别定义各属性;
 
 d、通过animation将动画应用于相应元素；
 
