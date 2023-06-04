@@ -2267,6 +2267,10 @@ i、steps(60) 表示动画分成60步完成
 
 正常布局是根据元素默认的属性，从上到下从左到右的方式依次排列，在排除其他布局情况，就是正常布局；
 
+在正常的布局流中，有两个重要的盒子，块级盒子和内联盒子，这个盒子怎么布局跟他是块级还是内联有很大的关系。可以通俗的讲，把盒子看成是一个元素。
+
+对于盒子本身有一个外部显示类型，所以它知道如何与其他盒子一起工作。然后它有一个内部显示类型，它改变了它的子对象的行为方式，这些子级也有一个外部和内部显示类型。
+
 比如，`div`元素默认是块级元素，他的宽度默认是它父元素的100%，高度与内容的高度一致，单独占据一行；而`span`元素默认是行内级元素，它的宽高是其内容自身的宽高，是不能给设置的，如果想要给`span`元素设置宽高，需要将`span`元素设置为`display: block;`或者 `display: inline-block;`
 
 ```html
@@ -2278,9 +2282,9 @@ i、steps(60) 表示动画分成60步完成
 
 **块级元素和行内元素**
 
-块级元素是指在HTML文档中以块的形式显示的元素。每个块级元素都会单独占据一行，并且默认情况下会在上下方向上留有一定的空白间距。常见的块级元素包括 `<div>、<p>、<h1> - <h6>、<ul>、<ol>、<li>` 等。块级元素可以设置宽度、高度、边距（margin）和内边距（padding），并且可以通过CSS属性控制其在页面上的布局。
+**块级元素**是指在HTML文档中以块的形式显示的元素。每个块级元素都会单独占据一行，并且默认情况下会在上下方向上留有一定的空白间距。常见的块级元素包括 `<div>、<p>、<h1> - <h6>、<ul>、<ol>、<li>` 等。同级的盒子间的垂直距离会由`margin`属性决定。会存在[边距重叠](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_box_model/Mastering_margin_collapsing)的问题。块级元素可以设置宽度、高度、边距（margin）和内边距（padding），并且可以通过CSS属性控制其在页面上的布局。
 
-行内元素是指在HTML文档中以行的形式显示的元素。行内元素不会独占一行，它们会在同一行上尽可能地排列。常见的行内元素包括 `<span>、<a>、<strong>、<em>、<img>、<input>` 等。行内元素的宽度和高度通常由其内容决定，无法直接设置，但可以设置水平方向的边距和内边距。
+行内元素是指在HTML文档中以行的形式显示的元素。行内元素不会独占一行，它们会在同一行上尽可能地排列。常见的行内元素包括 `<span>、<a>、<strong>、<em>、<img>、<input>` 等。行内元素的宽度和高度通常由其内容决定，无法直接设置，但可以设置水平方向的边距和内边距以及边框，宽高是由内容撑开。
 
 除了块级元素和行内元素之外，还有一种特殊的元素叫做行内块级元素（inline-block elements）。行内块级元素在外观上类似于行内元素，但可以设置宽度、高度、边距和内边距。常见的行内块级元素包括 `<img>` 和 `<input>`。
 
@@ -2316,7 +2320,7 @@ img {
 }
 ```
 
-在上面的示例中，`<div>` 元素被设置为块级元素，宽度为200像素，高度为100像素，具有红色背景，并且在下方有10像素的边距。`<span>` 元素被设置为行内元素，文本颜色为蓝色。`<img>` 元素被设置为行内块级元素，宽度和高度都是100像素。
+在上面的示例中，`<div>` 元素被设置为块级元素，宽度为200像素，高度为100像素，具有红色背景，并且在下方有10像素的边距。`<span>` 元素被设置为行内元素，文本颜色为蓝色。`<img>` 元素被设置为行内块级元素，宽度和高度都是100像素。这些都是元素的默认行为，但我们可以对这默认行为进行修改。
 
 ### 弹性盒子
 
@@ -2328,13 +2332,15 @@ img {
 
 **主轴**：`flex`容器的主轴主要用来配置`flex`项目，默认是水平方向
 
-**侧轴**：与主轴垂直的轴称作侧轴，默认是垂直方向的
+**交叉轴**：与主轴垂直的轴称作交叉轴，默认是垂直方向的
 
-**方向**：默认主轴从左向右，侧轴默认从上到下
+**方向**：默认主轴从左向右，交叉轴默认从上到下
 
-
+flex容器他也是一个盒子，因此它们的外部显示类型取决于它们是 flex 格式上下文的一部分。然而，他们有一种内在的流动显示类型，这意味着他们的孩子参与正常的流动。嵌套在 flex 项中的项将自己设置为块和内联元素，除非有什么改变了它们的显示类型。如果我们的flex容器为`div`元素，flex子项目为`span`元素，子项目会默认被修改为`display: block;`
 
 主轴和侧轴并不是固定不变的，可通过`flex-direction`进行修改。
+
+#### **flex-direction**
 
 `flex-direction`是设置在`flex`容器上的一个属性，指定主轴的方向，默认为`row`，及子元素应该以什么方向去排列；
 
@@ -2347,7 +2353,354 @@ img {
 | column         | 主轴为Y轴，方向为从上到下 |
 | column-reverse | 主轴为Y轴，方向为从下到上 |
 
+![image-20230603105349247](images/image-20230603105349247.png) 
+
+![image-20230603105408112](images/image-20230603105408112.png) 
+
+![image-20230603105443571](images/image-20230603105443571.png) 
+
+![image-20230603105512820](images/image-20230603105512820.png) 
+
 确定了轴的方向，并知道轴的方向是可更改的，我们就知道了对于多个项目整体的排列布局方式；
+
+现在来看看flex容器上的一些flex布局的属性
+
+1. 我们使用flex布局时，如果flex容器设置了高度，flex项目未设置高度，因为`display: flex` 属性会将 flex 项目的高定义成容器的高度，即`align-items: stretch;`
+2. 
+
+**flex容器属性：**
+
+- `flex-direction`：指定主轴的方向，可以是`row`（水平方向）、`column`（垂直方向）、`row-reverse`（反向水平方向）、`column-reverse`（反向垂直方向）。
+- `justify-content`：指定项目在**主轴上**的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`space-between`（两端对齐，项目之间间距相等）、`space-around`（每个项目两侧间距相等）等。
+- `align-items`：指定项目在交叉轴上的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`baseline`（基线对齐，以项目的第一行文字的基线对齐）、`stretch`（拉伸填满整个容器高度）等。
+- `flex-wrap`：指定项目是否换行，可以是`nowrap`（不换行，所有项目在一行上）、`wrap`（换行，后续项目从下一行开始）、`wrap-reverse`（反向换行）。
+
+**项目属性：**
+
+- `flex-grow`：指定项目的放大比例，默认为0，即不放大。如果某个项目设置为非零值，它将占据剩余空间的比例。
+- `flex-shrink`：指定项目的缩小比例，默认为1。如果空间不足，项目将按照该比例缩小。
+- `flex-basis`：指定项目在分配多余空间之前的基准大小。可以是像素值或百分比。
+- `flex`：`flex-grow`, `flex-shrink`, 和 `flex-basis` 的简写形式。
+- `align-self`：覆盖容器的`align-items`属性，单独设置某个项目在交叉轴上的对
+
+#### **justify-content**
+
+`justify-content`上面已经说过了，概念已经在上面介绍了，通过图来看看是怎样布局的；
+
+`justify-content`默认是`flex-start`，即从`start`位置开始排列
+
+1. `justify-content`默认是`flex-start`，
+
+![image-20230603114837332](images/image-20230603114837332.png) 
+
+2. `justify-content: flex-end`
+
+![image-20230603114803828](images/image-20230603114803828.png) 
+
+2. `justify-content: center`
+
+![image-20230603114948724](images/image-20230603114948724.png) 
+
+3. `justify-content: space-between`
+
+![image-20230603115038428](images/image-20230603115038428.png) 
+
+4. `justify-content: space-around`
+
+![image-20230603115219007](images/image-20230603115219007.png) 
+
+对于示例4，子项是平均分布，子项1左右两侧会各有间距，对于子项2左右两侧也会各有间距，这样造成了子项1和子项2之间的间距变大；
+
+#### **align-items & align-self**
+
+通过`align-items`属性，可以将交叉轴上的所有子项目对齐，此时使用的是垂直方向的块轴，而**align-self**控制交叉轴（纵轴）上的单个 flex 项目的对齐。
+
+以下子项目均设置了高度100
+
+1. `align-items: flex-start` flex 项目的开始端的对齐（默认方式）
+
+![image-20230603161326480](images/image-20230603161326480.png) 
+
+2. `align-items: flex-end` flex 项目的结束端对齐
+
+![image-20230603161516473](images/image-20230603161516473.png) 
+
+3. `align-items: center` flex 项目居中对齐
+
+![image-20230603161541061](images/image-20230603161541061.png) 
+
+4. `align-items: stretch` `flex` 项目撑满 `flex` 容器，在设置` stretch`值时子项如果设置了高度，这个值将无效，
+
+![image-20230603161720552](images/image-20230603161720552.png) 
+
+5. `align-items: baseline` flex 项目的基线对齐
+
+   基线（baseline）是指项目中的文本基线，它通常是文字的底部对齐线。不同字体、字号和样式的文本具有不同的基线位置。基线对齐是根据项目中的文本内容来确定对齐方式的。
+
+   当使用 `align-items: baseline;` 时，Flex容器会根据项目中的基线位置来对齐项目。具有不同字体或不同字号的项目将根据其基线对齐。这意味着项目的底部可能不对齐，而是根据文本内容的基线来进行对齐。
+
+   这种对齐方式在处理包含文本内容的项目时特别有用，可以在视觉上将它们对齐到一个基线，从而创建一致的布局效果。
+
+对于以下内容不使用`align-items: baseline` 时；
+
+未指明flex子项的高度
+
+```css
+div,  h1,   h2, h3 {
+    margin: 4px;
+}
+
+.one1 {
+    text-align: center;
+    width: 100px;
+    background: pink;
+}
+.flexContainer {
+    margin-top: 100px;
+    display: flex;
+    border: 1px solid;
+    width: 560px;
+    height: 400px;
+}
+```
+
+```html
+  <div class="flexContainer">
+    <div class="one1">
+      div
+    </div>
+    <h1 class="one1">
+      h1
+    </h1>
+    <h2 class="one1">
+      h2
+    </h2>
+    <h3 class="one1">
+      h3
+    </h3>
+    <div class="one1 one5">
+      5
+    </div>
+  </div>
+```
+
+![image-20230603163342431](images/image-20230603163342431.png) 
+
+使用`align-items: baseline` 后，
+
+```css
+.flexContainer {
+    ...
+    align-items: baseline;
+}
+```
+
+![image-20230603163538977](images/image-20230603163538977.png) 
+
+以上指定了`align-items`对整个子项目在交叉轴上的对齐方式，现在使用`align-self`来对每一个flex项目设置交叉轴上的对齐方式
+
+```html
+<div class="flexContainer">
+    <div class="one">
+        1
+    </div>
+    <div class="one one2">
+        2
+    </div>
+    <div class="one one3">
+        3
+    </div>
+    <div class="one one4">
+        4
+    </div>
+    <div class="one one5">
+        5
+    </div>
+</div>
+```
+
+```css
+.flexContainer {
+    margin-top: 100px;
+    display: flex;
+    border: 1px solid;
+    width: 560px;
+    height: 200px;
+}
+div {  margin: 4px;  }
+.one {
+    text-align: center;
+    width: 100px;
+    background: pink;
+    align-self: flex-start;
+}
+.one2 {
+    align-self: flex-end;
+}
+.one3 {
+    align-self: stretch;
+}
+.one4 {
+    align-self: center;
+}
+.one5 {
+    align-self: baseline;
+}
+```
+
+![image-20230603164337505](images/image-20230603164337505.png) 
+
+#### **justify-content**
+
+可以对齐主轴上的项目，主轴是水平方向的，默认是`flex-start`
+
+1. `justify-content: flex-start`
+
+![image-20230603170958494](images/image-20230603170958494.png) 
+
+2. `justify-content: flex-end` 
+
+![image-20230603171018342](images/image-20230603171018342.png) 
+
+3. `justify-content: center`
+
+![image-20230603171150572](images/image-20230603171150572.png) 
+
+4. `justify-content: space-between`
+
+![image-20230603171216442](images/image-20230603171216442.png) 
+
+5. `justify-content: space-around`
+
+![image-20230603171236795](images/image-20230603171236795.png) 
+
+#### **align-content**
+
+`align-content` 是 flex 布局中用于调整多行或多列项目在交叉轴上的对齐方式的属性。
+
+在 flex  布局中，当容器的总高度大于所有项目在交叉轴上所占据的空间时，`align-content` 属性可以控制项目在交叉轴上的分布方式。
+
+下面是对 `align-content` 属性的介绍：
+
+- `align-content: flex-start;`：将项目在交叉轴上顶部对齐。
+- `align-content: flex-end;`：将项目在交叉轴上底部对齐。
+- `align-content: center;`：将项目在交叉轴上居中对齐。
+- `align-content: space-between;`：将项目均匀分布在交叉轴上，第一行在容器顶部，最后一行在容器底部。
+- `align-content: space-around;`：将项目均匀分布在交叉轴上，每行两侧的间距相等。
+- `align-content: stretch;`：将项目在交叉轴上拉伸以填满容器的剩余空间。
+
+`align-content` 属性仅在容器的高度大于项目在交叉轴上所占据的空间时生效。如果所有项目在交叉轴上的高度总和已经填满了容器，或者容器只有一行项目，`align-content` 属性将不会产生任何效果。
+
+1. `align-content: flex-start;`
+
+![image-20230603172357770](images/image-20230603172357770.png) 
+
+2. `align-content: flex-end;`
+
+![image-20230603172436030](images/image-20230603172436030.png) 
+
+3. `align-content: center`
+
+![image-20230603172505420](images/image-20230603172505420.png) 
+
+4. `align-content: space-between;`
+
+![image-20230603172538925](images/image-20230603172538925.png) 
+
+5. `align-content: space-around`
+
+![image-20230603172620688](images/image-20230603172620688.png) 
+
+6. `align-content: stretch`
+
+![image-20230603172703159](images/image-20230603172703159.png) 
+
+#### **flex-wrap**
+
+flex-wrap默认子项目不换行；`nowrap`
+
+子项目不换行，的情况下是溢出或者压缩，在flex布局里面，子项目是压缩；
+
+1. `flex-wrap: nowrap`
+
+![image-20230603120624353](images/image-20230603120624353.png) 
+
+2. `flex-wrap: wrap` 如果子项一行放不下会放到下一行，能够看到，换行后第二行和第一行之间有间距；这是因为父元素有固定高度，子元素在垂直方向上会平均分布
+
+![image-20230603120733200](images/image-20230603120733200.png) 
+
+**注意：** 默认情况下，flex盒子会在交叉轴上尽量保持项目的对齐，使它们在垂直方向上居中对齐。当容器设置了固定的高度后，剩余的空间将被垂直方向上的间距填充，从而导致项目之间出现垂直间距。我们可以不用指定高度即可；
+
+3. `flex-wrap: wrap-reverse`
+
+![image-20230603155551675](images/image-20230603155551675.png)  
+
+#### order
+
+在flex 布局中，`order` 属性用于控制项目在容器中的排列顺序。通过指定不同的 `order` 值，可以改变项目在渲染时的顺序，从而实现重新排序的效果。
+
+默认情况下，项目的 `order` 值为 0，即按照它们在源代码中的出现顺序进行排列。当多个项目具有相同的 `order` 值时，它们按照它们在源代码中的出现顺序进行排序。
+
+要使用 `order` 属性重新排列项目，可以为项目设置不同的 `order` 值。`order` 值可以是负数、零或正数，它们决定了项目在容器中的排列顺序。具有较小 `order` 值的项目将在具有较大 `order` 值的项目之前进行渲染。
+
+例如，如果有三个项目：
+
+```html
+<div class="flexContainer">
+    <div class="one one1">
+        order 0
+    </div>
+    <div class="one one2">
+        order -1
+    </div>
+    <div class="one one3">
+        order 4
+    </div>
+    <div class="one one4">
+        order 2
+    </div>
+    <div class="one one5">
+        order 1
+    </div>
+</div>
+```
+
+```css
+.one1 {
+    order: 0;
+}
+
+.one2 {
+    order: -1;
+}
+
+.one3 {
+    order: 4;
+}
+
+.one4 {
+    order: 2;
+
+}
+
+.one5 {
+    order: 1;
+}
+```
+
+![image-20230603175016763](images/image-20230603175016763.png) 
+
+通过调整 `order` 属性的值，可以改变项目的排列顺序。
+
+- `order` 属性只影响项目的渲染顺序，不会改变它们在文档流中的顺序。
+- `order` 属性值越小，项目越早渲染，越靠前。
+- 相同 `order` 值的项目按照它们在源代码中的顺序进行排序。
+- 负数的 `order` 值可以用于将项目移至开头，正数的 `order` 值可以用于将项目移至末尾。
+- `order` 属性仅在 Flex 容器中生效，不会影响非 Flex 元素。
+
+#### **flex-grow & flex-shrink & flex-basis**
+
+这三个元属性能控制flex子项在主轴上的尺寸和伸缩，通常将这三个属性简写未`flex`的表达式；
 
 
 
