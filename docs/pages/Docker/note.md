@@ -1,13 +1,19 @@
 # Linux安装docker
 
-### cp -a
+### `CP`
 
+```shell
 cp -a 保留原文件属性的前提下复制文件 
 
 cp -r dirname（源文件） destdi（目标文件）
+```
 
 复制目录后其文件属性会发生变化
-想要使得复制之后的目录和原目录完全一样包括文件权限，可以使用cp -a dirname destdir 
+想要使得复制之后的目录和原目录完全一样包括文件权限，可以使用下列命令：
+
+```shell 
+cp -a dirname destdir 
+```
 
 ```shell
 # xxx.xxx.xxx.xxx:22 SSH-2.0-OpenSSH_7.4
@@ -20,9 +26,13 @@ xxx.xxx.xxx.xxx ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYxuxg/8WN2TEU4mD1NFQEjQiR3
 
 安装软件：
 
-\- run: sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
+更新软件，安装`rsync` 包，用于传输，安装`openssh-client`用于连接服务器
 
-## linux服务器之间传输文件
+```shell
+sudo apt-get update && sudo apt-get install rsync && sudo apt-get install openssh-client
+```
+
+#### linux服务器之间传输文件
 
 https://blog.csdn.net/qq_43674360/article/details/126096275
 
@@ -30,13 +40,13 @@ https://blog.csdn.net/weixin_44256848/article/details/126466072
 
 https://www.ydisp.cn/ement/75140.html
 
-## Rsync远程同步
+#### Rsync远程同步
 
 https://blog.csdn.net/weixin_71429839/article/details/127191015
 
-## 给文件/文件夹增加权限
+#### 给文件/文件夹增加权限
 
-## rsync 错误 failed: Permission denied (13)
+#### rsync 错误 failed: Permission denied (13)
 
 文件缺少权限，需要增加权限
 
@@ -44,31 +54,25 @@ https://blog.csdn.net/weixin_71429839/article/details/127191015
 chmod 755 /data/javaprefs
 ```
 
-## 查看是否安装某个软件包
+#### 查看是否安装某个软件包
 
 ```shell
 rpm -qa | grep "软件包名"
 ```
 
-## rsync常见问题及解决办法
+#### rsync常见问题及解决办法
 
 https://blog.csdn.net/qq_44786814/article/details/114849655
 
 https://blog.csdn.net/qq_39577008/article/details/104826277
 
-
-
-
-
-## ssh
+#### ssh
 
 查看是否安装ssh
 
 ```shell
 ssh -V
 ```
-
-
 
 检查ssh的状态
 
@@ -82,8 +86,6 @@ systemctl status sshd.service
 ps -aux | grep ssh
 ```
 
-
-
 ssh的位置
 
 ```shell
@@ -96,18 +98,13 @@ ssh的位置
 service sshd restart
 ```
 
-
-
-## 排查连接不上到linux的问题
-
-
+#### 排查连接不上到linux的问题
 
 circleci存的是密钥 
 
 linux存的是公钥
 
-
-## circleci在使用免密登录时的一些错误问题
+#### circleci在使用免密登录时的一些错误问题
 
 ### 使用私钥的情况下还输入密码问题
 
@@ -130,8 +127,6 @@ ssh -o StrictHostKeyChecking=no user@ip
 在文件/etc/ssh/ssh_config(全局)或者~/.ssh/config(某用户)开头加入以下内容
 
 StrictHostKeyChecking ask打开注释修改为StrictHostKeyChecking no即可
-
-
 
 但是这样做好像没什么反应
 
@@ -167,15 +162,13 @@ StrictHostKeyChecking no
 UserKnownHostsFile /dev/null
 ```
 
-
-
-## Linux操作系统如何使用SSH命令连接另外一台Linux服务器
+#### Linux操作系统如何使用SSH命令连接另外一台Linux服务器
 
 https://www.cnblogs.com/hls-code/p/16158324.html
 
 ### windows终端通过密钥远程连接Linux服务器
 
-## SSH密钥连接
+#### SSH密钥连接
 
 sshd服务提供两种安全验证的方法：
 
@@ -223,15 +216,11 @@ ssh tx
 也可以通过以下命令手动选中密钥连接远程主机
 `ssh -i path/id_rsa user_name@IP_address`
 
-
-
-
-
 ## 远程连接的方法
 
 (publickey,gssapi-keyex,gssapi-with-mic,password).
 
-## Win10自带的ssh客户端key权限设置
+#### Win10自带的ssh客户端key权限设置
 
 https://zhuanlan.zhihu.com/p/108445764#:~:text=Win10%E8%87%AA%E5%B8%A6%E7%9A%84ssh%E5%AE%A2%E6%88%B7%E7%AB%AFkey%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE%201%20%E5%AE%89%E8%A3%85%20%E6%89%93%E5%BC%80PowerShell%EF%BC%8C%E8%BE%93%E5%85%A5ssh%E4%B8%89%E4%B8%AA%E5%AD%97%E6%AF%8D%EF%BC%8C%E6%8C%89Enter%E3%80%82%20...%202%20%E5%8A%9F%E8%83%BD%20%E4%B8%8D%E5%A6%A8%E7%9C%8B%E4%B8%80%E4%B8%8BWin10%E6%8A%8A%E8%BF%99%E4%B8%AAssh%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%94%BE%E5%93%AA%E9%87%8C%E4%BA%86%E3%80%82,%E4%BF%AE%E6%94%B9key%E6%9D%83%E9%99%90%20%E5%AF%B9id_rsa%E6%96%87%E4%BB%B6%EF%BC%9A%E5%8F%B3%E5%87%BB-%E5%B1%9E%E6%80%A7-%E5%AE%89%E5%85%A8-%E9%AB%98%E7%BA%A7%E3%80%82%20...%205%20%E5%85%B6%E4%BB%96%20%E4%B8%80%E4%B8%AA%E9%9D%9E%E5%B8%B8%E6%9C%89%E7%94%A8%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%8C%E5%9C%A8PowerShell%E9%87%8C%E6%8C%89Ctrl%2BR%EF%BC%8C%E8%BE%93%E5%85%A5ssh%E5%AD%97%E6%A0%B7%EF%BC%8C%E7%84%B6%E5%90%8E%E4%B8%8D%E6%96%AD%E6%8C%89Ctrl%2BR%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%BE%80%E4%B8%8A%E7%BF%BB%E4%BB%A5%E5%89%8D%E8%BE%93%E8%BF%87%E7%9A%84%E5%B8%A6%27ssh%27%E5%AD%97%E6%A0%B7%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E5%92%8CLinux%20Shell%E5%87%A0%E4%B9%8E%E4%B8%80%E6%A0%B7%EF%BC%8C%E9%9D%9E%E5%B8%B8%E6%96%B9%E4%BE%BF%E3%80%82%20
 
@@ -283,73 +272,50 @@ https://blog.csdn.net/weixin_29980355/article/details/116859080
 
 https://blog.csdn.net/tyustli/article/details/122222605
 
-## 如果我们只想传输文件，但也要输入密码，可以在命令行加StrictHostKeyChecking=no
+#### 如果我们只想传输文件，但也要输入密码，可以在命令行加StrictHostKeyChecking=no
 
 **这样就可以解决跳过第一次登录时确认的问题**
 
-     ```shell
-command: scp -vr  -o StrictHostKeyChecking=no /home/circleci/cloudspace/dist/* $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
-     ```
-
-
-
-## 阿里云远程连接linux服务器的方法
+```shell
+ scp -vr  -o StrictHostKeyChecking=no /home/circleci/cloudspace/dist/* $SSH_USER@$SSH_IP:/www/wwwroot/testbuild/
+```
+#### 阿里云远程连接linux服务器的方法
 
 https://help.aliyun.com/document_detail/59083.html
 
-## 通过密钥连接之后，在通过密码连会提示说服务器禁止了使用密码进行连接，要使用密钥进行连接，现在登录linux服务器就需要使用密钥进行登录了，密钥文件放在网上
+#### 通过密钥连接之后，在通过密码连会提示说服务器禁止了使用密码进行连接，要使用密钥进行连接，现在登录linux服务器就需要使用密钥进行登录了，密钥文件放在网上
 
-## 出现Permission denied (publickey)的解决方法
+#### 出现Permission denied (publickey)的解决方法
 
 https://blog.csdn.net/a1489540461/article/details/126751164
 
-------------------------------
+#### [CircleCI 自动化部署](https://segmentfault.com/a/1190000021579837)
 
-# [CircleCI 自动化部署](https://segmentfault.com/a/1190000021579837)
-
-## 关于备份工具rsync，你不知道的事
+#### 关于备份工具rsync，你不知道的事
 
 https://developer.kingdee.com/article/387551352031207424?productLineId=29&isKnowledge=2
 
-## [GitHub + circleCI 自动构建/自动部署 应用](https://www.cnblogs.com/liugx/p/10339010.html)
+#### [GitHub + circleCI 自动构建/自动部署 应用](https://www.cnblogs.com/liugx/p/10339010.html)
 
-## CentOS 7 免密登录异常 -- we did not send a packet, disable method
+#### CentOS 7 免密登录异常 -- we did not send a packet, disable method
 
 https://blog.csdn.net/u010766726/article/details/108236397
 
-## circleci 使用手册
+#### circleci 使用手册
 
 https://haofly.net/circleci/
 
-
-
-## window自带ssh软件，可以使用ssh登录远程服务器
+#### window自带ssh软件，可以使用ssh登录远程服务器
 
 where.is   软件名
 
-## SCP的使用
+#### SCP的使用
 
 ![image-20230205074549790](./images/image-20230205074549790.png) 
 
 使用circleci自动部署前端是在circleci服务上构建好，然后通过将文件上传到服务器上的一种方法
 
 gitlab私有库是在linux环境上进行构建的，可以通过镜像来操作，很耗内存，
-
-说明以下项目的构建
-
-cloudspace是大项目，构建的时候很大，将他放在circleci上面进行构建，他的后端代码也是放到circleci上面的
-
-
-
-knowledge是通过github来访问的，也是通过circleci来构建，然后上传的github上面，这样做是因为很早测试了，然后没有改动
-
-
-
-interview这个是静态的项目，还没确定放到什么地方上
-
-
-
-光明公益小程序+后台+后端：放的地方不一致
 
 chapt
 
@@ -483,11 +449,7 @@ docker ps -a
 docker logs imagename
 ```
 
-```shell
-
-```
-
-# pm2常用指令
+### pm2常用指令
 
 ```js
 $ pm2 start app.js # 启动app.js应用程序
@@ -543,15 +505,11 @@ $ pm2 update                    # Save processes, kill PM2 and restore processes
 $ pm2 generate                  # Generate a sample json configuration file
 ```
 
-
-
-# nginx location
+#### nginx location
 
 http://t.zoukankan.com/shijianchuzhenzhi-p-6873737.html
 
-# 修改容器中的配置文件
-
-
+#### 修改容器中的配置文件
 
 docker 运行容器；
 
@@ -562,8 +520,6 @@ docker run --name nginx -p 80:80 -d nginx
 ```shell
 docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
 ```
-
-
 
 修改容器里面的文件，由于容器里面的文件无法修改该，通过拷贝的方式来替换掉原来的文件
 
@@ -591,7 +547,7 @@ docker cp /home/default.conf nginx:/etc/nginx/conf.d
 docker restart nginx
 ```
 
-# docker启动mysql时，有端口被占用，使用kill -9 pid杀不死的解决办法
+#### docker启动mysql时，有端口被占用，使用kill -9 pid杀不死的解决办法
 
 彻底停止mysql：
 
@@ -599,11 +555,11 @@ docker restart nginx
 sudo /etc/init.d/mysql stop
 ```
 
-# docker容器之间访问端口需要使用ip代替localhost
+#### docker容器之间访问端口需要使用ip代替localhost
 
-# docker不能运行mysql的时候查看一下端口是否占用‘
+#### docker不能运行mysql的时候查看一下端口是否占用‘
 
-# mysql容器无法外部访问解决方案
+#### mysql容器无法外部访问解决方案
 
 进入容器内  docker exec -it mysql /bin/bash
 
@@ -617,26 +573,22 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
 
 flush privileges;
 
-# 修改nginx容器中的文件
+#### 修改nginx容器中的文件
 
 通过拷贝主机上的文件到nginx容器，可修改容器中的文件
 
-```shell
-
-```
-
-# 查看nginx的安装目录
+#### 查看nginx的安装目录
 
 ```shell
 ps -ef | grep nginx
 ```
 
-# Dockerfile 中 run 和 cmd 区别
+#### Dockerfile 中 run 和 cmd 区别
 
 - `run` 是在 `docker build` 构建镜像时, 会执行的命令
 - `cmd` 是在 `docker run` 启动容器时, 会执行的命令
 
-# 在node启动的时候，sequlize报错
+#### 在node启动的时候，sequlize报错
 
 有可能时mysql没有连上，mysql是一个容器，node后端项目的容器在连接mysql的时候，有可能连接不上mysql；
 
@@ -654,10 +606,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
 
 这里的password是你正在使用的密码
 
-然后
-
-> `FLUSH PRIVILEGES;`
-> 刷新权限，让修改生效。
+然后`FLUSH PRIVILEGES;` 刷新权限，让修改生效。
 
 还有： 
 
@@ -680,7 +629,7 @@ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'xxxxxx';
 
 flush privileges;
 
-# 开始部署一个项目
+#### 开始部署一个项目
 
 安装git
 
@@ -730,7 +679,7 @@ npm i pm2 -g
 
 **像nginx，mysql，redis，这些可以安装到宿主机上，然后容器去访问就可以了，没必要放到容器里面**
 
-# 安装 mysql
+#### 安装 mysql
 
 https://blog.csdn.net/qq_55752792/article/details/122149990
 
@@ -738,7 +687,7 @@ https://blog.csdn.net/weixin_42123191/article/details/113230075
 
 https://blog.csdn.net/Y00010010/article/details/124562115
 
-# 安装docker
+#### 安装docker
 
 https://github.com/sillyhong/whongjiagou-learn/blob/master/turndownMarkdown/markdown/72.deploy.md
 
@@ -748,11 +697,11 @@ https://github.com/sillyhong/whongjiagou-learn/blob/master/turndownMarkdown/mark
 sudo systemctl start docker
 ```
 
-# linux查看进程
+#### linux查看进程
 
 https://blog.csdn.net/weixin_39785970/article/details/116867920
 
-## Docker部署vue
+#### Docker部署vue
 
 https://blog.csdn.net/weixin_42349568/article/details/125155544
 
@@ -811,7 +760,7 @@ docker ps
 
 gitlab启动成功后，浏览器访问http://ip:8880,即可访问。
 
-# 方法二
+#### 方法二
 
 ##### docker部署gitlab
 
@@ -875,11 +824,9 @@ user.save!
 exit
 ```
 
-## 方法三：
+#### 方法三：
 
-## 1. docker拉取gitlab社区版
-
-
+**1. docker拉取gitlab社区版**
 
 ```undefined
 docker pull gitlab/gitlab-ce:latest
@@ -887,15 +834,13 @@ docker pull gitlab/gitlab-ce:latest
 
 查看是否拉取成功
 
-
-
 ```bash
 [root@test gitlab] docker images
 REPOSITORY         TAG       IMAGE ID       CREATED      SIZE
 gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 ```
 
-## 2. 使用容器卷将数据映射到本地并运行
+**2. 使用容器卷将数据映射到本地并运行**
 
 | 宿主机位置          | 容器位置        | 作用                     |
 | ------------------- | --------------- | ------------------------ |
@@ -904,8 +849,6 @@ gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 | /data/gitlab/data   | /var/opt/gitlab | 用于存储应用数据         |
 
 ### 在宿主机创建映射目录
-
-
 
 ```kotlin
 [root@test ~] mkdir -p /data/gitlab/config  #递归创建目录，即使上级目录不存在，会按目录层级自动创建目录
@@ -916,11 +859,9 @@ gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 config  data  logs
 ```
 
-## 3.1 创建方法一
+3.1 创建方法一
 
 ### 创建`gitlab_start.sh`文件
-
-
 
 ```css
 [root@test gitlab] touch gitlab_start.sh
@@ -928,8 +869,6 @@ config  data  logs
 ```
 
 编写内容
-
-
 
 ```bash
 #!/bin/sh
@@ -957,21 +896,17 @@ sudo docker run --detach
 
 在该文件目录下,授予`gitlab_start.sh`执行权限
 
-
-
 ```css
 chmod +x gitlab_start.sh    
 ```
-
-
 
 ```bash
 ./gitlab_start.sh       #执行脚本
 ```
 
-# 方法四
+#### 方法四
 
-***\*下载\*******\*镜像\*******\*文件\****
+**下载镜像文件**
 
 ```
 docker pull beginor/gitlab-ce:11.0.1-ce.0
@@ -979,18 +914,18 @@ docker pull beginor/gitlab-ce:11.0.1-ce.0
 
 ![image-20220613071902175](./images/image-20220613071902175.png) 
 
-**2.\**创建GitLab 的配置 (etc) 、 日志 (log) 、数据 (data) 放到容器之外， 便于日后升级\****
+2.创建GitLab 的配置 (etc) 、 日志 (log) 、数据 (data) 放到容器之外， 便于日后升级
 
 ```
-mkdir` `-p ``/mnt/gitlab/etc
-```
-
-```
-mkdir` `-p ``/mnt/gitlab/log
+mkdir -p /mnt/gitlab/etc
 ```
 
 ```
-mkdir` `-p ``/mnt/gitlab/data
+mkdir -p /mnt/gitlab/log
+```
+
+```
+mkdir -p /mnt/gitlab/data
 ```
 
 **运行GitLab容器**
@@ -1041,26 +976,26 @@ vi /mnt/gitlab/data/gitlab-rails/etc/gitlab.yml
 
 ![image-20220613072026845](./images/image-20220613072026845.png) 
 
-# 方法五
+#### 方法五
 
 https://www.jb51.net/article/223451.htm
 
-# 方法六
+#### 方法六
 
 https://www.jb51.net/article/104536.htm
 
-# Linux执行.sh文件时提示No such file or directory该怎么办(三种解决办法)
+#### Linux执行.sh文件时提示No such file or directory该怎么办(三种解决办法)
 
 https://www.jb51.net/article/73684.htm
 
-# 操作系统怎么查看docker镜像的版本号
+#### 操作系统怎么查看docker镜像的版本号
 
 https://blog.csdn.net/wangxueying5172/article/details/122165237
 
-# Linux下面如何运行.sh文件
+#### Linux下面如何运行.sh文件
 
 http://t.zoukankan.com/lcword-p-5334059.html
 
-# 解决#!/bin/bash - no such file or directory
+#### 解决#!/bin/bash - no such file or directory
 
 https://www.jianshu.com/p/f2b867a347c9
