@@ -188,24 +188,20 @@ function add(x, y) {
 console.log(add(1, 2));
 ```
 
- index.js: webpack入口起点文件
+`webpack`入口起点文件
 
 **运行指令：**
 
 **开发环境**：`webpack ./src/index.js -o ./build/built.js --mode=development`
 
--o：表示输出路径
---mode：指定构建环境
+`-o`：表示输出路径
+`--mode`：指定构建环境
 
 webpack会以` ./src/index.js` 为入口文件开始打包，打包后输出到` ./build/built.js`
-
-**整体打包环境，是开发环境**
 
 **生产环境：**`webpack ./src/index.js -o ./build/built.js --mode=production`
 
  webpack会以` ./src/index.js `为入口文件开始打包，打包后输出到 `./build/built.js`
-
-**整体打包环境，是生产环境**
 
 为什么按照了webpack，还需要安装别的loader或者plugin？
 
@@ -214,14 +210,13 @@ webpack提供了一些默认的配置，有些插件会随着社区的完善，w
 比如：
 
 1. webpack能处理js/json资源，不能处理css/img等其他资源
-
-2. 生产环境和开发环境将ES6模块化编译成浏览器能识别的模块化~
-
-3. 生产环境比开发环境多一个压缩js代码。
+2. 生产环境和开发环境将ES6模块化编译成浏览器能识别的模块化
+3. 生产环境比开发环境多一个压缩js代码
+4. 等等等。。。
 
 使用时需要编译，ES6编译为ES5代码
 
-在这里built.js就是编译后的文件，也可以说mian.js就是**bundle**文件
+在这里built.js就是编译后的文件，也可以说`mian.js`就是**bundle**文件
 
 上述是单入口文件的介绍，在来看多入口文件的介绍：
 
@@ -240,7 +235,6 @@ index.js
 ```js
 import './index.css';
 const { log } = require('./common');
-
 log('webpack');
 ```
 
@@ -265,15 +259,17 @@ module.exports = {
 webpack.config.js
 
 ```js
-{
+module.exports = {
     // index 和utils两个入口文件
     entry: {
         index: "../src/index.js",  // 依赖common.js  、 index.css
         utils: '../src/utils.js', // 不依赖任何模块
     },
+    // 出口
     output: {
         filename: "[name].bundle.js", // 输出 index.bundle.js 和 utils.bundle.js
     },
+    // 外部loader
     module: {
         // lodaer使用
         rules: [
@@ -285,7 +281,8 @@ webpack.config.js
                 ],
             },
         ]
-    }
+    },
+    // 外部插件
     plugins: [
         // 用 MiniCssExtractPlugin 抽离出 css 文件，以 link 标签的形式引入样式文件
         new MiniCssExtractPlugin({
@@ -295,49 +292,53 @@ webpack.config.js
 }
 ```
 
-运行webpack之后
+运行webpack，可以使用上面提到的两种方式进行运行
 
 ![image-20230227132801645](./images/image-20230227132801645.png)  
 
-我们可以看出，index.css 和 common.js 在 index.js 中被引入，打包生成的 index.bundle.css 和 index.bundle.js 都属于 chunk 0，既同一个，utils.js 因为是独立打包的，它生成的 utils.bundle.js 属于 chunk 1。chunk属于一个标记，同一类，也是一个序号，表示谁先构建
+我们可以看出，`index.css` 和 `common.js` 在 index.js 中被引入，打包生成的` index.bundle.css` 和 `index.bundle.js `都属于 `chunk 0`，既同一个。utils.js 因为是独立打包的，它生成的 utils.bundle.js 属于 chunk 1。
 
+chunk属于一个标记，同一类，也是一个序号，表示谁先构建
 
+## bundle  chunk  module
 
 bundle、chunk、module之间的区别：
 
-1、对于一份同逻辑的代码，当我们手写下一个个的文件，它们无论是 ESM 还是 commonJS 或是 AMD，他们都是 module ；
+1、当我们手写下一个个的文件，它们无论是 ESM 还是 commonJS 或是 AMD，他们都是 module ；
 
- 2、当我们写的 module 源文件传到 webpack 进行打包时，webpack 会根据文件引用关系生成 chunk 文件，比如上面的index.js文件，引用了index.css、common.js ； common并入到了index.js文件里面了，index.css则单独提取出来了，因为配置了`MiniCssExtractPlugin` 插件，将css单独提取出来了，为一个chunk，所以index文件有两个chunk
-webpack 会对这个 chunk 文件进行一些操作；(个人理解：一个打包入口一个chunk)，上面的例子是两个打包入口，两个chunk（index.bundle.css，index.bundle.js属于同一个chunk）
+ 2、当我们写的 `module` 源文件传到 `webpack` 进行打包时，webpack 会根据文件引用关系生成 `chunk `文件，比如上面的`index.js`文件，引用了`index.css`、`common.js ； common并入到了index.js文件里面了，index.css`则单独提取出来了，因为配置了`MiniCssExtractPlugin` 插件，将`css`单独提取出来了，为一个`chunk`。所以index文件有两个chunk
+webpack 会对这个 chunk 文件进行一些操作；(个人理解：一个打包入口一个chunk)，上面的例子是两个打包入口，两个chunk（`index.bundle.css `， `index.bundle.js` 属于同一个`chunk`）
 
- 3、webpack 处理好 chunk 文件后，最后会输出 bundle 文件，这个 bundle 文件包含了经过加载和编译的最终源文件，所以它可以直接在浏览器中运行。
+ 3、webpack 处理好 chunk 文件后，最后会输出 `bundle` 文件，这个 `bundle` 文件包含了经过**加载**和**编译**的最终源文件，所以它可以直接在浏览器中运行。
 
-个人理解：一个入口文件下的所有引入都属于同一个chunk，而入口文件下引入的那些文件，可以说是bundle
+个人理解：一个入口文件下的所有引入都属于同一个`chunk`，而入口文件下引入的那些文件，可以说是`bundle`
 
- 一般来说一个 chunk 对应一个 bundle，比如上图中的 index.js -> chunks -> index.bumdle.js；
+ 一般来说一个 chunk 对应一个 bundle，比如上图中的 `index.js -> chunks -> index.bumdle.js`；
 
 **一句话总结：**
  module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：
 
-我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。
+我们直接写出来的是 `module`，`webpack` 处理时是 `chunk`，最后生成浏览器可以直接运行的 `bundle`。
 
-module ---> chunk --->  bundle
+**module ---> chunk --->  bundle**
 
 <span style="color: red">bundle</span>：打包最终生成的文件 
 
-chunk：每个chunk是由多个module组成（引用关系），可以通过代码分割成多个chunk。 运行过程中的代码块
+<span style="color: red">chunk</span>：每个chunk是由多个module组成（引用关系），可以通过代码分割成多个chunk。 运行过程中的代码块
 
-module：webpack中的模块（js、css、图片等等）
+<span style="color: red"> module</span>：webpack中的模块（js、css、图片等等）
 
-通俗来说，module 即每一个资源文件的模块对应，如js / css / 图片等，由NormalModule实例化而来，存在compilations.modules中；它可以理解为是源文件到chunk的一个中间态，便于编译过程中进行各种操作。
+通俗来说，module 即每一个资源文件的模块对应，如js / css / 图片等，由`NormalModule`实例化而来，存在`compilations.modules`中；它可以理解为是源文件到chunk的一个中间态，便于编译过程中进行各种操作。
 
 [最全webpack和chunk以及bundle的区别](https://jishuin.proginn.com/p/763bfbd3b63c)
 
+## npm run
+
 `npm run build`运行构建
 
-执行npm run 的时候，会去到`package.json`的`script`脚本下去找匹配的属性，然后自执行属性对应的值
+执行`npm run ...`的时候，会去到`package.json`的`script`脚本下去找匹配的属性，然后自执行属性对应的值
 
-调用的是script 里面build，执行的是build后面的命令
+调用的是`script `里面`build`，执行的是`build`后面的命令
 
 原理：模块局部安装会在node_module/.bin目录创建软链接
 
@@ -350,11 +351,11 @@ module：webpack中的模块（js、css、图片等等）
 }
 ```
 
-**[webpack entry](https://webpack.docschina.org/concepts/#entry)**
+## **[entry](https://webpack.docschina.org/concepts/#entry)**
 
 依赖入口文件，多入口多页面`entry：{}`，单入口单页面`entry: ''`
 
-**[webpack output](https://webpack.docschina.org/concepts/#output)**
+## [output](https://webpack.docschina.org/concepts/#output)
 
 在哪里输出它所创建的 *bundle*，以及如何命名这些文件
 
@@ -362,7 +363,7 @@ module：webpack中的模块（js、css、图片等等）
 
 ## [**Loaders**](https://webpack.docschina.org/concepts/loaders/)
 
-webpack只支持js、json
+webpack只支持`js`、`json`
 
 通过loader去支持其他文件类型并转换成有效的模块，并添加到依赖图中
 
@@ -378,7 +379,9 @@ webpack只支持js、json
 | raw-loader    | 将文件以字符串的形式导入   |
 | thread-loader | 多进程打包JS和CSS          |
 
-用法：
+用法： 
+
+通过`module`来包裹`loaders`的`rule`数组
 
 ```js
 module: {
@@ -395,13 +398,13 @@ module: {
 
 `use`指定使用的loader名称
 
-loader 从右到左（或从下到上）地取值(evaluate)/执行(execute)
+`loader` 从右到左（或从下到上）地取值(evaluate)/执行(execute)
 
 ## [**plugins**](https://webpack.docschina.org/concepts/plugins/)
 
 插件用于bundle文件的优化，资源管理和环境注入
 
-作用域整个构建过程，loader无法做的plugin去完成 
+作用域整个构建过程，**loader无法做的plugin去完成** 
 
 常见的plugin
 
@@ -423,15 +426,15 @@ plugin:[] // 数组里面就是plugin插件
 
 ## **[Mode](https://webpack.docschina.org/configuration/mode/)**
 
-提供 `mode` 配置选项，告知 webpack 使用相应模式的内置优化。
+提供 `mode` 配置选项，告知 webpack **使用相应模式**的内置优化。
 
 所选的有`development`，`production`
 
-development: 
+**development:** 
 设置 process.env.NODE_ENV 的值为 development ，开启NamedChunksPlugin 和 NamedModulesPlugin .
 
-production
-设置 process.env.NODE_ENV 的值为 production，开启FlagDependencyUsagePlugin ，FlagIncludedChunksPlugin，ModuleConcatenationPlugin ，NoEmitOnErrorsPluginOccurrenceOrderPlugin ，SideEffectsFlagPlugin 和TerserPlugin
+**production:**
+设置 `process.env.NODE_ENV `的值为 `production`，开启`FlagDependencyUsagePlugin` ，`FlagIncludedChunksPlugin`，`ModuleConcatenationPlugin` ，`NoEmitOnErrorsPluginOccurrenceOrderPlugin `，`SideEffectsFlagPlugin` 和`TerserPlugin`
 
 nonde
 不开启任何优化选项 
@@ -440,9 +443,9 @@ nonde
 
 **解析ES6**
 
-使用babel-loader解析
+使用`babel-loader`解析
 
-增加ES6的babel preset配置
+增加ES6的`babel preset`配置
 
 babel的配置文件：.babelrc
 
@@ -459,7 +462,7 @@ babel的配置文件：.babelrc
 npm i @babel/core @babel/preset-env babel-loader -D
 ```
 
-新建文 .babelrc 件并修改：
+新建文` .babelrc` 件并修改：
 
 ```
 {
@@ -469,12 +472,13 @@ npm i @babel/core @babel/preset-env babel-loader -D
 }
 ```
 
-修改webpack.config.js
+修改`webpack.config.js`
 
 ```js
 module: {
     rules: [
         {
+            // 对匹配到的js文件使用babel-loader进行解析
             use: /.js$/,
             use: 'babel-loader'
         }
@@ -482,9 +486,9 @@ module: {
 }
 ```
 
-解析React JSX
+**解析React JSX**
 
- .babelrc 件增加解析插件：
+ `.babelrc` 件增加解析插件：
 
 ```js
  "presets": [
@@ -492,9 +496,7 @@ module: {
   ]
 ```
 
-
-
-安装react ，react-dom，@babel/preset-react
+安装`react `，`react-dom`，`@babel/preset-react`
 
 ```
 npm i react react-dom @babel/preset-react -D
@@ -535,9 +537,9 @@ ReactDOM.render(
 
 时机：加载并转换
 
-css-loader用于加载.css文件，并且转换成commonjs对象
+`css-loader`用于加载.css文件，并且转换成commonjs对象
 
-style-loader将样式通过`<style>` 标签插入到head中
+`style-loader`将css文件内容通过`<style>` 标签插入到`head`元素中
 
 使用：
 
@@ -569,13 +571,13 @@ import './index1.css'
 
 **（2）解析less**
 
-安装less-loader
+安装`less-loader`
 
 ```
 npm install less less-loader -D
 ```
 
-在rules规则里面添加.less规则
+在rules规则里面添加`.less`规则
 
 ```js
 module: {
@@ -604,7 +606,7 @@ npm install file-loader -D
 
 规则里面添加文件规则
 
-```
+```js
 module: {
     rules: [
         {
@@ -636,9 +638,9 @@ module: {
 
 2. url-loader
 
-使用url-loader也可以处理图片和字体
+使用`url-loader`也可以处理图片和字体
 
-可以设置较小资源自动base64，内部也是使用的file-loader
+可以设置较小资源自动`base64`，内部也是使用的`file-loader`
 
 ```js
 module: {
@@ -664,9 +666,9 @@ module: {
 
 webpack开启监听模式，有两种方式：
 
-- 启动webpack命令时，带上--watch参数
+- 启动`webpack`命令时，带上`--watch`参数
 
-- 在配置webpack.config.js中设置watch:true
+- 在配置`webpack.config.js`中设置`watch:true`
 
 ```js
 // package.json
@@ -681,7 +683,7 @@ webpack开启监听模式，有两种方式：
 
 轮询监听文件的最后编辑时间是否变化
 
-某个文件发生了变化，并不会立刻告诉监听者，而是先缓存起来，等aggregateTimeout
+某个文件发生了变化，并不会立刻告诉监听者，而是先缓存起来，等`aggregateTimeout`
 
 ```js
 module.export = {
@@ -730,19 +732,19 @@ devServer: {
 
 这里面的热更新有最核心的是 HMR Server 和 HMR runtime。 
 
-HMR Server 是服务端，用来将变化的 js 模块通过 websocket 的消息通知给浏览器端。 
+HMR Server 是服务端，用来将变化的 js 模块通过 websocket 的消息通知给浏览器端。 (在我们启动项目的时候就产生了一个服务)
 
 HMR Runtime是浏览器端，用于接受  HMR Server 传递的模块数据，浏览器端可以看到 .hot-update.json 的文件过来。 
 
-HotModuleReplacementPlugin是做什么用的？ webpack 构建出来的 bundle.js 本身是不具备热更新的能力的，HotModuleReplacementPlugin 的作用就是将 HMR runtime 注入到 bundle.js，使得bundle.js可以和HMR Server建立websocket的通信连接，一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 js module 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。 
+`HotModuleReplacementPlugin`是做什么用的？ webpack 构建出来的` bundle.js `本身是不具备热更新的能力的，`HotModuleReplacementPlugin` 的作用就是将 HMR runtime 注入到 `bundle.js`，使得`bundle.js`可以和HMR Server建立`websocket`的通信连接，一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 `js module` 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。 
 
-webpack-dev-server的功能提供 bundle server的能力，就是生成的 bundle.js 文件可以通过 localhost://xxx 的方式去访问，另外 WDS 也提供 livereload(浏览器的自动刷新)。 
+`webpack-dev-server`的功能提供` bundle server`的能力，就是生成的 `bundle.js` 文件可以通过 `localhost://xxx` 的方式去访问，另外 WDS 也提供 livereload(浏览器的自动刷新)。 
 
-单独写两个包也是出于功能的解耦来考虑的。简单来说就是：hot-module-replacement-plugin 包给 webpack-dev-server 提供了热更新的能力。
+单独写两个包也是出于功能的解耦来考虑的。简单来说就是：`hot-module-replacement-plugin` 包给` webpack-dev-server `提供了热更新的能力。
 
 另一种方式：
 
-webpack-dev-middleware
+`webpack-dev-middleware`
 
 可以新建一个文件
 
@@ -806,7 +808,7 @@ js文件指纹设置
 
 设置output的filename使用[Chunkhash]
 
-```
+```js
 output: {
 	filename: '[name][chunkhash:8].js'
 }
@@ -824,7 +826,7 @@ plugins: [
 ]
 ```
 
-使用style-loader或css-loader并没有将css提取为独立的文件，可以使用`MiniCssExtractPlugin`将css提取为独立的文件
+使用`style-loader`或`css-loader`并没有将`css`提取为独立的文件，可以使用`MiniCssExtractPlugin`将css提取为独立的文件
 
 css使用时需要先将css文件单独提取出来 
 
@@ -1000,7 +1002,9 @@ plugins:[
 ]
 ```
 
-## PostCss插件autoprefixer自动补齐CSS3前缀
+## 自动补齐CSS3前缀
+
+PostCss插件autoprefixer
 
 查看浏览器支持版本（ https://caniuse.com/）
 
@@ -1096,17 +1100,17 @@ module: {
 
 请求层面：减少HTTP网络请求数
 
-- ⼩图⽚或者字体内联 (url-loader)
+- ⼩图⽚或者字体内联 (`url-loader`)
 
 **html和js内联**
 
-raw-loader内联html
+`raw-loader`内联`html`
 
 ```
 <script>${require(' raw-loader!babel-loader!. /meta.html')}</script>
 ```
 
-raw-loader 内联 JS
+`raw-loader `内联 JS
 
 ```
 <script>${require('raw-loader!babel-loader!../node_modules/lib-flexible')}</script>
@@ -1114,7 +1118,7 @@ raw-loader 内联 JS
 
 css内联
 
-使用style-loader
+使用`style-loader`
 
 ```js
 module: {
@@ -1138,7 +1142,7 @@ module: {
 
 ## 使用source map
 
-http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html
+参考: http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html
 
 ![image-20230227132710943](./images/image-20230227132710943.png) 
 
