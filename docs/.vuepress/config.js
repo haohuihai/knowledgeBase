@@ -1,7 +1,7 @@
 // 注意: base的值为github仓库的名称(/不能少)
 module.exports = {
   base: "/knowledgebase/" /* 基础虚拟路径 */,
-  dest: "docs/dist" /* 打包文件基础路径, 在命令所在目录下 */,
+  dest: "dist" /* 打包文件基础路径, 在命令所在目录下 */,
   title: "DATA", // 标题
   description: "记录一些我遇到的技术", // 标题下的描述
   // 指定网页head图标
