@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: cimg/node:16.14
+    working_directory: ~/knowledge
     branches:
       only:
         - main
@@ -26,9 +27,13 @@ jobs:
       - run: 
           name: Build
           command: yarn build
-      - run:
-          name: Prepare shell commands
-          command: chmod +x deploy.sh
-      - run:
-          name: Run Deploy to Github pages
-          command: ./deploy.sh
+      # - run:
+      #     name: Prepare shell commands
+      #     command: chmod +x deploy.sh
+      # - run:
+      #     name: Run Deploy to Github pages
+      #     command: ./deploy.sh
+      - deploy:
+          name: deploy
+          command: scp -vr  -o StrictHostKeyChecking=no /home/circleci/knowledge/dist/* $SSH_USER@$SSH_IP:/www/wwwroot/knowledge/
+      - run: echo '部署完毕'
