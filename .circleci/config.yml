@@ -10,9 +10,9 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "5d:d8:5e:09:c4:cc:57:2f:e4:3b:7e:49:2a:b3:f0:24"
+            - "06:f4:f6:4a:9d:43:0d:9e:0a:dd:15:33:27:0a:bf:3f"
       - checkout
-      - run: echo "A first hello"
+      - run: echo "开始打包"
       - run: yarn -v
       - restore_cache:
           keys:
