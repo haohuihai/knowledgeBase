@@ -12,6 +12,9 @@ jobs:
           fingerprints:
             - "06:f4:f6:4a:9d:43:0d:9e:0a:dd:15:33:27:0a:bf:3f"
       - checkout
+      - run: pwd
+      - run: echo '删除dist目录'
+      - run: rm -rf /home/circleci/knowledge/dist
       - run: echo "开始打包"
       - run: yarn -v
       - restore_cache:
