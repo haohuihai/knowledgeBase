@@ -112,7 +112,7 @@ chmod u+x bkDatabase.sh
 
 我这儿有三个定时任务 如图：
 
-![image-20230627172332421](images/image-20230627172332421.png) 
+![image-20230627172332421](./images/image-20230627172332421.png) 
 
 其中第二个
 
@@ -125,7 +125,7 @@ chmod u+x bkDatabase.sh
 
 可以看到是否添加成功（如图）
 
-![image-20230627172234358](images/image-20230627172234358.png) 
+![image-20230627172234358](./images/image-20230627172234358.png) 
 
 在备份目录中查看是否成功
 
@@ -133,7 +133,7 @@ chmod u+x bkDatabase.sh
 
 有些定时任务是关闭的，使用命令查看`crond`是否正常`service` `crond status`
 
-![image-20230627172217441](images/image-20230627172217441.png) 
+![image-20230627172217441](./images/image-20230627172217441.png) 
 
 若正常不用管，若未启动，则重启一次。
 
