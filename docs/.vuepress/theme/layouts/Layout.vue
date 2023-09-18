@@ -30,6 +30,7 @@
     </Sidebar>
     
     <Home v-if="$page.frontmatter.home" />
+    
     <!-- 主页展示区 -->
     <Page
       v-else
@@ -42,7 +43,12 @@
         <slot name="page-bottom" />
       </template>
     </Page>
-    <Content slot-key="doclist" />
+    <RightSidebar>
+      <template #doc>
+        <Content slot-key="doclist" />
+      </template>
+    </RightSidebar>
+    
   </div>
 </template>
 
@@ -51,6 +57,7 @@ import Home from '@theme/components/Home.vue'
 import Navbar from '@theme/components/Navbar.vue'
 import Page from '@theme/components/Page.vue'
 import Sidebar from '@theme/components/Sidebar.vue'
+import RightSidebar from '@theme/components/RightSidebar.vue'
 import { resolveSidebarItems } from '../util'
 import IndexPost from './IndexPost.vue'
 import Post from './Post.vue'
@@ -64,7 +71,8 @@ export default {
     Sidebar,
     Navbar,
     Post,
-    IndexPost
+    IndexPost,
+    RightSidebar
 },
 
   data () {

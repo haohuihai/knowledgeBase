@@ -860,10 +860,6 @@ setTimeout
 立即执行
 ```
 
-
-
-
-
 # 模块
 
 介绍Node的模块时，我们先介绍一下Commonjs规范，这两者是不可分割的，不管缺少哪一个，就不能实现模块的引入；
@@ -1139,6 +1135,8 @@ CommonJS模块规范也允许在标识符中不包含文件扩展名，这种情
 
 首先，Node在当前目录下查找`package.json`（CommonJS包规范定义的包描述文件），通过`JSON.parse()`解析出包描述对象，从中取出main属性指定的文件名进行定位。如果文件名缺少扩展名，将会进入扩展名分析的步骤。而如果main属性指定的文件名错误，或者压根没有`package.json`文件，Node会将`index`当做默认文件名，然后依次查找`index.js`、`index.json`、`index.node`。如果在目录分析的过程中没有定位成功任何文件，则自定义模块进入下一个模块路径进行查找。如果模块路径数组都被遍历完毕，依然没有查找到目标文件，则会抛出查找失败的异常。
 
+## ES6模块规范
+
 ## 系统模块
 
 ### nvm
@@ -1286,7 +1284,7 @@ Node.js 目前支持的编码如下：
 
 6. hex
 
-> 用两位 16 进制来表示每个字节
+用两位 16 进制来表示每个字节
 
 示例代码：
 
@@ -1304,9 +1302,51 @@ console.log(buf.toString('utf8'));
 2. 当我们要把一大块数据从一个地方传输到另外一个地方的时候可以通过 Buffer 对象进行传输
 3. 通过 Buffer 每次可以传输小部分数据，直到所有数据都传输完毕。
 
+### Stream
+
+Node中很多对象都是Stream，HTTP请求，进程日志输出，文件的读写
+
+Stream本身是一个EventEmitter
+
+Stream内部含有Buffer
+
+**类型**
+
+可读Writable
+
+可写Readble
+
+双工 Duplex
+
+转换 Transform
+
+### Events
+
+on 方法，注册事件回调
+
+emit 方法，手动触发事件
+
+```js
+const EventEmitter = require('events');
+class MyEventEmitter extends EventEmitter {}
+
+
+const myEventEmitter = new MyEventEmitter();
+myEventEmitter.on('ping', function() {
+ console.log('pong');
+})
+myEventEmitter.emit('ping');
+
+```
+
+
+
 ### fs
 
 用于操作服务器的文件(目录)，创建目录、删除目录、读取目录、创建文件、删除文件、写入文件....
+
+path: 路径
+callback: 回调函数
 
  (1)创建目录
 
@@ -1328,8 +1368,8 @@ fs.readdir(path, callback)  —— 异步
 fs.readdirSync(path)    —— 同步
  ```
 
-> 1. 同步会阻止后续代码的执行，只有执行完以后才会执行后续代码；是通过返回值来获取结果；
-> 2. 异步不会阻止后续代码的执行，在整个程序的最后执行，是通过回调函数来获取结果。常用于一些比较耗时的操作。
+1. 同步会阻止后续代码的执行，只有执行完以后才会执行后续代码；是通过返回值来获取结果；
+2. 异步不会阻止后续代码的执行，在整个程序的最后执行，是通过回调函数来获取结果。常用于一些比较耗时的操作。
 
  (4)写入文件
 
@@ -1339,13 +1379,26 @@ fs.writeFile(path, data, callback)
 
 如果文件不存在，则会创建文件，然后写入数据；如果文件已经存在，则会清空文件的内容，然后写入
 
-> callback的格式
+```js
+fs.writeFile('文件路径/文件名称', '数据', err => {
+    if(err ! === null) {
+    	console.log(err)
+        return
+    }
+    console.log('文件写入成功')
+})
+
+```
+
+**callback的格式**
 
 ```js
 (err, result) => {
 
 }
 ```
+
+在使用回调函数的时候，优先判断程序错误
 
  (5)删除文件
 
@@ -1372,10 +1425,34 @@ fs.appendFileSync(path,data)
  (4)读取文件
 
 ```js
-fs.readFile(path, callback)/fs.readFileSync(path)
+fs.readFile(path, 编目格式,callback)/fs.readFileSync(path)
 
-// 读取的数据格式为buffer
+// 默认读取的数据格式为buffer，通过buffer进行转换
 ```
+
+额外的：
+
+1. 路径拼接：
+
+```js
+path.join('路径1', '路径2', '路径3', ....)
+```
+
+```js
+  // 导入path模块
+ const path = require('path');
+  // 路径拼接
+ let finialPath = path.join('hao', 'a', 'b', 'c.css');
+  // 输出结果 hao\a\b\c.css
+ console.log(finialPath);
+
+```
+
+2. 相对路径 和 绝对路径
+
+- 大多数情况下使用绝对路径，因为相对路径有时候相对的是命令行工具的当前工作目录
+- 在读取文件或者设置文件路径时都会选择绝对路径
+- 使用__dirname获取当前文件所在的绝对路径
 
 ### querystring
 
@@ -1429,7 +1506,11 @@ console.log(obj3);
 
 ```
 
-### URl
+### url
+
+统一资源定位符，又叫URL（Uniform Resource Locator），是专为标识Internet网上资源位置而设的一种编址方式，我们平时所说的网页地址指的即是URL。
+
+平时我们使用的localhost是我们本地的域名，127.0.0.1是我们本地的ip
 
 parse()  将URL解析为对象
 
@@ -1492,11 +1573,11 @@ console.log(obj2);
 
  (1)通用头信息
 
-  Request URL: 请求的URL，向服务器端获取的内容
+  **Request URL**: 请求的URL，向服务器端获取的内容
 
-  Request Method: 请求的方法  常用的有 get/post  get获取内容，post常用于向服务器端传递安全较高数据
+  **Request Method**: 请求的方法  常用的有 get/post/put/delete  get获取内容，post常用于向服务器端传递安全较高数据，get用于请求数据
 
-  Status Code: 响应的状态码
+  **Status Code: 响应的状态码**
 
   ```
 2**: 服务器成功的响应
@@ -1509,6 +1590,31 @@ console.log(obj2);
   ```
 
   Remote Address: 请求的服务器的IP地址和端口号
+
+**内容类型**
+
+```
+text/html
+text/css
+application/javascript
+image/jpeg
+application/json
+
+
+application/x-www-form-urlencoded
+multipart/form-data  表单上传时，指定的类型
+```
+
+```js
+ app.on('request', (req, res) => {
+     // 设置响应报文
+     res.writeHead(200, {  
+         'Content-Type': 'text/html;charset=utf8‘
+     });
+ });
+```
+
+
 
  (2)响应头信息
 
@@ -1606,6 +1712,51 @@ server.on('request',(req,res)=>{
 });
 ```
 
+创建GET请求:
+
+参数被放置在浏览器地址栏中，例如：http://localhost:3000/?name=zhangsan&age=20
+参数获取需要借助系统模块url，url模块用来处理url地址
+
+```js
+ const http = require('http');
+ // 导入url系统模块 用于处理url地址
+ const url = require('url');
+ const app = http.createServer();
+ app.on('request', (req, res) => {
+     // 将url路径的各个部分解析出来并返回对象
+         // true 代表将参数解析为对象格式
+     let {query} = url.parse(req.url, true);
+     console.log(query);
+ });
+ app.listen(3000);
+
+```
+
+
+
+创建post请求：
+
+参数被放置在请求体中进行传输
+获取POST参数需要使用data事件和end事件
+使用querystring系统模块将参数转换为对象格式
+
+```js
+ // 导入系统模块querystring 用于将HTTP参数转换为对象格式
+ const querystring = require('querystring');
+ app.on('request', (req, res) => {
+     let postData = '';
+     // 监听参数传输事件
+     req.on('data', (chunk) => postData += chunk;);
+     // 监听参数传输完毕事件
+     req.on('end', () => { 
+         console.log(querystring.parse(postData)); 
+     }); 
+ });
+
+```
+
+
+
 ### process
 
 ```
@@ -1663,12 +1814,367 @@ https://zhuanlan.zhihu.com/p/36678971
 | 文件模块 | require('./circle.js')常用于用户自定义模块，如果后缀名是js是可以省略的 | require('url')常用于引入官方提供的核心模块                   |
 | 目录模块 | require('./Animal')会在当前目录下的Animal中寻找package.json文件中的main属性对应的值，如果不存在该文件，则自动寻找index.js | require('Animal')要求引入的目录出现在node_modules中，如果找不到，则会到上一级目录查找，直到顶层。常用于第三方模块。 |
 
+### 常用全局对象和模块
+
+```
+clearInterval
+setInterval
+clearTimeout
+setTimeout
+console
+process
+```
+
+```
+__filename
+__dirname
+exports
+module
+require
+```
+
+他们在模块加载的时候进行入注入程序
+
+
+
 ## 第三方模块
+
+npm 是node的第三方模块管理工具
+
+关于npm的一些命令：
+
+```js
+npm install  
+npm uninstall 
+
+```
+
+
 
 安装方式：
 
 ```js
 npm install package
+```
+
+1. nodemon
+
+nodemon 用来替代node命令执行的一个包，在每次修改完代码之后，能够监听文件的变化，从而重新编译项目
+
+全局安装
+
+```
+npm install nodemon -g
+```
+
+使用
+
+```js
+nodemon app.js
+```
+
+2. package.json
+
+项目描述文件，记录了当前项目信息，例如项目名称、版本、作者、github地址、当前项目依赖了哪些第三方模块等。
+通过使用`npm init -y`命令生成。
+
+项目依赖：
+
+在项目的开发阶段和线上运营阶段，都需要依赖的第三方包，称为项目依赖
+使用npm install 包名命令下载的文件会默认被添加到 package.json 文件的 dependencies 字段中
+
+```js
+{
+    "dependencies": {
+        "jquery": "^3.3.1“
+    }
+ } 
+```
+
+开发依赖：
+
+在项目的开发阶段需要依赖，线上运营阶段不需要依赖的第三方包，称为开发依赖
+使用npm install 包名 --save-dev命令将包添加到package.json文件的devDependencies字段中
+
+```js
+ {
+    "devDependencies": {
+        "gulp": "^3.9.1“
+    }
+ } 
+```
+
+package-lock.json文件的作用
+
+ 锁定包的版本，确保再次下载时不会因为包版本不同而产生问题
+ 加快下载速度，因为该文件中已经记录了项目所依赖第三方包的树状结构和包的下载地址，重新安装时只需下载即可，不需要做额外的工作
+
+# 异步编程
+
+同步和异步API
+
+```JS
+ // 路径拼接
+ const public = path.join(__dirname, 'public');
+ // 请求地址解析
+ const urlObj = url.parse(req.url);
+ // 读取文件
+ fs.readFile('./demo.txt', 'utf8', (err, result) => {
+     console.log(result);
+ });
+
+```
+
+同步API可以从返回值中拿到API执行的结果, 但是异步API是不可以的
+
+```JS
+    // 同步
+  function sum (n1, n2) { 
+      return n1 + n2;
+  } 
+  const result = sum (10, 20);
+
+```
+
+```JS
+    // 异步
+  function getMsg () { 
+      setTimeout(function () { 
+          return { msg: 'Hello Node.js' }
+      }, 2000);
+  }
+  const msg = getMsg ();
+
+// ----------------------- 代码不回安装顺序输出
+console.log('代码开始执行'); 
+setTimeout(() => { console.log('2秒后执行的代码')}, 2000);
+setTimeout(() => { console.log('"0秒"后执行的代码')}, 0); 
+console.log('代码结束执行');
+
+
+```
+
+![image-20230811225915535](images/image-20230811225915535.png) 
+
+回调函数
+
+```js
+  // getData函数定义
+ function getData (callback) {}
+  // getData函数调用
+ getData (() => {});
+
+```
+
+```js
+const fs = require('fs');
+
+fs.readFile('./1.txt', 'utf8', (err, result1) => {
+	console.log(result1)
+	fs.readFile('./2.txt', 'utf8', (err, result2) => {
+		console.log(result2)
+		fs.readFile('./3.txt', 'utf8', (err, result3) => {
+			console.log(result3)
+		})
+	})
+});
+```
+
+
+
+使用回调函数获取异步API的结果
+
+```js
+function getMsg (callback) {
+    setTimeout(function () {
+        callback ({ msg: 'Hello Node.js' })
+    }, 2000);
+}
+getMsg (function (msg) { 
+    console.log(msg);
+});
+
+```
+
+Node中的异步API
+
+```js
+ fs.readFile('./demo.txt', (err, result) => {});
+
+ var server = http.createServer();
+ server.on('request', (req, res) => {});
+
+```
+
+Promise
+
+Promise出现的目的是解决Node.js异步编程中回调地狱的问题。
+
+```js
+let promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        if (true) {
+            resolve({name: '张三'})
+        }else {
+            reject('失败了') 
+        } 
+    }, 2000);
+});
+promise.then(result => console.log(result); // {name: '张三'})
+       .catch(error => console.log(error); // 失败了)
+
+```
+
+二、
+
+```js
+const fs = require('fs');
+let promise = new Promise((resolve, reject) => {
+	fs.readFile('./100.txt', 'utf8', (err, result) => {
+		if (err != null) {
+			reject(err);
+		}else {
+			resolve(result);
+		}
+	});
+});
+
+promise.then((result) => {
+	 console.log(result);
+})
+.catch((err)=> {
+	console.log(err);
+})
+```
+
+三、
+
+```js
+const fs = require('fs');
+
+// fs.readFile('./1.txt', 'utf8', (err, result1) => {
+// 	console.log(result1)
+// 	fs.readFile('./2.txt', 'utf8', (err, result2) => {
+// 		console.log(result2)
+// 		fs.readFile('./3.txt', 'utf8', (err, result3) => {
+// 			console.log(result3)
+// 		})
+// 	})
+// });
+
+function p1 () {
+	return new Promise ((resolve, reject) => {
+		fs.readFile('./1.txt', 'utf8', (err, result) => {
+			resolve(result)
+		})
+	});
+}
+
+function p2 () {
+	return new Promise ((resolve, reject) => {
+		fs.readFile('./2.txt', 'utf8', (err, result) => {
+			resolve(result)
+		})
+	});
+}
+
+function p3 () {
+	return new Promise ((resolve, reject) => {
+		fs.readFile('./3.txt', 'utf8', (err, result) => {
+			resolve(result)
+		})
+	});
+}
+
+p1().then((r1)=> {
+	console.log(r1);
+	return p2();
+})
+.then((r2)=> {
+	console.log(r2);
+	return p3();
+})
+.then((r3) => {
+	console.log(r3)
+})
+```
+
+
+
+异步函数
+
+异步函数是异步编程语法的终极解决方案，它可以让我们将异步代码写成同步的形式，让代码不再有回调函数嵌套，使代码变得清晰明了。
+
+```js
+// 一
+const fn = async () => {};
+
+// 二
+async function fn () {}
+
+```
+
+**async**
+
+1. 普通函数定义前加async关键字 普通函数变成异步函数
+2. 异步函数默认返回promise对象
+3. 在异步函数内部使用return关键字进行结果返回 结果会被包裹的promise对象中 return关键字代替了resolve方法
+4. 在异步函数内部使用throw关键字抛出程序异常
+5. 调用异步函数再链式调用then方法获取异步函数执行结果
+6. 调用异步函数再链式调用catch方法获取异步函数执行的错误信息
+
+**await**
+
+1. await关键字只能出现在异步函数中
+2. await promise await后面只能写promise对象 写其他类型的API是不不可以的
+3. await关键字可是暂停异步函数向下执行 直到promise返回结果
+
+一、
+
+```js
+async function p1 () {
+	return 'p1';
+}
+
+async function p2 () {
+	return 'p2';
+}
+
+async function p3 () {
+	return 'p3';
+}
+
+async function run () {
+	let r1 = await p1()
+	let r2 = await p2()
+	let r3 = await p3()
+	console.log(r1)
+	console.log(r2)
+	console.log(r3)
+}
+
+run();
+```
+
+二、
+
+```js
+const fs = require('fs');
+// 改造现有异步函数api 让其返回promise对象 从而支持异步函数语法
+const promisify = require('util').promisify;
+// 调用promisify方法改造现有异步API 让其返回promise对象
+const readFile = promisify(fs.readFile);
+
+async function run () {
+	let r1 = await readFile('./1.txt', 'utf8')
+	let r2 = await readFile('./2.txt', 'utf8')
+	let r3 = await readFile('./3.txt', 'utf8')
+	console.log(r1)
+	console.log(r2)
+	console.log(r3)
+}
+
+run();
 ```
 
 

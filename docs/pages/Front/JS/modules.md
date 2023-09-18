@@ -900,14 +900,15 @@ console.log(person.name);
 
 7. 引入第三方模块(jQuery)
    
+
 1). 下载jQuery模块: 
-   
+
    ```js
    npm install jquery@1 --save
-```
-   
+   ```
+
 2). 在app.js中引入并使用
-   
+
    ```
    import $ from 'jquery'
    $('body').css('background', 'red')

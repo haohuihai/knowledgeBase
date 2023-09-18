@@ -10,7 +10,8 @@ cacheGroups:
 
 开始的文件大小
 
-<img :src="$withBase('./images/image-20220711170653856.png')" />
+
+<img :src="$withBase('/images/image-20220711170653856.png')" />
 
 
 <img :src="$withBase('/images/image-20220711171111675.png')" />

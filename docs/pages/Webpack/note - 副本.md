@@ -1,27 +1,37 @@
-存在的问题：
+## 存在的问题：
 
-体积大
+- [ ] 体积大
 
-构建速度慢
 
-静态资源没优化
+- [ ] 构建速度慢
+
+
+- [ ] 静态资源没优化
+
 
 cacheGroups: 
 
 开始的文件大小
 
-<img :src="$withBase('./images/image-20220711170653856.png')" />
+<img src="./images/image-20220711170653856.png" />
 
 
-<img :src="$withBase('/images/image-20220711171111675.png')" />
+
+
+
+<img src="./images/image-20220711171111675.png" />
+
+
 
 
 第二次修改：
 
-<img :src="$withBase('/images/image-20220711173009686.png')" />
+<img src="./images/image-20220711173009686.png" />
 
 
 可以看到vendors的体积很大，我们需要对vendors的依赖包进行抽离，将多次引入的包抽离，
+
+## 检测不使用的依赖
 
 使用depcheck检测项目中不用的依赖：
 
@@ -30,86 +40,73 @@ npm install -g depcheck
 depcheck 项目路径
 ```
 
-<img :src="$withBase('/images/image-20220712092429722.png')" />
+<img src="./images/image-20220712092429722.png" />
 
-
-
-
-Unused 表示没有使用的依赖包，Missing 表示使用到了但是没有在 json 文件中声明的依赖包
-
-
+> Unused 表示没有使用的依赖包，Missing 表示使用到了但是没有在 json 文件中声明的依赖包
 
 有一些特殊乱入的包也会被检测出来的，比如：babel、eslint、husky、prettier、lint-staged、types、webpack的loaders等相关的包。
 
 https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md
 
-
-
-
-
-检测出没用到的依赖：
+检测出没用到的依赖，根据项目使用，判断是否再用后在删除下列包
 
 node-plop、clone、qrcode-react、react-highlight-words、react-infinite-scroller、react-pdf-js、uglifyjs-webpack-plugin、umi-plugin-dva、babel-plugin-react-intl、eslint-config-airbnb、eslint-plugin-markdown，lrz，
 
-base: "/",
+```
+base: "/",  也称访问的基本路径
+// 构建完  生成 asset目录下的dist文件  访问方式ip/...  本地构建的时候需要注释 
+// base: "/asset/",
+// 构建完  生成 asset目录下的dist文件  访问方式ip/asset/...  本地构建的时候需要注释 
+// 本地开发的时候，不存在asset  注释就可以了  不然存在  index.html下的资源都需要asset这样去引用 
 
- // base: "/asset/",
 
- // 构建完  生成 asset目录下的dist文件  访问方式ip/asset/...  本地构建的时候需要注释 
-
- // 本地开发的时候，不存在asset  注释就可以了  不然存在  index.html下的资源都需要asset这样去引用 
-
- publicPath: "/asset/",
-
+publicPath: "/asset/",  也称静态资源的基本路径
 // 构建好的资源，访问静态目录时的位置
-
-
+```
 
 换之前：
 
 vendors.js
 
-<img :src="$withBase('/images/image-20220712165331616.png')" />
+<img src="./images/image-20220712165331616.png" />
 
 
 加载文件大小：
 
-<img :src="$withBase('/images/image-20220718104837358.png')" />
+<img src="./images/image-20220718104837358.png" />
 
 
-<img :src="$withBase('/images/image-20220720100215746.png')" />
+<img src="./images/image-20220720100215746.png" />
 
 
-<img :src="$withBase('/images/image-20220720100447163.png')" />
+<img src="./images/image-20220720100447163.png" />
 
 
 **换完之后：**
 
-<img :src="$withBase('/images/image-20220720100044128.png')" />
+<img src="./images/image-20220720100044128.png" />
 
 
-<img :src="$withBase('/images/image-20220720100014871.png')" />
+<img src="./images/image-20220720100014871.png" />
 
 
 代码打包：
 
-<img :src="$withBase('/images/image-20220720100336294.png')" />
+<img src="./images/image-20220720100336294.png" />
 
 
 <hr/ >
-<img :src="$withBase('/images/image-20220713103131498.png')" />
+<img src="./images/image-20220713103131498.png" />
 
+<img src="./images/image-20220713111411125.png" />
 
-<img :src="$withBase('/images/image-20220713111411125.png')" />
+打包时长
 
+<img src="./images/image-20220713142315369.png" /> 
 
-<img :src="$withBase('/images/image-20220713142315369.png')" />
+<img src="./images/image-20220713142340924.png" /> 
 
-
-<img :src="$withBase('/images/image-20220713142340924.png')" />
-
-
-<img :src="$withBase('/images/image-20220713142406391.png')" />
+<img src="./images/image-20220713142406391.png" /> 
 
 
 遗留问题，externals在排除ant  ant-design-pro时没排除
@@ -122,12 +119,12 @@ treeShinking:
 
 倒数第二次打包：
 
-<img :src="$withBase('/images/image-20220713150250871.png')" />
+<img src="./images/image-20220713150250871.png" />
 
 
 目前最终结果
 
-<img :src="$withBase('/images/image-20220713152422617.png')" />
+<img src="./images/image-20220713152422617.png" />
 
 
 ## 卸载的包：
@@ -425,7 +422,7 @@ const exportObj = COMMAND === 'start' ? normalObj : {
 export default exportObj;
 ```
 
-<img :src="$withBase('/images/image-20220718115901134.png')" />
+<img src="./images/image-20220718115901134.png" />
 
 
 第二次修改：
@@ -480,9 +477,7 @@ cacheGroups: {
           },
 ```
 
-
-
-
+这里要对排除在打包进node_modules的代码引入到documentjs文件里面
 
 document.js的代码
 
@@ -694,44 +689,9 @@ document.js的代码
   <!--  <link rel="icon" href="favicon.png" type="image/x-icon">-->
   <link rel="stylesheet" href="/fontface/quartz/stylesheet.css" type="text/css">
   <title></title>
-  <style>
-    .bg {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      height: 100%;
-    }
-
-    .point {
-      position: absolute;
-      width: 520px;
-      height: 255px;
-      left: 32%;
-      top: 32%;
-      background: #fff;
-      border-radius: 5px;
-    }
-
-    .xl-chrome-ext-bar {
-      opacity: 0;
-    }
-  </style>
+  
   <script>
-    (function (doc, win) {
-      var docEl = doc.documentElement;
-      var recalc = function () {
-        var deviceWidth = docEl.clientWidth;
-        // console.log(deviceWidth);
-        //if (deviceWidth > 960) deviceWidth = 960;
-        docEl.style.fontSize = 1366 / 9.6 + 'px';
-      };
-      recalc();
-      window.removeEventListener('resize', recalc);
-
-    })(document, window);
+    
   </script>
   <% if(context.env==='production' ) { %>
     <link href="https://cdn.bootcdn.net/ajax/libs/antd/4.19.5/antd.min.css" rel="stylesheet">
@@ -780,145 +740,27 @@ document.js的代码
   </script>
   <script type="text/javascript" src="/less.min.js"></script>
   <div id="root"></div>
-  <div id="bg" style="display: none">
-    <div class="point">
-      <div
-        style="padding: 16px 24px; text-align: left; color: #4a4a4a; font-size: 15px; font-weight: 500; margin: 0; border-bottom: 1px solid #e8e8e8;">
-        提示信息
-        <img src='./headerIcon/close.png' alt='close' onclick="closeModal()" style="float: right;
-              width: 30px;
-              position: relative;
-              top: -3px;
-              cursor: pointer;
-              right: -12px;" />
-      </div>
-      <div style="padding: 24px">
-        <p style="font-size: 14px">为保证功能正常使用，请将浏览器切换至极速模式或使用Chrome浏览器</p>
-        <p>
-          <img src='./headerIcon/mac.png' alt="mac" style="width: 30px; position: relative; top: -3px" />
-          <span style="margin-left: 10px; color: #395AC5; cursor: pointer" onclick="downMac()">Mac版Chrome浏览器下载
-          </span>
-        </p>
-        <p>
-          <img src='./headerIcon/win.png' alt="win" style="width: 30px; position: relative; top: -3px" />
-          <span style="margin-left: 10px; cursor: pointer; color: #395AC5"
-            onclick="downWin32()">Windows版Chrome浏览器下载（32位）</span>
-        </p>
-        <p>
-          <img src='./headerIcon/win.png' alt="win" style="width: 30px; position: relative; top: -3px" />
-          <span style="margin-left: 10px; cursor: pointer; color: #395AC5"
-            onclick="downWin64()">Windows版Chrome浏览器下载（64位）</span>
-        </p>
-      </div>
-    </div>
-  </div>
 </body>
 <script>
 
-  var ua = navigator.userAgent.toLocaleLowerCase();
-  // let isChrome = ua.match(/chrome/) != null
-
-  var el = document.getElementById("bg");
-  var isIE = ua.match(/msie/) != null || ua.match(/trident/) != null || ua.match(/edge/) != null;
-  var ieLogined = localStorage.getItem('ieLogined') === 'true' // 判断之前是否登录过ie浏览器
-  if (isIE && !ieLogined) {
-    el.style.display = 'block';
-    localStorage.setItem('ieLogined', 'true')
-  }
-
-  function closeModal() {
-    el.style.display = 'none';
-  }
-
-  function downWin32() {
-    var a = document.createElement('a') // 先创建a标签
-    a.href = './chromeDown/chrome32.exe' // base是后端返回的数据
-    a.download = '下载.exe' // 下载的图片名
-    if (navigator.msSaveBlob) {
-      // 兼容IE
-      var url32 = 'http://' + window.location.host + window.location.pathname + 'chromeDown/chrome32.exe';
-      fetchBlob(url32);
-    }
-    a.click(); // 开始下载
-  }
-  function downWin64() {
-    var a = document.createElement('a') // 先创建a标签
-    a.href = './chromeDown/chrome64.exe' // base是后端返回的数据
-    a.download = '下载.exe' // 下载的图片名
-    if (navigator.msSaveBlob) {
-      // 兼容IE
-      var url64 = 'http://' + window.location.host + window.location.pathname + 'chromeDown/chrome64.exe'; // window.location.origin(IE11及以上)
-      fetchBlob(url64);
-    }
-    a.click(); // 开始下载
-
-
-  }
-  function downMac() {
-    var a = document.createElement('a') // 先创建a标签
-    a.href = './chromeDown/chrome.dmg' // base是后端返回的数据
-    a.download = '下载.dmg' // 下载的图片名
-    if (navigator.msSaveBlob) {
-      // 兼容IE
-      var blob = Blob(['./chromeDown/chrome.dmg'], { type: 'image/jpg' });
-      return navigator.msSaveBlob(blob, 'chrome.dmg');
-    }
-    a.click(); // 开始下载
-  }
-
-  // 获取浏览器安装包文件
-  function fetchBlob(url) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        var blob = Blob([xhr.response], { type: 'image/jpg' });
-        return navigator.msSaveBlob(blob, 'chrome.exe');
-      }
-    };
-    xhr.send();
-  }
-  // 将迅雷节点移除本网站，防止迅雷下载
-  let count = 0;
-  const time = setInterval(() => {
-    count++
-    // 有迅雷插件
-    if (document.getElementById('xl_chrome_ext_download') && document.getElementById('xl_chrome_ext_download').parentNode) {
-      try {
-        document.getElementsByTagName('video') && document.getElementsByTagName('video')[0].addEventListener("mouseover", function () {
-          setTimeout(() => {
-            document.getElementById('xl_chrome_ext_download').parentNode.style.display = 'none'
-          })
-        })
-      } catch (error) { }
-      document.getElementsByTagName('body')[0].removeChild(document.getElementById('xl_chrome_ext_download').parentNode)
-      clearInterval(time)
-    }
-    // 没有迅雷插件的情况下，最多执行6次
-    if (count > 5) {
-      clearInterval(time)
-    }
-  }, 1000)
 </script>
 
-</html>/*eslint-disable */
+</html>
 ```
 
-<img :src="$withBase('/images/image-20220713161646999.png')" />
+<img src="./images/image-20220713161646999.png" />
+
+## 找新项目试试：
 
 
+项目中的目录结构：
 
-
-项目中的目录解构：
-
-<img :src="$withBase('/images/image-20220715115542210.png')" />
+<img src="./images/image-20220715115542210.png" /> 
 
 
 不配任何optimization的效果：在不配optimization，webpack会按照默认的方式来构建；所有的依赖，入口文件，node_module都会打进一个文件里面；
 
-<img :src="$withBase('/images/image-20220715141622347.png')" />
+<img src="./images/image-20220715141622347.png" /> 
 
 
 comment，preview，table都引入了antd，jquery，也就是说3个地方引入了jquery，至少3个地方引入了antd，jquery、antd就是公用模块
@@ -1009,12 +851,12 @@ reuseExistingChunk
 
 我引入jquery在每个页面都有引，其中一个文件大小95kb，根据上面的配置，构建完依旧是下面的文件格式
 
-<img :src="$withBase('/images/image-20220715150420220.png')" />
+<img src="./images/image-20220715150420220.png" /> 
 
 
 找不到办法，现在将minChunks设为1，发现提取出来的多了两个：
 
-<img :src="$withBase('/images/image-20220715150905150.png')" />
+<img src="./images/image-20220715150905150.png" /> 
 
 
 根据这两个名子可以看出，是提取了css，js的内容，新生成了一个文件
@@ -1023,13 +865,13 @@ reuseExistingChunk
 
 试着将vendors改为vendors1，
 
-<img :src="$withBase('/images/image-20220715151059370.png')" />
+<img src="./images/image-20220715151059370.png" /> 
 
 
 
 可以看到构建出来的文件名也发生变化，看看当minchunk为1时，提取出来的文件大小是否大于20000bytes
 
-<img :src="$withBase('/images/image-20220715151234477.png')" />
+<img src="./images/image-20220715151234477.png" />
 
 
 可以看到很大；
@@ -1177,7 +1019,7 @@ import b from './b';
 
 构建出来的文件可以看到；
 
-<img :src="$withBase('/images/image-20220715163032005.png')" />
+<img src="./images/image-20220715163032005.png" /> 
 
 
 分析里面的文件，umi.js是打包之后的入口文件，webpack会把入口文件拆分成一个chunk，这样说好像很矛盾
@@ -1200,12 +1042,12 @@ npm install --save-dev umi-webpack-bundle-analyzer
 
 然后这样：
 
-<img :src="$withBase('/images/image-20220715170824760.png')" />
+<img src="./images/image-20220715170824760.png" /> 
 
 
 然后：
 
-<img :src="$withBase('/images/image-20220715170853662.png')" />
+<img src="./images/image-20220715170853662.png" />
 
 
 再次尝试：
@@ -1218,14 +1060,14 @@ npm install --save-dev umi-webpack-bundle-analyzer
 
 然后：
 
-<img :src="$withBase('/images/image-20220715170934329.png')" />
+<img src="./images/image-20220715170934329.png" /> 
 
 
 运行：`npm run build`
 
 可以好好分析了；
 
-<img :src="$withBase('/images/image-20220715171058394.png')" />
+<img src="./images/image-20220715171058394.png" /> 
 
 
 
@@ -1242,7 +1084,7 @@ umi.js里面全部是页面的文件，其中moment文件最大，这也能理�
 
 先看看上面那样拆分后的时间；
 
-<img :src="$withBase('/images/image-20220715171421385.png')" />
+<img src="./images/image-20220715171421385.png" />
 
 
 好了，下面拆分该怎么拆分，继续看概念的东西：
@@ -1251,14 +1093,14 @@ umi.js里面全部是页面的文件，其中moment文件最大，这也能理�
 
 **`chunks: 'initial'`的时候；**
 
-<img :src="$withBase('/images/image-20220715171830445.png')" />
+<img src="./images/image-20220715171830445.png" />
 
 
 两次的对比，发现文件个数没变化，体积没变化，倒是速度变快了；
 
 **第三次修改chunks为'async'后;**
 
-<img :src="$withBase('/images/image-20220715172016938.png')" />
+<img src="./images/image-20220715172016938.png" />
 
 
 lodash是提取出来的，现在还在，可是vendors.umi.async.js、vendors.umi.async.css那，哪去了，看看官方解释；
@@ -1302,7 +1144,7 @@ cacheGroups: {
 },
 ```
 
-<img :src="$withBase('/images/image-20220715173922047.png')" />
+<img src="./images/image-20220715173922047.png" />
 
 
 vendors呢？
@@ -1319,7 +1161,7 @@ vendors: {
 
 这样设置，讲node_modules下面的所有包打到vendors文件里面
 
-我们可以修改，讲公用的基本包打进去就可以了；
+我们可以修改，将公用的基本包打进去就可以了；
 
 ```jsx
  vendors: {
@@ -1431,7 +1273,7 @@ cacheGroups: {
 
 拿上面的结果和图进行比较；
 
-<img :src="$withBase('/images/image-20220715220913283.png')" />
+<img src="./images/image-20220715220913283.png" />
 
 
 根据上面配置完，控制台会报错，说找不到构建的包
@@ -1470,15 +1312,15 @@ rcomponent: {
 }
 ```
 
-<img :src="$withBase('/images/image-20220716075138871.png')" />
+<img src="./images/image-20220716075138871.png" /> 
 
 
 虽然说antd是按需引入的，其实并没有，可以自行的抽离到一个文件里面，按照antd那样引入
 
-<img :src="$withBase('/images/image-20220716075741718.png')" />
+<img src="./images/image-20220716075741718.png" /> 
 
 
-<img :src="$withBase('/images/image-20220716082239126.png')" />
+<img src="./images/image-20220716082239126.png" />
 
 
 简单介绍一下上面3中size：
@@ -1489,7 +1331,7 @@ rcomponent: {
 
 这几个页面里面我都引入了comment，我可以将这个拆成一个单独的文件出来
 
-<img :src="$withBase('/images/image-20220716095350958.png')" />
+<img src="./images/image-20220716095350958.png" />
 
 
 <span style="color:red">拆分的时候一定要注意优先级问题，不然会出现有的文件没被拆出来，导致文件体积过大；或者输出的文件由于找不到而报错</span>
@@ -1553,7 +1395,7 @@ cacheGroups: {
           },
 ```
 
-<img :src="$withBase('/images/image-20220716121434712.png')" />
+<img src="./images/image-20220716121434712.png" />
 
 
 现在的结果就是上面的那样，其实也没必要拆lodash，jquery，
@@ -1638,7 +1480,7 @@ optimization: {
 }
 ```
 
-<img :src="$withBase('/images/image-20220717092730283.png')" />
+<img src="./images/image-20220717092730283.png" /> 
 
 
 
@@ -1689,3 +1531,24 @@ minimizer: {
 }
 ```
 
+
+
+------
+
+
+
+2023 8 15
+
+vendors包还是很大，试着将不用的包不打
+
+![image-20230815105802880](images/image-20230815105802880.png) 
+
+
+
+本地打包
+
+![image-20230815114910708](images/image-20230815114910708.png) 
+
+2
+
+![image-20230815130100283](images/image-20230815130100283.png) 

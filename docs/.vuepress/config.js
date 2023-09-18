@@ -222,6 +222,24 @@ module.exports = {
         ],
       },
       {
+        title: 'Pm2',
+        collapsable: true,
+        children: [
+          {
+            title: "安装",
+            path: "../pages/Pm2/install"
+          },
+          {
+            title: "基础命令",
+            path: "../pages/Pm2/note"
+          },
+          {
+            title: "项目进阶",
+            path: "../pages/Pm2/senior"
+          },
+        ]
+      },
+      {
         title: "React",
         collapsable: true,
         children: [

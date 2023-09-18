@@ -19,6 +19,7 @@ body
 
 .page
   padding-left $sidebarWidth
+  padding-right $sidebarWidth
 
 .navbar
   position fixed
@@ -53,6 +54,15 @@ body
   box-sizing border-box
   border-right 1px solid $borderColor
   overflow-y auto
+.right-sidebar
+  position fixed
+  z-index 10
+  margin 0
+  right 10px
+  top $navbarHeight + 1px
+  width $sidebarWidth
+  border 1px solid #eee
+  border-radius 6px
 
 {$contentClass}:not(.custom)
   @extend $wrapper
@@ -154,7 +164,8 @@ a.header-anchor
 
 code, kbd, .line-number
   font-family source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace
-
+.go-to-top
+  bottom 1rem !important
 p, ul, ol
   line-height 1.7
 
@@ -200,20 +211,15 @@ th, td
       padding-left 0
 
 @require 'mobile.styl'
-@media (max-width: ($MQMobile + 1px))
-  .content__doclist
-    display none
-@media (max-width: 1300px)
-  .content__doclist
+@media (max-width: $MQNarrow)
+  .right-sidebar
     display none
 
+
 .content__doclist
-  position fixed
-  top: 80px
-  right: 0
-  width: 300px
+  width: 100%
   overflow-x: overlay
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 100px);
   overflow-y: overlay;
   .table-of-contents li
     list-style: none;
