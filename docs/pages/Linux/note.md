@@ -18,7 +18,7 @@
 
 https://baijiahao.baidu.com/s?id=1726925779817385200&wfr=spider&for=pc
 
-**vim** **文件的** **url(****在英文模式下****)**
+**vim** **文件的** url(在英文模式下)
 
  按 i 进插入模式 进行文件的编辑 
 
@@ -29,6 +29,33 @@ https://baijiahao.baidu.com/s?id=1726925779817385200&wfr=spider&for=pc
  wq 保存退出
 
  set nu 设置行号
+
+查找软件的安装：
+
+方法一：使用which命令： `which Redis` 命令。
+
+方法二：使用whereis命令:  输入 `whereis Redis` 命令。
+
+方法三：使用find命令：输入 `find / -name redis `命令
+
+**redis相关命令**
+
+```shell
+redis-server -v #查看redis版本
+redis-server --version #查看redis版本
+ps aux | grep redis #查看redi是否在运行
+netstat -lntp #查看redi是否在运行
+redis-server /etc/redis.conf #启动redis服务
+/usr/bin/redis-cli shutdown #关闭redis服务
+```
+
+**查看当地时间**
+
+```shell
+timedatectl
+```
+
+
 
 #### linux暴露端口
 
