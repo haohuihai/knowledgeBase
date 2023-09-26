@@ -44,8 +44,7 @@ add('1','1');
 ```
 
 
-<img :src="$withBase('/images/image-20220524195042457.png')" >
-
+![image-20230926111518055](./images/image-20220524195042457.png) 
 
 能够看到，TS在我们进行编码的时候就能捕获错误，及早的发现错误，而不是在执行的时候才去发现错误；
 
@@ -69,8 +68,8 @@ TypeScript 可以和 JavaScript 共存，这意味着 JavaScript 项目能够渐
 
 当然，TS不像JS那样随便建一个html或js文件就能运行，因为Node/浏览器不认识TS代码，需要先将TS代码转换为JS代码才能运行。
 
-<img :src="$withBase('/images/image-20220524200252488.png')" >
 
+![image-20220524200252488](./images/image-20220524200252488.png) 
 
 这里有两个方法去执行TS代码：
 
@@ -154,14 +153,16 @@ let arr: (number | string)[] = [1, 2, '3']
 
 上面的代码表示可以包含数组或字符串类型的数组，其他类型的不被允许
 
-
+```js
+let numbers: number[] = [1, 2, 3]
+```
 
 上面定义了的类型，在对数组进行操作的时候也被限制
 
 比如：
 
 ```typescript
-arr.push('1')
+numbers.push('1')
 // 会报下列错误
 // Argument of type 'string' is not assignable to parameter of type 'number'.
 ```
@@ -229,7 +230,7 @@ let add: (x: number, y: number) => number = function (x: number, y: number): num
 
 **可选参数**
 
-使用函数实现某个功能时，参数可以传也可以不传。这种情况下，在给函数参数指定类型时，就用到可选参数了。 比如，数组的 slice 方法，可以 slice() 也可以 slice(1) 还可以 slice(1, 3)。
+使用函数实现某个功能时，参数可以传也可以不传。这种情况下，在给函数参数指定类型时，就用到可选参数了。 比如，数组的 slice 方法，可以 `slice() `也可以 `slice(1)` 还可以` slice(1, 3)`。
 
 ```typescript
 function mySlice(x?: number, y?: number): void {
@@ -241,9 +242,7 @@ function mySlice(x?: number, y?: number): void {
 
 <span style="color: red">注意：可选参数只能出现在必选参数的最后，也就是说可选参数后面不能再出现必选参数。</span>
 
-
-<img :src="$withBase('/images/image-20220524214157285.png')" >
-
+![image-20220524214157285](./images/image-20220524214157285.png) 
 
 **参数默认值**
 
@@ -311,14 +310,14 @@ let objName: Type = {
 
 1 Type中定义的非必须的属性，必须在定义的对象中存在；
 
-<img :src="$withBase('/images/image-20220524214929458.png')" >
 
+![image-20220524214929458](./images/image-20220524214929458.png) 
 
 sayHi方法在person对象中不存在，但是存在于对象类型中，所以会报错
 
 2 Type中未定义的属性，在定义的对象中不能存在；
-<img :src="$withBase('/images/image-20220524214902426.png')" >
 
+![image-20220524214902426](./images/image-20220524214902426.png) 
 
 isBool定义在了对象中，但不在对象类型中，会报错
 
@@ -332,15 +331,15 @@ let person: {name: string; age: number; sayHi(): void} = {
 }
 ```
 
-1. 直接使用 {} 来描述对象结构。属性采用属性名: 类型的形式；方法采用方法名(): 返回值类型的形式。
+1. 直接使用` {} `来描述对象结构。属性采用属性名: 类型的形式；方法采用方法名(): 返回值类型的形式。
 
-2. 如果方法有参数，就在方法名后面的小括号中指定参数类型（比如：greet(name: string): void）。
+2. 如果方法有参数，就在方法名后面的小括号中指定参数类型（比如：`greet(name: string): void`）。
 
 3. 在一行代码中指定对象的多个属性类型时，使用 ;（分号）来分隔。
 
    如果一行代码只指定一个属性类型（通过换行来分隔多个属性类型），可以去掉 ;（分号）。
 
-   方法的类型也可以使用箭头函数形式（比如：{ sayHi: () => void }）。
+   方法的类型也可以使用箭头函数形式（比如：`{ sayHi: () => void }`）。
 
 **对象中的可选属性**
 
@@ -397,13 +396,13 @@ const n:number = obj
 
 注意：因为不推荐使用 any，所以，这两种情况下都应该提供类型！
 
-### 中级介绍
+## TS中级介绍
 
 #### 接口
 
 上面我们使用了`type`去定义了CustomArray对应的某种基本的类型，下面使用`interface`去定义一个对象类型
 
-当一个对象类型被多次使用时，一般会使用**接口（interface）**来描述对象的类型，达到复用的目的。
+当一个对象类型被多次使用时，一般会使用 **接口（interface）** 来描述对象的类型，达到复用的目的。
 
 格式:
 
@@ -438,8 +437,6 @@ let person:IPerson = {
 
 在使用`interface`定义好的对象类型中，其中定义的变量比接口中的变量不能少，也不能多，即赋值的时候，变量的形状必须和接口的形状保持一致；（类型，参数名必须保持一致）
 
-
-
 当然上面的规则很死板，下面可以使用某种方法让**变量的形状必须和接口的形状不必一致**
 
 ```typescript
@@ -459,15 +456,14 @@ let person:IPerson = {
 // 这里的age可传可不传
 ```
 
+`interface`（接口）和 `type`（类型别名）的对比：
 
-
-interface（接口）和 type（类型别名）的对比：
-
-相同点：都可以给对象指定类型；都可以允许继承（`type`的继承使用交叉类型）
+相同点：
+都可以给对象指定类型；都可以允许继承（`type`的继承使用交叉类型）
 
 不同点：
 接口，只能为对象指定类型，可以合并重复声明；
-类型别名，不仅可以为对象指定类型，实际上可以为任意类型（基本类型，联合类型，交叉类型）指定别名。
+类型别名（Type），不仅可以为对象指定类型，实际上可以为任意类型（基本类型，联合类型，交叉类型）指定别名。
 
 
 
@@ -491,8 +487,6 @@ interface NumStr1 = number | string
 // 'number' only refers to a type, but is being used as a value here.
 ```
 
-
-
 **接口间的继承**
 
 如果两个接口之间有相同的属性或方法，可以将公共的属性或方法抽离出来，通过继承来实现复用。
@@ -514,7 +508,7 @@ let person: Ponit2 = {
 }
 ```
 
-使用 extends（继承）关键字实现了接口 Ponit2继承 Ponit1。 继承后，Ponit2就有了 Ponit1的所有属性和方法（此时，Ponit2同时有 x、y、z 三个属性）。
+使用 extends（继承）关键字实现了接口 `Ponit2`继承 `Ponit1`。 继承后，`Ponit2`就有了 `Ponit1`的所有属性和方法（此时，`Ponit2`同时有 x、y、z 三个属性）。
 
 #### 元组
 
@@ -526,7 +520,7 @@ let person: Ponit2 = {
 let position:number[] = [1,2,3]
 ```
 
-使用 number[] 的缺点：不严谨，因为该类型的数组中可以出现任意多个数字。 更好的方式：元组（Tuple）。 元组类型是另一种类型的数组，它确切地知道包含多少个元素，以及特定索引对应的类型。
+使用 `number[] `的缺点：不严谨，因为该类型的数组中可以出现任意多个数字。 更好的方式：元组`（Tuple）`。 元组类型是另一种类型的数组，它确切地知道包含多少个元素，以及特定索引对应的类型。
 
 ```typescript
 let position: [number, number] = [1,2]
@@ -534,9 +528,7 @@ let position: [number, number] = [1,2]
 
 元组类型可以确切地标记出有多少个元素，以及每个元素的类型。 
 
-该示例中，元素有两个元素，每个元素的类型都是 number
-
-
+该示例中，元素有两个元素，每个元素的类型都是 `number`
 
 当直接对元组类型的变量进行初始化或者赋值的时候，需要提供所有元组类型中指定的项
 
@@ -552,23 +544,19 @@ TS 中，某些没有明确指出类型的地方，TS 的类型推论机制会�
 
 换句话说：由于类型推论的存在，这些地方，类型注解可以省略不写！ 
 
-发生类型推论的 2 种常见场景：1 声明变量并初始化时 2 决定函数返回值时
-
-<img :src="$withBase('/images/image-20220524224416754.png')" >
+发生类型推论的 2 种常见场景：1 声明变量并初始化时； 2 决定函数返回值时
 
 
+![image-20220524224416754](./images/image-20220524224416754.png) 
 
 TS会自动推断除age为number类型
 
-<img :src="$withBase('/images/image-20220524224525180.png')" >
 
-
+![image-20220524224525180](./images/image-20220524224525180.png) 
 
 TS自动推断出函数的返回类型为number
 
 以上这两种情况下，类型注解可以省略不写！
-
-
 
 推荐：能省略类型注解的地方就省略（偷懒，充分利用TS类型推论的能力，提升开发效率）。 
 
@@ -580,28 +568,24 @@ TS自动推断出函数的返回类型为number
 
  比如
 
-<img :src="$withBase('/images/image-20220524225702216.png')" >
 
+![image-20220524225702216](./images/image-20220524225702216.png) 
 
-
-注意：getElementById 方法返回值的类型是 HTMLElement，该类型只包含所有标签公共的属性或方法，不包含 a  标签特有的 href 等属性。 因此，这个类型太宽泛（不具体），无法操作 href 等 a 标签特有的属性或方法。
+注意：`getElementById` 方法返回值的类型是` HTMLElement`，该类型只包含所有标签公共的属性或方法，不包含 a  标签特有的 href 等属性。 因此，这个类型太宽泛（不具体），无法操作 `href` 等 `a` 标签特有的属性或方法。
 
 解决方式：这种情况下就需要使用类型断言指定更加具体的类型
 
 使用类型断言：
 
-<img :src="$withBase('/images/image-20220524225807879.png')" >
-
+![image-20220524225807879](./images/image-20220524225807879.png) 
 
 使用 as 关键字实现类型断言。
 
 关键字 as 后面的类型是一个更加具体的类型（HTMLAnchorElement 是 HTMLElement 的子类型）。
 
-通过类型断言，aLink 的类型变得更加具体，这样就可以访问 a 标签特有的属性或方法了。 
+通过类型断言，aLink 的类型变得更加具体，这样就可以访问 `a `标签特有的属性或方法了。 
 
-技巧：在浏览器控制台，通过 console.dir() 打印 DOM 元素，在属性列表的最后面，即可看到该元素的类型。
-
-
+技巧：在浏览器控制台，通过` console.dir() `打印 DOM 元素，在属性列表的最后面，即可看到该元素的类型。
 
 #### 字面量类型
 
@@ -615,7 +599,7 @@ const str2 = 'hello ts'
 
 通过 TS 类型推论机制，可以得到答案： 
 
-1. 变量 str1 的类型为：string。
+1. 变量 str1 的类型为：`string`。
 2. 变量 str2 的类型为：'Hello TS'。
 
 解释：
@@ -641,8 +625,6 @@ personInfo = 12
 
 上面表示的是，personInfo可选`string`或者`number`的值
 
-
-
 用来表示一组明确的可选值列表
 
 比如，在贪吃蛇游戏中，游戏的方向的可选值只能是上、下、左、右中的任意一个。
@@ -659,17 +641,14 @@ changeDirection("up")
 
 优势：相比于 `string` 类型，使用字面量类型更加精确、严谨。
 
-
-
 #### 枚举
 
-枚举的功能类似于字面量类型+联合类型组合的功能，也可以表示一组明确的可选值。 
+枚举的功能类似于字面量类型 + 联合类型组合的功能，也可以表示一组明确的可选值。 
 
 枚举：定义一组命名常量。它描述一个值，该值可以是这些命名常量中的一个。
 
-<img :src="$withBase('/images/image-20220525090836484.png')" >
 
-
+![image-20220525090836484](./images/image-20220525090836484.png) 
 
 能够看到传参的时候只能使用字面量类型里面定义的某个变量
 
@@ -682,8 +661,8 @@ changeDirection("up")
 
 这里我们把枚举成员作为了函数的实参，那他的值是什么呢？
 
-<img :src="$withBase('/images/image-20220525091142783.png')" >
 
+![image-20220525091142783](./images/image-20220525091142783.png) 
 
 可以看到枚举成员 Up 的值为 0。 
 
@@ -693,30 +672,25 @@ changeDirection("up")
 
 比如给枚举成员Up设置数字0，后面其他类型会依次按数字顺序赋值（测试了好像只有数字才会默认赋值，其他不行）
 
-<img :src="$withBase('/images/image-20220525091436774.png')" >
 
-
+![image-20220525091436774](./images/image-20220525091436774.png) 
 
  当然，也可以给枚举中的成员初始化值，手动赋值
 
-<img :src="$withBase('/images/image-20220525091604126.png')" >
 
-
+![image-20220525091604126](./images/image-20220525091604126.png) 
 
 可以看到未赋值Right会根据上一个值自动赋值（数字）
 
-<img :src="$withBase('/images/image-20220525091747550.png')" >
 
-
+![image-20220525091747550](./images/image-20220525091747550.png) 
 
 非数字会报错，这种情况，Right不知道'4'后面是什么，没有相关顺序性
 
-
-
 **字符串枚举**
 
-<img :src="$withBase('/images/image-20220525091950570.png')" >
 
+![image-20220525091950570](./images/image-20220525091950570.png) 
 
 <span style="color: red">字符串枚举没有自增长行为，因此，字符串枚举的每个成员必须有初始值</span>
 
@@ -726,13 +700,12 @@ changeDirection("up")
 
 也就是说，其他的类型会在编译为 JS 代码时自动移除。但是，枚举类型会被编译为 JS 代码
 
-<img :src="$withBase('/images/image-20220525092237827.png')" >
 
+![image-20220525092237827](./images/image-20220525092237827.png)
 
+说明：枚举与前面讲到的字面量类型 + 联合类型组合的功能类似，都用来表示一组明确的可选值列表。
 
-说明：枚举与前面讲到的字面量类型+联合类型组合的功能类似，都用来表示一组明确的可选值列表。
-
- 一般情况下，推荐使用字面量类型+联合类型组合的方式，因为相比枚举，这种方式更加直观、简洁、高效。
+ 一般情况下，推荐使用字面量类型 + 联合类型组合的方式，因为相比枚举，这种方式更加直观、简洁、高效。
 
 #### typeof
 
@@ -763,20 +736,19 @@ function formatPoint1(point: typeof p) {
 formatPoint1(p)
 ```
 
-1. 使用 typeof 操作符来获取变量 p 的类型，结果与第一种（对象字面量形式的类型）相同。 
+1. 使用 `typeof` 操作符来获取变量 p 的类型，结果与第一种（对象字面量形式的类型）相同。 
 
 2. typeof 出现在类型注解的位置（参数名称的冒号后面）所处的环境就在类型上下文（区别于 JS 代码）。 
-3. 注意：typeof 只能用来查询变量或属性的类型，无法查询其他形式的类型（比如，函数调用的类型）。
+3. 注意：`typeof` 只能用来查询变量或属性的类型，无法查询其他形式的类型（比如，函数调用的类型）。
 
-### 高级类型
+## TS高级类型
 
 #### class类
 
 TypeScript 全面支持 ES2015 中引入的 class 关键字，并为其添加了类型注解和其他语法（比如，可见性修饰符等）
 
-<img :src="$withBase('/images/image-20220525111441747.png')" >
 
-
+![image-20220525111441747](./images/image-20220525111441747.png) 
 
 根据 TS 中的类型推论，可以知道 Person 类的实例对象 p 的类型是 Person。 
 
@@ -796,36 +768,34 @@ const p = new Person()
 
 **构造函数**
 
-<img :src="$withBase('/images/image-20220525112321902.png')" >
 
+![image-20220525112321902](./images/image-20220525112321902.png) 
 
 实参和形参的数据类型需要一致
 
 和函数传参一样，可以使用?来标明可传可不传的变量
 
-<img :src="$withBase('/images/image-20220525112514743.png')" >
 
-
+![image-20220525112514743](./images/image-20220525112514743.png) 
 
 1. 在构造函数里面，必须得成员初始化后才可以通过this.age来访问成员
 
 <span style="color: #1890ff">比如：</span>
 
-<img :src="$withBase('/images/image-20220525112715768.png')" >
 
-
+![image-20220525112715768](./images/image-20220525112715768.png) 
 
 2. 需要为构造函数指定类型注解，否则会被隐式推断为 any；构造函数不需要返回值类型
 
 <span style="color: #1890ff">比如：</span>
- 
-<img :src="$withBase('/images/image-20220525112814061.png')" >
 
+
+![image-20220525112814061](./images/image-20220525112814061.png) 
 
 **实例方法**
- 
-<img :src="$withBase('/images/image-20220525113028865.png')" >
 
+
+![image-20220525113028865](./images/image-20220525113028865.png) 
 
 方法的类型注解（参数和返回值）与函数用法相同。
 
@@ -836,10 +806,9 @@ const p = new Person()
 类继承的两种方式：1 extends（继承父类） 2 implements（实现接口）。
 
  说明：JS 中只有 extends，而 implements 是 TS 提供的。
- 
-<img :src="$withBase('/images/image-20220525113245904.png')" >
 
 
+![image-20220525113245904](./images/image-20220525113245904.png)
 可以看到实例dog有两个可用的方法
 
 通过 extends 关键字实现继承。
@@ -847,9 +816,9 @@ const p = new Person()
 子类 Dog 继承父类 Animal，则 Dog 的实例对象 dog 就同时具有了父类 Animal 和 子类 Dog 的所有属性和方法
 
 - 实现接口
- 
-<img :src="$withBase('/images/image-20220525113531053.png')" >
 
+
+![image-20220525113531053](./images/image-20220525113531053.png) 
 
 可以看到，接口（interface）中的属性和方法，用来规定Dog类中的属性和方法的；即接口提供类型声明
 
@@ -878,34 +847,30 @@ class Animal {
 **protected修饰符**
 
 表示受保护的，仅对其声明所在类和子类中（非实例对象）可见
- 
-<img :src="$withBase('/images/image-20220525114627544.png')" >
 
+
+![image-20220525114627544](./images/image-20220525114627544.png) 
 
 **private修饰符**
 
 表示私有的，只在当前类中可见，对实例对象以及子类也是不可见的。
- 
-<img :src="$withBase('/images/image-20220525114900408.png')" >
 
-
+![image-20220525114900408](./images/image-20220525114900408.png)
 **readonly修饰符**
 
 除了可见性修饰符之外，还有一个常见修饰符就是：readonly（只读修饰符）。 
 
 readonly：表示只读，用来防止在构造函数之外对属性进行赋值。
- 
-<img :src="$withBase('/images/image-20220525134700836.png')" >
 
+
+![image-20220525134700836](./images/image-20220525134700836.png) 
 
 能够看到name可修改而age不可修改
- 
-<img :src="$withBase('/images/image-20220525134818157.png')" >
 
+
+![image-20220525134818157](./images/image-20220525134818157.png) 
 
 也能够看到，在构造函数；里面可以修改，在实例对象不能修改
-
-
 
 使用 readonly 关键字修饰该属性是只读的，注意只能修饰属性不能修饰方法。
 
@@ -1096,10 +1061,9 @@ const num = id('a')
 **泛型约束**
 
 默认情况下，泛型函数的类型变量 Type 可以代表多个类型，这导致无法访问任何属性。 比如，id('a') 调用函数时获取参数的长度：
- 
-<img :src="$withBase('/images/image-20220527124042807.png')" >
 
 
+![image-20220527124042807](./images/image-20220527124042807.png)
 Type 可以代表任意类型，无法保证一定存在 length 属性，比如 number 类型就没有 length。 此时，就需要为泛型添加约束来收缩类型（缩窄类型取值范围）
 
 **添加泛型约束**
@@ -1178,12 +1142,12 @@ let obj:IdFunc<number> = {
 此时，id 方法的参数和返回值类型都是 number；ids 方法的返回值类型是 number[]
 
 实际上，JS 中的数组在 TS 中就是一个泛型接口
- 
-<img :src="$withBase('/images/image-20220527212021838.png')" >
 
- 
-<img :src="$withBase('/images/image-20220527212104870.png')" >
 
+![image-20220527212021838](./images/image-20220527212021838.png) 
+
+
+![image-20220527212104870](./images/image-20220527212104870.png) 
 
 当我们在使用数组时，TS 会根据数组的不同类型，来自动将类型变量设置为相应的类型。
 
@@ -1235,9 +1199,9 @@ type PartialProps = Partial<Props>
 **Readonly** 
 
 泛型工具类型 - Readonly 用来构造一个类型，将 Type 的所有属性都设置为 readonly（只读）。
- 
-<img :src="$withBase('/images/image-20220527212831899.png')" >
 
+
+![image-20220527212831899](./images/image-20220527212831899.png) 
 
 构造出来的新类型 ReadonlyProps 结构和 Props 相同，但所有属性都变为只读的
 
@@ -1247,8 +1211,8 @@ type PartialProps = Partial<Props>
 
 泛型工具类型 - Pick 从 Type 中选择一组属性来构造新类型。
 
-<img :src="$withBase('/images/image-20220527213031912.png')" >
 
+![image-20220527213031912](./images/image-20220527213031912.png) 
 
 Pick 工具类型有两个类型变量：1 表示选择谁的属性 2 表示选择哪几个属性。
 
@@ -1376,21 +1340,20 @@ type PartialProps = Partial<Props>
 刚刚用到的 T[P] 语法，在 TS 中叫做索引查询（访问）类型
 
 作用：用来查询属性的类型
- 
-<img :src="$withBase('/images/image-20220527214800805.png')" >
 
 
+![image-20220527214800805](./images/image-20220527214800805.png)
 Props['a'] 表示查询类型 Props 中属性 'a' 对应的类型 number。所以，TypeA 的类型为 number。
 
 索引查询类型的其他使用方式：同时查询多个索引的类型
- 
-<img :src="$withBase('/images/image-20220527214903889.png')" >
 
+
+![image-20220527214903889](./images/image-20220527214903889.png) 
 
 使用字符串字面量的联合类型，获取属性 a 和 b 对应的类型，结果为： string | number
- 
-<img :src="$withBase('/images/image-20220527214943347.png')" >
 
+
+![image-20220527214943347](./images/image-20220527214943347.png) 
 
 使用 keyof 操作符获取 Props 中所有键对应的类型，结果为： string | number | boolean
 
@@ -1462,19 +1425,18 @@ export { Props }
 第三方库的类型声明文件：目前，几乎所有常用的第三方库都有相应的类型声明文件。 第三方库的类型声明文件有两种存在形式：1 库自带类型声明文件 2 由 DefinitelyTyped 提供。 
 
 1. 库自带类型声明文件：比如，axios
- 
-<img :src="$withBase('/images/image-20220527230942844.png')" >
 
+![image-20220524200252488](./images/image-20220527230942844.png) 
+
+ 
 
 这种情况下，正常导入该库，TS 就会自动加载库自己的类型声明文件，以提供该库的类型声明。
 
 2. 由 DefinitelyTyped 提供
 
 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/) 是一个 github 仓库，用来提供高质量 TypeScript 类型声明。 可以通过 npm/yarn 来下载该仓库提供的 TS 类型声明包，这些包的名称格式为：@types/*。 比如，@types/react、@types/lodash 等。 说明：在实际项目开发时，如果你使用的第三方库没有自带的声明文件，VSCode 会给出明确的提示。
- 
-<img :src="$withBase('/images/image-20220527231051257.png')" >
 
-
+![image-20220527231051257](./images/image-20220527231051257.png)
 当安装 @types/* 类型声明包后，TS 也会自动加载该类声明包，以提供该库的类型声明。 补充：TS 官方文档提供了一个[页面](https://www.typescriptlang.org/dt)，可以来查询 @types/* 库
 
 创建自己的类型声明文件：1 项目内共享类型 2 为已有 JS 文件提供类型声明。 
@@ -1549,9 +1511,7 @@ tsc 后不带输入文件时（比如，tsc），才会启用 tsconfig.json。
 
 推荐使用：tsconfig.json 配置文件。
 
-#### React 中的常用类型
-
-
+### React 中的常用类型
 
 在不使用 TS 时，可以使用 prop-types 库，为 React 组件提供[类型检查](https://reactjs.org/docs/typechecking-with-proptypes.html)。 
 
