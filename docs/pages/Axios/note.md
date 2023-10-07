@@ -9,7 +9,6 @@ Axios可以使用在node和浏览器
 
 > 这里以浏览器为例
 默认axios都是经过安装且已经引入过的
-# 初步使用
 **安装**
 
 ```js
@@ -275,9 +274,12 @@ axios.get('/foo/bar', {
 controller.abort()
 ```
 
-# 源码开始
+## 源码开始
 
 源码通过使用构造函数来创建一个Axios
+
+### 请求流程
+
 1. 简单的调用
 ```js
 // 创建构造方法
@@ -426,7 +428,7 @@ console.log('axios', axios.request);
 
 1. 是支持Promise，那我们请求完，返回的就是一个Promise了
 2. 参数：我们在request里面的传参是很随意的，这里要处理传参的格式，最终将默认的配置和用户传的参数进行合并
-3. 方法：方法不是必选的，所以我们不时，有默认的方法，传，则覆盖默认的方法
+3. 方法：方法不是必选的，所以我们不传，有默认的方法，传，则覆盖默认的方法
 4. 发送请求前的拦截 （原理）
 5. 接收响应时的拦截（原理）
 
@@ -553,7 +555,7 @@ function xhrAdapter(config){
 ```
 上面的代码就是真正的创建了一个axios的请求
 
-## 拦截器
+### 拦截器
 
 对于拦截器，Axios源码中使用一个InterceptorManager的构造函数来管理拦截器，这个构造函数原型上有3个方法：use、eject、forEach。
 我们使用的use是来添加拦截器的规则，每次添加的是成功和失败
@@ -619,15 +621,16 @@ Object.keys(context).forEach(key => {
 });
 ```
 
-## 取消请求
+### 取消请求
+
 取消功能的核心是通过CancelToken内的this.promise = new Promise(resolve => resolvePromise = resolve)，得到实例属性promise，此时该promise的状态为pending
 通过这个属性，在/lib/adapters/xhr.js文件中继续给这个promise实例添加.then方法
 在这个方法里面在去钓鱼abort方法来取消请求
 
-
 在CancelToken外界，通过executor参数拿到对cancel方法的控制权，
 这样当执行cancel方法时就可以改变实例的promise属性的状态为rejected，
 从而执行request.abort()方法达到取消请求的目的。
+
 ```js
  //xhrAdapter
 function xhrAdapter(config){
@@ -725,14 +728,14 @@ cancel()
 
 ## 总结
 
-### 1. axios为什么能有多种发请求的方法?
+**1. axios为什么能有多种发请求的方法?**
 
     axios函数对应的是Axios.prototype.request方法通过bind(Axiox的实例)产生的函数
     axios有Axios原型上的所有发特定类型请求的方法: get()/post()/put()/delete()
     axios有Axios的实例上的所有属性: defaults/interceptors
     后面又添加了create()/CancelToken()/all()
 
-### 2. axios.create()返回的对象与axios的区别?
+**2. axios.create()返回的对象与axios的区别?**
 
     相同: 
         都是一个能发任意请求的函数: request(config)
@@ -742,7 +745,7 @@ cancel()
         默认匹配的值很可能不一样
         instance没有axios后面添加的一引起方法: create()/CancelToken()/all()
 
-### 3. axios运行的整体流程
+**3. axios运行的整体流程**
 
 ```
   1). 整体流程: request(config)  ===> dispatchRequest(config) ===> xhrAdapter(config)
@@ -751,25 +754,23 @@ cancel()
   4). xhrAdapter(config): 创建XHR对象, 根据config进行相应设置, 发送特定请求, 并接收响应数据, 返回promise 
 ```
 
+**4. Axios.prototype.request()都做了什么?**
 
+**5. dispatchrequest()都做了什么?**
 
-### 4. Axios.prototype.request()都做了什么?
-
-### 5. dispatchrequest()都做了什么?
-
-### 6. xhrAdapter()做了什么?
+**6. xhrAdapter()做了什么?**
 
     整体流程: request(config)  ===> dispatchRequest(config) ===> xhrAdapter(config)
     request(config): 将请求拦截器 / dispatchRequest() / 响应拦截器 通过promise链串连起来, 返回promise
     dispatchRequest(config): 转换请求数据 ===> 调用xhrAdapter()发请求 ===> 请求返回后转换响应数据. 返回promise
     xhrAdapter(config): 创建XHR对象, 根据config进行相应设置, 发送特定请求, 并接收响应数据, 返回promise 
 
-### 7. axios的请求/响应拦截器是什么?
+**7. axios的请求/响应拦截器是什么?**
 
     请求拦截器: 在真正发请求前, 可以对请求进行检查或配置进行特定处理的函数, 包括成功/失败的函数, 传递的必须是config
     响应拦截器: 在请求返回后, 可以对响应数据进行特定处理的函数, 包括成功/失败的函数, 传递的默认是response
 
-### 8. axios的请求/响应数据转换器是什么?
+**8. axios的请求/响应数据转换器是什么?**
 
     请求转换器: 对请求头和请求体数据进行特定处理的函数
         setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
@@ -777,7 +778,7 @@ cancel()
     响应转换器: 将响应体json字符串解析为js对象或数组的函数
         response.data = JSON.parse(response.data)
 
-### 9. response的整体结构
+**9. response的整体结构**
 
     {
         data,
@@ -788,7 +789,7 @@ cancel()
         request
     }
 
-### 10. error的整体结构
+**10. error的整体结构**
 
     {
         message,
@@ -796,7 +797,7 @@ cancel()
         response
     }
 
-### 11. 如何取消已经发送的请求?
+**11. 如何取消已经发送的请求?**
 
 ```
 1. 当配置了cancelToken对象时, 保存cancel函数
