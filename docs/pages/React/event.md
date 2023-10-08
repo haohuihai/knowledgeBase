@@ -48,13 +48,11 @@ document
 
 事件流也被称为IE事件流，简单来说，最先触发被点击的那个，然后，点击事件然后沿DOM一路向上，在经过的每个节点上依次触发，直至道达document对象，现代浏览器可达window对象
 
-<img :src="$withBase('/images/image-20220512092827739.png')" >
-
+![image-20220512092827739](./images/image-20220512092827739.png) 
 
 官方的解释：
 
-<img :src="$withBase('/images/image-20220512093040442.png')" >
-
+![image-20220512093040442](./images/image-20220512093040442.png) 
 
 **事件捕获**
 
@@ -67,14 +65,13 @@ handdleSon
 
 在事件捕获过程种，事件首先由document元素捕获，然后沿DOM树依次向下传播。直至到达目标元素
 
-<img :src="$withBase('/images/image-20220512093801028.png')" >
+![image-20220512093801028](./images/image-20220512093801028.png) 
 
-
-这里还有一个官方事件流的概念：
+这里还有一个官方**事件流的概念**：
 
 DOM2 Events规范规定事件流分为3个阶段：事件捕获、到达目标和事件冒泡。事件捕获最先发生，为提前拦截事件提供了可能。然后，实际的目标元素接收到事件。最后一个阶段是冒泡，最迟要在这个阶段响应事件（也就是上面说的判断是否注册了事件）
 
-<img :src="$withBase('/images/image-20220512094009961.png')" >
+![image-20220512094009961](./images/image-20220512094009961.png) 
 
 
 在DOM事件流中，实际的目标（`<div>`元素）在捕获阶段不会接收到事件。这是因为捕获阶段从document到`<html>`再到`<body>`就结束了。下一阶段，即会在`<div>`元素上触发事件的“到达目标”阶段，然后，冒泡阶段开始，事件反向传播至文档。
@@ -161,15 +158,15 @@ handleFather
 
 **总结：**
 
- e.stopPropagation()能阻止两个合成事件冒泡、合成和原生事件冒泡
+` e.stopPropagation()`能阻止两个合成事件冒泡、合成和原生事件冒泡
 
-e.nativeEvent.stopImmediatePropagation()能阻止合成和原生事件间的冒泡，不能阻止两个合成事件之间的冒泡
+`e.nativeEvent.stopImmediatePropagation()`能阻止合成和原生事件间的冒泡，不能阻止两个合成事件之间的冒泡
 
 要想阻止<u>合成事件</u>和<u>原生事件</u>，可以用`e.stopPropagation()`或`e.nativeEvent.stopImmediatePropagation()`
 
 要阻止<u>两个合成事件</u>的冒泡。可以用`e.stopPropagation()`
 
-（3）阻事件冒泡，也可以用e.target来判断
+阻事件冒泡，也可以用e.target来判断
 
 点击事件的子元素可以修改为
 
@@ -196,7 +193,7 @@ useEffect(() => {
 
 ### 在react中阻止事件捕获
 
-给需要捕获的元素将onClick改为onClickCapture
+给需要捕获的元素将`onClick`改为`onClickCapture`
 
 其中代码修改为以下：
 
@@ -245,8 +242,6 @@ handdleSon
 document
 ```
 
-
-
 根据上面说的捕获与冒泡分析以下
 
 点击了子元素，最先触发了document，然后父元素，在父元素这里进行了捕获，那么先触发父元素，然后子元素，在到document，如果这里只触发父元素改怎么做，只需要在父元素这里加上阻止事件冒泡即可：
@@ -263,8 +258,6 @@ document
 ```
 handleFather
 ```
-
-
 
 如果向在document这里拦截，这么做：
 

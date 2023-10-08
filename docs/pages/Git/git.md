@@ -859,7 +859,7 @@ git remote set-url origin git@email:username/ProjectName.git
 以后提交代码都提交到main上，或者新开分支，合并到main上
 
 ### 一些提交命令
-git回退到某个commit
+**git回退到某个commit**
 
 git reset --hard HEAD^ 回退到上个版本  ^代表前一个，^^代表前两个 一次类推
 
@@ -868,7 +868,7 @@ git reset --hard commit_id 退到/进到 指定的commit
 
 git push origin HEAD -- force 强退至远程
 
-git回退到某个commit 推送远程
+**git回退到某个commit 推送远程**
 
 1.先查询对应的提交历史，使用如下命令：
 
@@ -888,4 +888,19 @@ git push -f origin master
 
 在github设置上面，得设置页面展示分支，也就是构建好之后的分支，在构建的时候默认会创建一个预览的分支，选中创建好的那个预览分支就可以了
 
+**在提交时 忽略文件名大小写的解决办法**
+
+Git 默认是忽略大小写的，可通过下面方式查看；
+
+```
+git config --get core.ignorecase
+```
+
+上面的返回`true` 表示忽略文件名大小写
+
+可以通过下面的代码设置为 区分文件名大小写
+
+```
+git config core.ignorecase false
+```
 

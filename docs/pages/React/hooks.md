@@ -1,31 +1,28 @@
->  以下案例默认已按照react，react-dom等依赖
+>  以下案例默认已安装react，react-dom等依赖
 
 jsx语法创建虚拟dom渲染到页面上，可以通过两种方式
 
 1. **ReactDOM.render()**
 
-```js
+```jsx
 //1.创建虚拟DOM
 const VDOM = (
     <h1 id="title">
-    <span>Hello,React</span>
+    	<span>Hello,React</span>
     </h1>
 )
 //2.渲染虚拟DOM到页面
-ReactDOM.render(VDOM,document.getElementById('test'))
+ReactDOM.render(VDOM, document.getElementById('test'))
 ```
-
-render的使用：
-
-
 
 2. **React.createElement()**
 
 ```jsx
 //1.创建虚拟DOM
-const VDOM = React.createElement('h1',{id:'title'},React.createElement('span',{},'Hello,React'))
+const VDOM = React.createElement('h1', { id:'title' }, 
+                                 React.createElement('span',{},'Hello,React'))
 //2.渲染虚拟DOM到页面
-ReactDOM.render(VDOM,document.getElementById('test'))
+ReactDOM.render(VDOM, document.getElementById('test'))
 ```
 
 createElement()API的使用
@@ -50,8 +47,6 @@ createElement()API的使用
 
 通过类组件调用一个render函数，返回自定义标签
 
-
-
 ```jsx
 class Parent extends React.Component {
     render() {
@@ -61,39 +56,37 @@ class Parent extends React.Component {
 ReactDOM.render(<Parent />, document.getElementById('root'))
 ```
 
+这里面用到了`this`，这里的`this`是`Parent`上的实例对象
 
+而`render`是`Parent`原型对象上的
 
-这里面用到了this，这里的this是Parent上的实例对象
+这里在执行`ReactDOM.render`后会去判断是否存在`isCureComponent`参数，存在就是类组件
 
-而render是Parent原型对象上的
-
-这里在执行ReactDOM.render后会去判断是否存在isCureComponent参数，存在就是类组件
-
-在类组件中，渲染到页面上的变量，通过state对象来定义，修改时使用`setState()`来修改
+在类组件中，渲染到页面上的变量，通过`state`对象来定义，修改时使用`setState()`来修改
 
 **state**
 
 ### 函数组件
 
-在函数组件中是不存在this的，函数组件中的babel开启了严格模式
+在函数组件中是不存在`this`的，函数组件中的`babel`开启了严格模式
 
 ```jsx
 function Function(){
     return <div>我是类组件</div>
 }
 
-ReactDOM.render(<Function/>,document.getElementById('root'))
+ReactDOM.render(<Function/>, document.getElementById('root'))
 ```
 
-对于函数组件，React.render在执行之后，会去判断`<Function />`的类型。通过typeof 来判断，是function类型，所以走函数组件的逻辑
+对于函数组件，`React.render`在执行之后，会去判断`<Function />`的类型。通过`typeof `来判断，是function类型，所以走函数组件的逻辑
 
 ### Props
 
-对Props进行限制方式，设置类型，设置默认值
+对`Props`进行限制方式，设置类型，设置默认值
 
-Props是单向流动，让父组件修改传给子组件，
+`Props`是单向流动，让父组件修改传给子组件，
 
-类组件中，构造器是否接收props，是否传递给super，取决于：是否希望在构造器中通过this访问props，可以通过`super(props)`来接收
+类组件中，构造器是否接收`props`，是否传递给`super`，取决于：是否希望在构造器中通过`this`访问`props`，可以通过`super(props)`来接收
 
 ### 组件的实例
 
@@ -156,35 +149,35 @@ class Demo extends React.Component{
 
     state = {isHot:false}
 
-showInfo = ()=>{
-    const {input1} = this
-    alert(input1.value)
-}
+    showInfo = ()=>{
+        const {input1} = this
+        alert(input1.value)
+    }
 
-changeWeather = ()=>{
-    //获取原来的状态
-    const {isHot} = this.state
-    //更新状态
-    this.setState({isHot:!isHot})
-}
+    changeWeather = ()=>{
+        //获取原来的状态
+        const {isHot} = this.state
+        //更新状态
+        this.setState({isHot:!isHot})
+    }
 
-saveInput = (c)=>{
-    this.input1 = c;
-    console.log('@',c);
-}
+    saveInput = (c)=>{
+        this.input1 = c;
+        console.log('@',c);
+    }
 
-render(){
-    const {isHot} = this.state
-    return(
-        <div>
-            <h2>今天天气很{isHot ? '炎热':'凉爽'}</h2>
-            {/*<input ref={(c)=>{this.input1 = c;console.log('@',c);}} type="text"/><br/><br/>*/}
-            <input ref={this.saveInput} type="text"/><br/><br/>
-            <button onClick={this.showInfo}>点我提示输入的数据</button>
-            <button onClick={this.changeWeather}>点我切换天气</button>
-        </div>
-    )
-}
+	render(){
+        const {isHot} = this.state
+        return(
+            <div>
+                <h2>今天天气很{isHot ? '炎热':'凉爽'}</h2>
+                {/*<input ref={(c)=>{this.input1 = c;console.log('@',c);}} type="text"/><br/><br/>*/}
+                <input ref={this.saveInput} type="text"/><br/><br/>
+                <button onClick={this.showInfo}>点我提示输入的数据</button>
+                <button onClick={this.changeWeather}>点我切换天气</button>
+            </div>
+        )
+	}
 }
 ```
 
@@ -223,12 +216,14 @@ render(){
 ```jsx
 //创建组件
 class Demo extends React.Component{
-    /* 
-				(1).通过onXxx属性指定事件处理函数(注意大小写)
-						a.React使用的是自定义(合成)事件, 而不是使用的原生DOM事件 —————— 为了更好的兼容性
-						b.React中的事件是通过事件委托方式处理的(委托给组件最外层的元素) ————————为了的高效
-				(2).通过event.target得到发生事件的DOM元素对象 ——————————不要过度使用ref
-			 */
+/* 
+(1).通过onXxx属性指定事件处理函数(注意大小写)
+	a.React使用的是自定义(合成)事件, 而不是使用的原生DOM事件 —————— 为了更好的兼容性
+	b.React中的事件是通过事件委托方式处理的(委托给组件最外层的元素) ————————为了的高效
+(2).通过event.target得到发生事件的DOM元素对象 ——————————不要过度使用ref
+*/
+    
+    
 //创建ref容器
 myRef = React.createRef()
 myRef2 = React.createRef()
@@ -260,9 +255,9 @@ render(){
 
 在React官网：
 
-如果一个 input 表单元素的值是由 React 控制，就其称为*受控组件*。当用户将数据输入到受控组件时，会触发修改状态的事件处理器，这时由你的代码来决定此输入是否有效（如果有效就使用更新后的值重新渲染）。如果不重新渲染，则表单元素将保持不变。
+如果一个 `input` 表单元素的值是由 `React `控制，就其称为*受控组件*。当用户将数据输入到受控组件时，会触发修改状态的事件处理器，这时由你的代码来决定此输入是否有效（如果有效就使用更新后的值重新渲染）。如果不重新渲染，则表单元素将保持不变。
 
-一个*非受控组件*，就像是运行在 React 体系之外的表单元素。当用户将数据输入到表单字段（例如 input，dropdown 等）时，React 不需要做任何事情就可以映射更新后的信息。然而，这也意味着，你无法强制给这个表单字段设置一个特定值。
+一个*非受控组件*，就像是运行在 `React` 体系之外的表单元素。当用户将数据输入到表单字段（例如 input，dropdown 等）时，`React `不需要做任何事情就可以映射更新后的信息。然而，这也意味着，你无法强制给这个表单字段设置一个特定值。
 
 在大多数情况下，你应该使用受控组件。
 
@@ -342,7 +337,7 @@ class Login extends React.Component{
 
 函数的柯里化：通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式。 
 
-     ```js
+```javascript
 function sum(a){
     return(b)=>{
         return (c)=>{
@@ -350,8 +345,7 @@ function sum(a){
         }
     }
 }
-     ```
-
+```
 使用高阶函数-函数柯里化
 
 ```jsx
@@ -387,7 +381,7 @@ render(){
 }
 ```
 
-不实用高阶函数实现方式
+不使用高阶函数实现方式
 
 ```jsx
 //创建组件
