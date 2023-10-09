@@ -390,3 +390,21 @@ server {
 systemctl restart nginx
 ```
 
+```shell
+tail -f access.log  # 动态查看输出 日志
+
+ps -ef | grep nginx 执行 查看是否安装成功 
+```
+
+修改执行脚本
+
+```shell
+vim /etc/profile
+PATH=$PATH:/usr/local/nginx/sbin   
+```
+
+刷新 
+
+```shell
+profile  source /etc/profile
+```

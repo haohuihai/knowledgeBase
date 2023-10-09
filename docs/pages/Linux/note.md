@@ -104,6 +104,14 @@ firewall-cmd --query-port=8091/tcp
 
  iptables -L -n  查看开放端口列表
 
+```shell
+firewall-cmd --permanent --zone=public --add-port=8080/tcp
+firewall-cmd --permanent --zone=public --list-ports
+firewall-cmd --permanent --zone=public --add-port=80/tcp
+firewall-cmd --permanent --zone=public --list-ports
+
+firewall-cmd --reload
+```
 
 #### Linux备份数据库
 

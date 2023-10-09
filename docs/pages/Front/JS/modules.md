@@ -86,13 +86,13 @@
 
   * 基本语法
 
-    * 定义暴露模块: define([依赖模块名], function(){return 模块对象})
+    * 定义暴露模块: define([依赖模块名], function(){ return 模块对象 })
 
-    * 引入模块: require(['模块1', '模块2', '模块3'], function(m1, m2){//使用模块对象})
+    * 引入模块: require(['模块1', '模块2', '模块3'], function(m1, m2){ 使用模块对象  })
 
     * 配置: 
 
-      ```
+      ```javascript
       require.config({
         //基本路径
         baseUrl : 'js/',
@@ -124,15 +124,15 @@
 
     定义暴露模块: 
 
-    ```
+    ```javascript
     define(function(require, module, exports){
-      通过require引入依赖模块
-      通过module/exports来暴露模块
+      // 通过require引入依赖模块
+      // 通过module/exports来暴露模块
       exports.xxx = value
     })
     ```
 
-    使用模块seajs.use(['模块1', '模块2'])
+    使用模块`seajs.use(['模块1', '模块2'])`
 
   **ES6**
 
@@ -140,15 +140,15 @@
 
     定义暴露模块 : export
 
-    暴露一个对象: 
+    暴露一个对象，一个模块只能有一个`export default`导出: 
 
-    ```
+    ```javascript
     export default 对象
     ```
 
     暴露多个: 
 
-    ```
+    ```javascript
     export var xxx = value1
     export let yyy = value2
     
@@ -157,17 +157,17 @@
     export {xxx, yyy}
     ```
 
-    引入使用模块 : import
+    引入使用模块 : `import`
 
-    default模块:
+    default模块导出时:
 
-    ```
+    ```javascript
     import xxx  from '模块路径/模块名'
     ```
 
     其它模块
 
-    ```
+    ```javascript
     import {xxx, yyy} from '模块路径/模块名'
     import * as module1 from '模块路径/模块名'
     ```
@@ -354,7 +354,7 @@ let myModule2 = {
 ```
 
   ```html
-// test4.html
+<!-- test4.html -->
 <script type="text/javascript" src="jquery-1.10.1.js"></script>
 <script type="text/javascript" src="module4.js"></script>
 <script type="text/javascript">
@@ -909,7 +909,7 @@ console.log(person.name);
 
 2). 在app.js中引入并使用
 
-   ```
+   ```javascript
    import $ from 'jquery'
    $('body').css('background', 'red')
    ```

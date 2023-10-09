@@ -19,4 +19,4 @@
 
 VS code
 
-# VSCode 同时选中多个相同字符 编辑Ctrl+D,Ctrl+Shift+L
+VSCode 同时选中多个相同字符 编辑Ctrl+D,Ctrl+Shift+L
