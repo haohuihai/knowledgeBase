@@ -1,3 +1,5 @@
+## 对象
+
 在JS对象中，几乎所有的对象在创建时[[Prototype]]属性都会被赋予一个非空的值，对于下面的代码：
 
 ```js
@@ -44,17 +46,13 @@ for(var k in myObject) {
 ('a' in myObject) // true
 ```
 
-
-
 **Object.prototype**
 
 所有普通的[[Prototype]]链最终都会指向内置的Object.prototype。由于所有的“普通”（内置，不是特定主机的扩展）对象都“源于”（或者说把[[Prototype]]链的顶端设置为）这个Object.prototype对象，所以它包含JavaScript中许多通用的功能
 
-# 对象
+### 一、创建对象的两种方式
 
-## 一、创建对象的两种方式
-
-### 构造函数
+**构造函数**
 
 ```javascript
 var person = new Object();
@@ -105,7 +103,7 @@ console.log(person);
 结果如下图所示：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130102326854.png)
 
-### 字面量：
+**字面量：**
 
 对于字面量而言：
 直接使用`var person = {}`这样就可以创建出一个对象了
@@ -121,9 +119,11 @@ console.log(person1);
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130102626905.png)
 对于使用对象字面量创建对象的键值集合跟使用构造函数创建的对象是一样的；
 
-## 二、使用对象
+### 二、使用对象
+
 给对象集合装东西；
 设置属性（这里的属性就是前面提到的键）的时候可以使用`点表示法`，或者`方括号`表示法
+
 ```javascript
 //点表示法
 person.name='张三';
@@ -171,7 +171,7 @@ console.log(person["frist name"]);
 当属性为数字的时候，必须使用方括号来访问，否则会被当成小数点
 给对象设置一个属性，并赋予某一个数据类型的值，就创建了对象的某一个属性；
 
-## 三、访问对象的属性
+### 三、访问对象的属性
 
 在访问的对象上的属性的时候可以使用：`Object.keys(obj)`来访问
 此时会以数组的形式返回对象的属性
@@ -284,7 +284,8 @@ var  person2 = new Person('张三',18)
 console.log(person1.constructor == Person) //true
 console.log(person2.constructor == Person) //true
 ```
-## 四、构造函数当作普通函数
+### 四、构造函数当作普通函数
+
 构造函数与普通函数的唯一区别是调用他们的方式不同。任何函数，只要通过new操作符来调用，那它就可以作为构造函数来使用，而任何函数如果不通过new操作符来调用，就跟普通函数没什么区别。
 例如：
 
@@ -304,7 +305,8 @@ o.sayName();//"Nichols";
 
 不使用new 操作符调用Person时，属性和方法被添加进了window对象了（在全局作用域中调用一个函数时，this总是指向Global对象，浏览器中就是window对象，）
 
-# 原型模式
+## 原型模式
+
 在说原型模式之前看一个例子
 
 ```javascript
@@ -351,7 +353,8 @@ console.log(person1.sayName == person2.sayName);//ture
 ```
 
 将sayName方法和函数添加到Person的prototype中，Person此时成为空的函数，但是也可以通过调用构造函数来创建创建新对象，新对象具有相同的属性和方法，与构造函数模式不同的是，新对象的这些属性和方法，是由所有实例所共享的。
-## 一、理解原型对象
+### 一、理解原型对象
+
 无论什么时候，只要创建一个函数，就会为该函数创建一个prototype属性，这个属性指向函数的原型对象
 **原型对象**  
 
@@ -387,7 +390,8 @@ console.log(Person.prototype.isPrototypeOf(person2));//true
 ```javascript
 console.log(Object.getPrototypeOf(person1).name)//"张三"；
 ```
-## 二、属性的查找规则
+### 二、属性的查找规则
+
 在读取某个对象的属性的时候，先从对象实例本身开始查找，如果找到这个属性，就返回这个属性的值，不会在向下查找，如果没有找到，就继续找指针指向的原型对象`Person.prototype`对象也就是`person1.__proto__`它里面找，如果在这里面找到，就返回该属性的值
 简单理解：第一次查找：person1有name属性吗，没有，第二次查找，person1的`__proto__`有name属性吗，有就返回该属性的值
 
@@ -448,7 +452,7 @@ console.log(person1.hasOwnProperty("address"));
 
 ```
 
-##  三、属性设置和屏蔽
+### 三、属性设置和屏蔽
 
 ```js
 myObject.foo = "bar"

@@ -5,7 +5,7 @@
 - 在方法中，为了能够获取到name名称，必须通过obj的引用（变量名称）来获取。
 - 但是这样做有一个很大的弊端：如果我将obj的名称换成了info，那么所有的方法中的obj都需要换成info。
 
-```
+```javascript
 var obj = {
   name: "why",
   running: function() {
@@ -24,7 +24,7 @@ var obj = {
 
 - 当我们通过obj去调用running、eating、studying这些方法时，this就是指向的obj对象
 
-```
+```javascript
 var obj = {
   name: "why",
   running: function() {
@@ -50,7 +50,7 @@ var obj = {
 - 这个问题非常容易回答，在浏览器中测试就是指向window
 - 所以，在全局作用域下，我们可以认为this就是指向的window
 
-```
+```javascript
 console.log(this); // window
 
 var name = "why";
@@ -125,7 +125,7 @@ foo();
 
 - 所有的函数调用都没有被绑定到某个对象上；
 
-```
+```javascript
 // 2.案例二:
 function test1() {
   console.log(this); // window
@@ -145,7 +145,7 @@ test1();
 
 **案例三：将函数作为参数，传入到另一个函数中**
 
-```
+```javascript
 function foo(func) {
   func()
 }
@@ -162,7 +162,7 @@ foo(bar);
 - 这里的结果依然是window，为什么呢？
 - 原因非常简单，在真正函数调用的位置，并没有进行任何的对象绑定，只是一个独立函数的调用；
 
-```
+```javascript
 function foo(func) {
   func()
 }
@@ -188,7 +188,7 @@ foo(obj.bar);
 - foo的调用位置是obj.foo()方式进行调用的
 - 那么foo调用时this会隐式的被绑定到obj对象上
 
-```
+```javascript
 function foo() {
   console.log(this); // obj对象
 }
@@ -206,7 +206,7 @@ obj.foo();
 - 我们通过obj2又引用了obj1对象，再通过obj1对象调用foo函数；
 - 那么foo调用的位置上其实还是obj1被绑定了this；
 
-```
+```javascript
 function foo() {
   console.log(this); // obj对象
 }
@@ -230,7 +230,7 @@ obj2.obj1.foo();
 - 因为foo最终被调用的位置是bar，而bar在进行调用时没有绑定任何的对象，也就没有形成隐式绑定；
 - 相当于是一种默认绑定；
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -272,7 +272,7 @@ bar();
 
 - 显示绑定后，this就会明确的指向绑定的对象
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -291,7 +291,7 @@ foo.call(123); // Number对象,存放时123
 - 我们手动写了一个bind的辅助函数
 - 这个辅助函数的目的是在执行foo时，总是让它的this绑定到obj对象上
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -315,7 +315,7 @@ bar(); // obj对象
 
 方案二：使用Function.prototype.bind
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -343,7 +343,7 @@ bar(); // obj对象
 
 - setTimeout中会传入一个函数，这个函数中的this通常是window
 
-```
+```javascript
 setTimeout(function() {
   console.log(this); // window
 }, 1000);
@@ -361,7 +361,7 @@ setTimeout(function() {
 - 在forEach中传入的函数打印的也是Window对象；
 - 这是因为默认情况下传入的函数是自动调用函数（默认绑定）；
 
-```
+```javascript
 var names = ["abc", "cba", "nba"];
 names.forEach(function(item) {
   console.log(this); // 三次window
@@ -372,7 +372,7 @@ names.forEach(function(item) {
 
 forEach参数
 
-```
+```javascript
 var names = ["abc", "cba", "nba"];
 var obj = {name: "why"};
 names.forEach(function(item) {
@@ -386,7 +386,7 @@ names.forEach(function(item) {
 
 - 注意：省略了部分代码
 
-```
+```html
   <style>
     .box {
       width: 200px;
@@ -403,7 +403,7 @@ names.forEach(function(item) {
 - 在点击事件的回调中，this指向谁呢？box对象；
 - 这是因为在发生点击时，执行传入的回调函数被调用时，会将box对象绑定到该函数中；
 
-```
+```javascript
 var box = document.querySelector(".box");
 box.onclick = function() {
   console.log(this); // box对象
@@ -427,7 +427,7 @@ JavaScript中的函数可以当做一个类的构造函数来使用，也就是�
 - 3.这个新对象会绑定到函数调用的this上（this的绑定在这个步骤完成）；
 - 4.如果函数没有返回其他对象，表达式会返回这个新对象；
 
-```
+```javascript
 // 创建Person
 function Person(name) {
   console.log(this); // Person {}
@@ -452,7 +452,7 @@ console.log(p);
 
 - 结果是obj2，说明是显示绑定生效了
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -479,7 +479,7 @@ obj1.foo.call(obj2); // obj2, 说明显式绑定优先级更高
 
 - 结果是foo，说明是new绑定生效了
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -496,7 +496,7 @@ new obj.foo(); // foo对象, 说明new绑定优先级更高
 
 new绑定和call、apply是不允许同时使用的，所以不存在谁的优先级更高
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -514,7 +514,7 @@ var foo = new foo.call(obj);
 
 - 结果显示为foo，那么说明是new绑定生效了
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -540,7 +540,7 @@ var foo = new bar(); // 打印foo, 说明使用的是new绑定
 
 如果在显示绑定中，我们传入一个null或者undefined，那么这个显示绑定会被忽略，使用默认规则：
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -565,7 +565,7 @@ bar(); // window
 
 - (num2 = num1)的结果是num1的值；
 
-```
+```javascript
 var num1 = 100;
 var num2 = 0;
 var result = (num2 = num1);
@@ -577,7 +577,7 @@ console.log(result); // 100
 - 赋值(obj2.foo = obj1.foo)的结果是foo函数；
 - foo函数被直接调用，那么是默认绑定；
 
-```
+```javascript
 function foo() {
   console.log(this);
 }
@@ -610,7 +610,7 @@ obj1.foo(); // obj1对象
 - 但是直接拿到的this是window，我们需要在外层定义：`var _this = this`
 - 在setTimeout的回调函数中使用_this就代表了obj对象
 
-```
+```javascript
 var obj = {
   data: [],
   getData: function() {
@@ -631,7 +631,7 @@ obj.getData();
 - 为什么在setTimeout的回调函数中可以直接使用this呢？
 - 因为箭头函数并不绑定this对象，那么this引用就会从上层作用域中找到对应的this
 
-```
+```javascript
 var obj = {
   data: [],
   getData: function() {
@@ -652,7 +652,7 @@ obj.getData();
 - 依然是不断的从上层作用域找，那么找到了全局作用域；
 - 在全局作用域内，this代表的就是window
 
-```
+```javascript
 var obj = {
   data: [],
   getData: () => {
@@ -669,7 +669,7 @@ obj.getData();
 
 ### 4.1. 面试题一：
 
-```
+```javascript
 var name = "window";
 var person = {
   name: "person",
@@ -689,7 +689,7 @@ sayName();
 
 这道面试题非常简单，无非就是绕一下，希望把面试者绕晕：
 
-```
+```javascript
 function sayName() {
   var sss = person.sayName;
   // 独立函数调用，没有和任何对象关联
@@ -703,7 +703,7 @@ function sayName() {
 
 ### 4.2. 面试题二：
 
-```
+```javascript
 var name = 'window'
 var person1 = {
   name: 'person1',
@@ -742,7 +742,7 @@ person1.foo4().call(person2);
 
 下面是代码解析：
 
-```
+```javascript
 // 隐式绑定，肯定是person1
 person1.foo1(); // person1
 // 隐式绑定和显示绑定的结合，显示绑定生效，所以是person2
@@ -773,7 +773,7 @@ person1.foo4().call(person2) // person1
 
 ### 4.3. 面试题三:
 
-```
+```javascript
 var name = 'window'
 function Person (name) {
   this.name = name
@@ -812,7 +812,7 @@ person1.foo4().call(person2)
 
 下面是代码解析：
 
-```
+```javascript
 // 隐式绑定
 person1.foo1() // peron1
 // 显示绑定优先级大于隐式绑定
@@ -840,7 +840,7 @@ person1.foo4().call(person2) // person1
 
 ### 4.4. 面试题四：
 
-```
+```javascript
 var name = 'window'
 function Person (name) {
   this.name = name
@@ -872,7 +872,7 @@ person1.obj.foo2().call(person2)
 
 下面是代码解析：
 
-```
+```javascript
 // obj.foo1()返回一个函数
 // 这个函数在全局作用于下直接执行（默认绑定）
 person1.obj.foo1()() // window

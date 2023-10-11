@@ -5,7 +5,7 @@ module.exports = {
   title: "DATA", // 标题
   description: "记录一些我遇到的技术", // 标题下的描述
   // 指定网页head图标
-  level: [1, 2, 3],
+  // level: [1, 2, 3, 4],
   head: [
     [
       "link",
@@ -15,7 +15,7 @@ module.exports = {
   themeConfig: {
     // 主题配置
     logo: "/images/logo.jpeg",
-    sidebarDepth: 0,
+    sidebarDepth: 4,
     searchMaxSuggestions: 10,
     nav: [
       // 头部导航
@@ -30,13 +30,9 @@ module.exports = {
         collapsable: true,
         children: [
           {
-            title: "CSS1",
+            title: "CSS基础知识",
             path: "../pages/Front/CSS/CSS1",
-          },
-          {
-            title: "CSS2",
-            path: "../pages/Front/CSS/CSS2",
-          },
+          }
         ],
       },
       {
@@ -64,7 +60,7 @@ module.exports = {
             path: "../pages/Front/JS/JavaScript核心原理之原型",
           },
           {
-            title: "JS原型函数",
+            title: "JS原生函数",
             path: "../pages/Front/JS/JavaScript原生函数",
           },
           {

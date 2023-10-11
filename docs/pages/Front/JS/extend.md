@@ -3,8 +3,6 @@
 **在面向对象的编程里面，继承也是很重要的一部分**
 对于继承：A对象通过继承B对象，就可以直接拥有B对象的所有属性和方法，用于代码的复用，提升开发效率。
 
-[toc]
-
 ## 一、原型链的继承
 
 原型链是比较常见的一种继承，其中涉及的构造函数、原型和实例，三者之间存在着一定的关系；
@@ -173,7 +171,7 @@ console.log(s4.getName()); // 正常输出'parent3'
 
 ## 四、原型式继承
 
-这里提到的就是 ES5 里面的 Object.create 方法，这个方法接收两个参数：一是用作新对象原型的对象、二是为新对象定义额外属性的对象（可选参数）。
+这里提到的就是` ES5` 里面的 `Object.create` 方法，这个方法接收两个参数：一是用作新对象原型的对象、二是为新对象定义额外属性的对象（可选参数）。
 
 ```javascript
 let parent4 = {
@@ -196,7 +194,7 @@ console.log(person4.friends);//["p1","p2","p3","jerry","lucy"]
 console.log(person5.friends);//["p1","p2","p3","jerry","lucy"]
 ```
 
-从上面的代码中可以看到，通过 Object.create 这个方法可以实现普通对象的继承，不仅仅能继承属性，同样也可以继承 getName 的方法
+从上面的代码中可以看到，通过 `Object.create` 这个方法可以实现普通对象的继承，不仅仅能继承属性，同样也可以继承 `getName` 的方法
 
 ## 五、寄生式继承
 
@@ -225,11 +223,11 @@ console.log(person5.getName());//parent5
 console.log(person5.getFriends());//["p1", "p2", "p3"]
 ```
 
-person5 通过 clone 的方法，增加了 getFriends 的方法，从而使 person5 这个普通对象在继承过程中又增加了一个方法，这样的继承方式就是寄生式继承。
+person5 通过 clone 的方法，增加了 `getFriends `的方法，从而使` person5` 这个普通对象在继承过程中又增加了一个方法，这样的继承方式就是寄生式继承。
 
 ## 六、寄生组合式继承
 
-解决普通对象的继承问题的 Object.create 方法，在前面这几种继承方式的优缺点基础上进行改造，得出了寄生组合式的继承方式，这也是所有继承方式里面相对最优的继承方式，代码如下。
+解决普通对象的继承问题的` Object.create` 方法，在前面这几种继承方式的优缺点基础上进行改造，得出了寄生组合式的继承方式，这也是所有继承方式里面相对最优的继承方式，代码如下。
 
 ```javascript
   function clone (parent, child) {
@@ -289,9 +287,9 @@ const asuna = new Gamer('Asuna', 20)
 asuna.getName() // 成功访问到父类的方法
 ```
 
-因为浏览器的兼容性问题，如果遇到不支持 ES6 的浏览器，那么就得利用 babel 这个编译工具，将 ES6 的代码编译成 ES5，让一些不支持新语法的浏览器也能运行。
+因为浏览器的兼容性问题，如果遇到不支持 ES6 的浏览器，那么就得利用` babel `这个编译工具，将 `ES6 `的代码编译成 ES5，让一些不支持新语法的浏览器也能运行。
 
-使用babel进行编译
+使用`babel`进行编译
 
 ```js
 function _possibleConstructorReturn (self, call) { 

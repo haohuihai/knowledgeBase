@@ -4,10 +4,6 @@ tags:
   - 主题
   - 索引
 ---
-::: slot doclist
-[[toc]]
-:::
-
 ## 样式表书写位置
 
 1. 内嵌样式
@@ -2702,8 +2698,6 @@ flex-wrap默认子项目不换行；`nowrap`
 
 这三个元属性能控制flex子项在主轴上的尺寸和伸缩，通常将这三个属性简写未`flex`的表达式；
 
-
-
 **1、必要元素：**
 
 a、指定一个盒子为伸缩盒子 display: flex
@@ -2716,34 +2710,30 @@ d、可互换主侧轴，也可改变方向
 
 **2、各属性详解**
 
-a、flex-direction调整主轴方向（默认为水平方向）
+a、`flex-direction`调整主轴方向（默认为水平方向）
 
-b、justify-content调整主轴对齐
+b、`justify-content`调整主轴对齐
 
-c、align-items调整侧轴对齐
+c、`align-items`调整侧轴对齐
 
-d、flex-wrap控制是否换行
+d、`flex-wrap`控制是否换行
 
-e、align-content堆栈（由flex-wrap产生的独立行）对齐
+e、`align-content`堆栈（由flex-wrap产生的独立行）对齐
 
-f、flex-flow是flex-direction、flex-wrap的简写形式
+f、`flex-flow`是`flex-direction`、`flex-wrap`的简写形式
 
-g、flex子项目在主轴的缩放比例，不指定flex属性，则不参与伸缩分配
+g、`flex`子项目在主轴的缩放比例，不指定`flex`属性，则不参与伸缩分配
 
-h、order控制子项目的排列顺序，正序方式排序，从小到大
+h、`order`控制子项目的排列顺序，正序方式排序，从小到大
 
 ### 多列布局
 
-类似报纸或杂志中的排版方式，上要用以控制大篇幅文本。
+类似报纸或杂志中的排版方式，以控制大篇幅文本。
 
-分几列
--webkit-column-count:3;
-分割线
--webkit-column-rule:1px dashed red;
-设置列间距
--webkit-column-gap:60px;
-列宽度
--webkit-column-width: 400px;
+分几列 `-webkit-column-count:3`;
+分割线  `-webkit-column-rule:1px dashed red`;
+设置列间距  `-webkit-column-gap:60px`;
+列宽度  `-webkit-column-width: 400px`;
 
 ### 网格布局
 
@@ -2753,12 +2743,10 @@ h、order控制子项目的排列顺序，正序方式排序，从小到大
 
 ### 表格布局
 
+**固定宽度被挤压 flex为1的元素宽度超出父元素**
 
-
-# 固定宽度被挤压 flex为1的元素宽度超出父元素
-
-当子元素设置固定宽度，如果整体宽度不足时，会把固定宽度给压缩，解决方法: 给固定宽度的元素添加flex-shrink:0。
-flex-shrink：指定了 flex 元素的收缩规则。
+当子元素设置固定宽度，如果整体宽度不足时，会把固定宽度给压缩，解决方法: 给固定宽度的元素添加`flex-shrink:0`。
+`flex-shrink`：指定了 flex 元素的收缩规则。
 
 设置右边元素flex：1，当右边元素宽度超过父元素时，会造成右边宽度溢出。
 解决方案：给右侧设置了flex:1;的元素，同时设置width:0

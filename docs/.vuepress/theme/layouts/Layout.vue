@@ -43,11 +43,11 @@
         <slot name="page-bottom" />
       </template>
     </Page>
-    <RightSidebar>
+    <!-- <RightSidebar>
       <template #doc>
         <Content slot-key="doclist" />
       </template>
-    </RightSidebar>
+    </RightSidebar> -->
     
   </div>
 </template>

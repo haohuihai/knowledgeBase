@@ -86,9 +86,9 @@
 
   * 基本语法
 
-    * 定义暴露模块: define([依赖模块名], function(){ return 模块对象 })
+    * 定义暴露模块: `define([依赖模块名], function(){ return 模块对象 })`
 
-    * 引入模块: require(['模块1', '模块2', '模块3'], function(m1, m2){ 使用模块对象  })
+    * 引入模块: `require(['模块1', '模块2', '模块3'], function(m1, m2){ 使用模块对象  })`
 
     * 配置: 
 
@@ -138,7 +138,7 @@
 
   * ES6内置了模块化的实现
 
-    定义暴露模块 : export
+    定义暴露模块 : `export`
 
     暴露一个对象，一个模块只能有一个`export default`导出: 
 
@@ -159,7 +159,7 @@
 
     引入使用模块 : `import`
 
-    default模块导出时:
+    `default`模块导出时:
 
     ```javascript
     import xxx  from '模块路径/模块名'
@@ -174,9 +174,9 @@
 
   * 问题: 所有浏览器还不能直接识别ES6模块化的语法 : 
 
-    使用Babel将ES6--->ES5(使用了CommonJS) ----浏览器还不能直接支行
+    使用`Babel`将ES6--->ES5(使用了`CommonJS`) ----浏览器还不能直接支行
 
-    使用Browserify--->打包处理----浏览器可以运行
+    使用`Browserify`--->打包处理----浏览器可以运行
 
 
 # 模块化发展
@@ -264,7 +264,7 @@ let myModule2 = {
 </script>
   ```
 
-  * namespace模式: 简单对象封装
+  * `namespace`模式: 简单对象封装
 
   * 作用: 减少了全局变量
 
@@ -889,8 +889,8 @@ console.log(person.name);
 
 5. 编译
 
-  * 使用Babel将ES6编译为ES5代码(但包含CommonJS语法) : babel js/src -d js/lib
-  * 使用Browserify编译js : `browserify js/lib/app.js -o js/lib/bundle.js`
+  * 使用`Babel`将ES6编译为ES5代码(但包含`CommonJS`语法) : `babel js/src -d js/lib`
+  * 使用`Browserify`编译js : `browserify js/lib/app.js -o js/lib/bundle.js`
 
 6. 页面中引入测试
 
