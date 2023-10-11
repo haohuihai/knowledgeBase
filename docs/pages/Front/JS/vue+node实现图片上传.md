@@ -11,7 +11,9 @@
 
 **`FormData`** 接口提供了一种表示表单数据的键值对 `key/value` 的构造方式，如果送出时的编码类型被设为 `"multipart/form-data"`，它会使用和表单一样的格式。如下图所示：
 
-![image-20220413141105238](C:\Users\EDZ\AppData\Roaming\Typora\typora-user-images\image-20220413141105238.png) 
+![image-20231011142017578](images/image-20220413141105238.png)
+
+
 
 通过FormData()构造函数可以创建出一个FormData对象；
 
@@ -21,7 +23,8 @@ let formData = new FormData(...)
 
 打印formdata：
 
-![image-20220413141826495](C:\Users\EDZ\AppData\Roaming\Typora\typora-user-images\image-20220413141826495.png) 
+![image-20231011142017578](images/image-20220413141826495.png)
+
 
 **方法**
 
@@ -267,7 +270,8 @@ value2
 
 **注意**: Multer 不会处理任何非 `multipart/form-data` 类型的表单数据。前端通过formData对象格式向后端传递参数
 
-![image-20220413141105238](C:\Users\EDZ\AppData\Roaming\Typora\typora-user-images\image-20220413141105238.png) 
+![image-20220413141105238](images/image-20220413141105238.png)
+
 
 安装 
 

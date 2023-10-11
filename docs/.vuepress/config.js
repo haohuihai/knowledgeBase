@@ -68,6 +68,10 @@ module.exports = {
             path: "../pages/Front/JS/JavaScript原生函数",
           },
           {
+            title: "JS作用域",
+            path: "../pages/Front/JS/JavaScript原理作用域",
+          },
+          {
             title: "JS基础",
             path: "../pages/Front/JS/JavaScript基础",
           },
@@ -78,6 +82,10 @@ module.exports = {
           {
             title: "JSON",
             path: "../pages/Front/JS/JSON",
+          },
+          {
+            title: "动画",
+            path: "../pages/Front/JS/动画",
           },
         ],
       },
@@ -188,14 +196,6 @@ module.exports = {
           {
             title: 'Gitlab管道',
             path: '../pages/Gitlab/Pipeline/note'
-          },
-          {
-            title: 'Docker安装Gitlab',
-            path: '../pages/Gitlab/dockerInstallGitlab'
-          },
-          {
-            title: '搭建私有Gitlab',
-            path: '../pages/Gitlab/note'
           },
         ],
       },
