@@ -381,23 +381,23 @@ fs.rename('zs.txt','newFile/lisi.txt',function(err) {
 
 #### fs.writeFile(file, data[, options], callback)
 
--  file 			<string> | <Buffer> | <URL> | <integer> 文件名或文件描述符
+-  file 			`<string>` | `<Buffer>` | `<URL>` | `<integer>` 文件名或文件描述符
 
-- data 		 <string> | <Buffer> | <TypedArray> | <DataView> | <Object>
+- data 		 `<string>` | `<Buffer>` | `<TypedArray> `| `<DataView>` | `<Object>`
 
-- options     <Object> | <string>
+- options     `<Object>` | `<string>`
 
-  ​	encoding 		<string> | <null> 默认值: 'utf8'
+  ​	encoding 		`<string>` | `<null>` 默认值: 'utf8'
 
-   	mode 			<integer> 默认值: 0o666
+   	mode 			`<integer>` 默认值: 0o666
 
-  ​	flag 					<string> 请参阅对文件系统 flags 的支持。 默认值: 'w'。
+  ​	flag 					`<string>` 请参阅对文件系统 flags 的支持。 默认值: 'w'。
 
-  ​	signal				 <AbortSignal> 允许中止正在进行的写入文件
+  ​	signal				 `<AbortSignal>` 允许中止正在进行的写入文件
 
-- callback    <Function>
+- callback    `<Function>`
 
-  ​	err 					<Error> | <AggregateError>
+  ​	err 					`<Error> `| `<AggregateError>`
 
 当 `file` 是文件名时，将数据异步地写入文件，如果文件已存在则替换该文件。 `data` 可以是字符串或缓冲区。
 
@@ -502,8 +502,8 @@ uploadImg (file) {
 
 #### Buffer.from(string[, encoding])
 
-- `string`  <string>要编码的字符串。
-- `encoding` <string>  string的编码。 **默认值:** `'utf8'`。
+- `string`  `<string>`要编码的字符串。
+- `encoding` `<string>`  string的编码。 **默认值:** `'utf8'`。
 
 > 创建包含 `string` 的新 `Buffer`。 `encoding` 参数标识将 `string` 转换为字节时要使用的字符编码。
 

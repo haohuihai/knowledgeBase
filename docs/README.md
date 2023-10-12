@@ -4,11 +4,12 @@ heroImage: /images/hero.png
 actionText: 学习 →
 actionLink: /pages/
 features:
-- title: 技术为
-  details: 对以 markdown 为中心的项目结构，做最简化的配置，帮助你专注于创作。
-- title: Vue 驱动
-  details: 享用 Vue + webpack 开发环境，在 markdown 中使用 Vue 组件，并通过 Vue 开发自定义主题。
-- title: 性能高效
-  details: VuePress 将每个页面生成为预渲染的静态 HTML，每个页面加载之后，然后作为单页面应用程序(SPA)运行。
+- title: 前端开发
+  details: 从基础到深入、从伪代码到实战项目，介绍前端的条条框框。
+- title: 后端开发
+  details: 我用Node、Java、Python来学习后端知识，记录我遇到的技术。
+- title: 运维（运维工程）
+  details: 前后端都有了，运维必须要看，这里有一些将项目部署到线上的各种方法，供大家参考学习。
 footer: 
+  details: Continuous effort, Exploring new discoveries. 
 ---

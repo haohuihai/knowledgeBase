@@ -1,30 +1,31 @@
-组件通信常用方式
+## 组件通信常用方式
 
+```js
 props
 
 eventbus
 
 vuex
+```
 
 自定义事件
 
 边界情况
 
-​		$parent
-
-​		$children
-
-​		$root
-
-​		$refs
-
-​		provide/inject
+```js
+$parent
+$children
+$root
+$refs
+provide/inject
+```
 
 ​	非prop特性
 
-​		$attrs
-
-​		$listeners
+```js
+$attrs
+$listeners
+```
 
 **props**
 

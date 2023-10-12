@@ -1,6 +1,7 @@
 ::: slot doclist
 [[toc]]
 :::
+
 # 前置知识
 
 ## ES6模块化
@@ -66,50 +67,50 @@ __pathname // E:\foo\bar\index.js
 - `path.join([...paths])` 多参数路径拼接
 
 ```js
-path.join(__dirname,"..","src") //E:\foo\src
-path.join('/bbb/aaa','./test/index.js') //\bbb\aaa\test\index.js
+path.join(__dirname,"..","src") // E:\foo\src
+path.join('/bbb/aaa','./test/index.js') // \bbb\aaa\test\index.js
 ```
 
 - `path.resolve([...paths])` 相对路径转绝对路径，类似于cmd中cd命令，对每一级path都进行`cd path`处理
 
 ```js
-path.resolve(__dirname,"../") //E:\foo\src
-path.resolve('/bbb/aaa','./test/index.js') //E:\bbb\aaa\test\index.js
-path.resolve('/bbb/aaa','test/index.js') //E:\bbb\aaa\test\index.js
-path.resolve('/bbb/aaa','/test/index.js') //E:\test\index.js
-path.resolve('/bbb/aaa','..','/test/index.js') //E:\bbb\test\index.js
+path.resolve(__dirname,"../") // E:\foo\src
+path.resolve('/bbb/aaa','./test/index.js') // E:\bbb\aaa\test\index.js
+path.resolve('/bbb/aaa','test/index.js') // E:\bbb\aaa\test\index.js
+path.resolve('/bbb/aaa','/test/index.js') // E:\test\index.js
+path.resolve('/bbb/aaa','..','/test/index.js') // E:\bbb\test\index.js
 ```
 
 - path.dirname(path) 返回path的目录名
 
 ```js
-path.dirname(__filename) === __dirname  //true
+path.dirname(__filename) === __dirname  // true
 ```
 
 - path.extname(path) 返回文件的扩展名
 
 ```js
-path.extname('/foo/bar/baz/asdf/index.html');  //return '.html'
-path.extname('/foo/bar/baz/asdf/index.');  //return '.'
-path.extname('/foo/bar/baz/asdf/index');  //return ''
-path.extname('.index');  //return ''
+path.extname('/foo/bar/baz/asdf/index.html');  // return '.html'
+path.extname('/foo/bar/baz/asdf/index.');  // return '.'
+path.extname('/foo/bar/baz/asdf/index');  // return ''
+path.extname('.index');  // return ''
 ```
 
 - path.basename(path[,ext]) 返回path的最后一部分，如果加了扩展名（区分大小写）则是剔除掉扩展名的部分
 
 ```js
-path.basename('/foo/bar/baz/asdf/index.html');  //return 'index.html'
-path.basename('/foo/bar/baz/asdf/index.html','.html');  //return 'index'
-path.basename('/foo/bar/baz/asdf/index.HTML','.html');  //return 'index.HTML'
+path.basename('/foo/bar/baz/asdf/index.html');  // return 'index.html'
+path.basename('/foo/bar/baz/asdf/index.html','.html');  // return 'index'
+path.basename('/foo/bar/baz/asdf/index.HTML','.html');  // return 'index.HTML'
 ```
 
 - path.isAbsolute(path) 判断路径是否是绝对路径
 
 ```js
-path.isAbsolute(".")  //false
-path.isAbsolute("/")  //true
-path.isAbsolute("./foo/baz")  //false
-path.isAbsolute("/foo/baz")  //true
+path.isAbsolute(".")  // false
+path.isAbsolute("/")  // true
+path.isAbsolute("./foo/baz")  // false
+path.isAbsolute("/foo/baz")  // true
 ```
 
 ## 准备工作
@@ -188,9 +189,7 @@ function add(x, y) {
 console.log(add(1, 2));
 ```
 
-`webpack`入口起点文件
-
-**运行指令：**
+`webpack`入口起点文件，这里时单文件入口的demo
 
 **开发环境**：`webpack ./src/index.js -o ./build/built.js --mode=development`
 
@@ -212,7 +211,6 @@ webpack提供了一些默认的配置，有些插件会随着社区的完善，w
 1. webpack能处理js/json资源，不能处理css/img等其他资源
 2. 生产环境和开发环境将ES6模块化编译成浏览器能识别的模块化
 3. 生产环境比开发环境多一个压缩js代码
-4. 等等等。。。
 
 使用时需要编译，ES6编译为ES5代码
 
@@ -920,7 +918,7 @@ plugin:[
 npm run build
 ```
 
-**注：**css这里 在webpack5已经不支持`optimize-css-assets-webpack-plugin`来进行压缩，要使用新的`css-minimizer-webpack-plugin `
+**注** ：css这里 在webpack5已经不支持`optimize-css-assets-webpack-plugin`来进行压缩，要使用新的`css-minimizer-webpack-plugin `
 
 webpack5的  使用方式
 
@@ -1190,7 +1188,7 @@ hidden-source-map：外部
 
 
 
-  开发环境：速度快，调试更友好
+  **开发环境：速度快，调试更友好**
 
    速度快(eval>inline>cheap>...)
 
@@ -1210,7 +1208,7 @@ hidden-source-map：外部
 
 
 
-  生产环境：源代码要不要隐藏? 调试要不要更友好
+  **生产环境：源代码要不要隐藏? 调试要不要更友好**
 
    内联会让代码体积变大，所以在生产环境不用内联
 
@@ -1727,7 +1725,11 @@ var addNumber = largeNumber('1','999')
 
 ![image-20220429160029200](./images/image-20220429160029200.png) 
 
-![image-20220429160040983](./images/image-20220429160040983.png) 
+|          | 客户端渲染          | 服务的渲染            |
+| -------- | ------------------- | --------------------- |
+| 请求     | 多个请求            | 1个请求               |
+| 加载过程 | HTML 和数据串行加载 | 1个请求返回HTML和数据 |
+| 渲染     | 浏览器渲染          | 服务的渲染            |
 
 #### SSR 的优势
 

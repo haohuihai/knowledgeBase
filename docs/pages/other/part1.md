@@ -402,7 +402,7 @@ background-Origin属性指定background-position属性应该是相对位置。
 
 
 
-利用<script>标签没有跨域限制的漏洞。通过<script> 标签指向一个需要访问的地址，并提供一个回调函数
+利用`<script>`标签没有跨域限制的漏洞。通过`<script> `标签指向一个需要访问的地址，并提供一个回调函数
 
 
 
