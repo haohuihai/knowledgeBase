@@ -11,3 +11,12 @@ https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/wxml
 ## 小程序项目配置
 
 https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html
+
+
+## 开放平台添加网站应用
+
+需要在WORD上面手写相关信息，盖章，扫描后上传
+
+## 发票
+
+无论是公众平台还是开放平台，如果选择了不开发票，后期需要联系微信运营平台的客服，申请补开发票

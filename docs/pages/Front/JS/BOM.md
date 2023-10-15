@@ -126,12 +126,12 @@ var scrollTop = document.documentElement.scrollTop + document.body.scrollTop；
 
 格式：
 
-```
+```js
 scrollTo(xpos, ypos)
 
-xpos 必需。要在窗口文档显示区左上角显示的文档的 x 坐标。
+// xpos 必需。要在窗口文档显示区左上角显示的文档的 x 坐标。
 
-ypos 必需。要在窗口文档显示区左上角显示的文档的 y 坐标
+// ypos 必需。要在窗口文档显示区左上角显示的文档的 y 坐标
 ```
 
 **事件对象event**
@@ -148,7 +148,7 @@ ie 678 支持 `window.event`（无参）
 
 ```js
 box.onclick = function(event|| asdf){
- event || asdf对时间对象event的操作
+ // event || asdf对时间对象event的操作
 }
 ```
 
