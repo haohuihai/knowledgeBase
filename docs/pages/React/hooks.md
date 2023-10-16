@@ -1,5 +1,7 @@
 >  以下案例默认已安装react，react-dom等依赖
 
+## JSX的渲染方式
+
 jsx语法创建虚拟dom渲染到页面上，可以通过两种方式
 
 1. **ReactDOM.render()**
@@ -25,7 +27,9 @@ const VDOM = React.createElement('h1', { id:'title' },
 ReactDOM.render(VDOM, document.getElementById('test'))
 ```
 
-createElement()API的使用
+`createElement() `  这个API在React18 中已经过时了 的使用:
+
+`createElement() `的目的是创建一个React元素， 可以传入一个组件，也可以传入 type、props 和 children来创建一个元素
 
 关于JSX语法
 
