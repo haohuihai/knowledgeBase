@@ -1,3 +1,4 @@
+## 介绍
 
 实际上，`<canvas> `标签只有两个样式属性 —— `width`和`height`。这些都是可选的，并且同样利用 `DOM properties` 来设置。当没有设置宽度和高度的时候，`canvas`会初始化宽度为300像素和高度为150像素。该元素可以使用CSS来定义大小，但在绘制时图像会伸缩以适应它的框架尺寸：如果CSS的尺寸与初始画布的比例不一致，它会出现扭曲。
 
@@ -32,6 +33,8 @@ if (canvas.getContext){
  - 之后你把路径封闭。
  - 一旦路径生成，你就能通过描边或填充路径区域来渲染图形。
 
+### 基本绘制
+
 **描边或填充：**
 1、描边：
 
@@ -54,7 +57,7 @@ ctx.fill()
 ```
 
 绘制图形的基本函数：
- - `beginPath()`  新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。（绘制路径之前有必要这样写）
+ - `beginPath()`  新建一条路径，和之前的路径没关系，图形绘制命令被指向到路径上生成路径。（绘制路径之前有必要这样写）
  - `closePath()`闭合路径之后图形绘制命令又重新指向到上下文中。
  - `stroke()`通过线条来绘制图形轮廓。
  - `fill()`通过填充路径的内容区域生成实心的图形。
@@ -131,6 +134,18 @@ gd.fill();//默认为黑色
 ```
 ![image-20231024110446259](images/image-20231024110446259.png) 
 
+快速绘制矩形的方法：
+
+```javascript
+// 描边矩形
+gd.strokeStyle = 'green';
+gd.strokeRect( 10, 10, 300, 100 );
+
+// 填充矩形
+gd.fillStyle = 'red';
+gd.fillRect( 200, 300, 200, 80 );
+```
+
 是先描边还是先填充，不同顺序不同的结果；
 
 1. 先描边 ，在填充，填充的会截取描边宽度的一半
@@ -203,14 +218,16 @@ gd.stroke();
 arc(x, y, radius, startAngle, endAngle, anticlockwise)
 ```
 
-- `x:`
-- `y:`
-- `startAngle:`
-- `endAngle:`
-- `anticlockwise: `
+- `x:` 圆弧的圆心，距离X轴的横坐标
+- `y:`圆弧的圆心，距离Y轴的横坐标
+- `radius:` 圆弧的半径
+- `startAngle:` 圆弧的起始弧度
+- `endAngle:` 圆弧的中止弧度
+- `anticlockwise: ` 沿顺时针还是逆时针  `true`为逆时针，`false`为顺时针
 
-画一个以（x,y）为圆心的以radius为半径的圆弧（圆），从startAngle开始到endAngle结束，按照anticlockwise给定的方向（默认为顺时针）来生成。
-arc()函数中表示角的单位是弧度，不是角度。角度与弧度的js表达式:`弧度=(Math.PI/180)*角度。`
+画一个以（x,y）为圆心的以`radius`为半径的圆弧（圆），从`startAngle`开始到`endAngle`结束，按照`anticlockwise`给定的方向（默认为顺时针）来生成。
+
+`arc()`函数中表示角的单位是弧度，不是角度。角度与弧度的`js`表达式:`弧度=(Math.PI/180)*角度。`
 
 ```javascript
 draw()
@@ -242,22 +259,38 @@ function draw() {
   }
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210209222301966.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231024233704244](images/image-20231024233704244.png) 
 
-其他绘制属性
+辅助函数
+
+```javascript
+// 角度转弧度
+function a2r(ang){
+	return Math.PI / 180 * ang;
+}
+
+// 弧度转角度
+function r2a(rad){
+	return 180 / Math.PI * rad;
+}
+```
+
+**其他绘制属性**
 `gd.lineCap(x)`的参数可以是` butt 、round 、 square`
+
 ```javascript
 gd.lineCap = 'butt';
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210123153255498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231024233847829](images/image-20231024233847829.png) 
 ```javascript
 gd.lineCap = 'round';
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210123153340572.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231024233906492](images/image-20231024233906492.png) 
 ```javascript
 gd.lineCap = 'square';
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210123153426744.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231024233924140](images/image-20231024233924140.png) 
+
 `gd.lineJoin()`的参数值有` miter、bevel、round`
 
 ```javascript
@@ -270,12 +303,16 @@ gd.lineJoin = 'miter'; // bevel round
 gd.lineWidth = 20;
 gd.stroke();
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210123153954396.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
-保存与恢复：
+![image-20231024233957293](images/image-20231024233957293.png) 
+
+**保存与恢复：**
+
 `save()`保存画布(canvas)的所有状态
 `restore()`恢复画布保存之前的状态
-save 和 restore 方法是用来保存和恢复 canvas 状态的，都没有参数。Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。
+`save` 和 `restore `方法是用来保存和恢复 canvas 状态的，都没有参数。Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。
+
 简单理解就是，执行`save()`方法之后，会将`save()`之前的状态保存到栈里面，`restore()`一次，会根据最后面`save()`的先恢复其状态，栈的就是：后进先出。
+
 你可以调用任意多次 save方法。每一次调用 restore 方法，上一个保存的状态就从栈中弹出，所有设定都恢复。
 
 ```javascript
@@ -302,13 +339,44 @@ function draw() {
 
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210209224238873.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231024234134719](images/image-20231024234134719.png) 
+
+`globalAlpha`的使用
+
+ `lineWidth`, `strokeStyle`,` fillStyle` 只能当前路径上有效，`globalAlpha `能对它以后的所有路径都会产生效果
+
+```javascript
+gd.beginPath();
+gd.rect( 10, 10, 300, 100 );
+gd.fillStyle = 'blue';
+gd.lineWidth = 8;
+gd.strokeStyle = 'green';
+gd.globalAlpha = 0.1;
+gd.fill();;
+gd.stroke();
+
+gd.beginPath();
+gd.arc( 500, 300, 100, 0, Math.PI * 2 );
+gd.fillStyle = 'red';
+gd.globalAlpha = 1;
+gd.fill();
+```
+
+![image-20231024234508269](images/image-20231024234508269.png) 
+
+### 动画初级
+
 **移动：Translate**
-translate 方法，它用来移动 canvas 和它的原点到一个不同的位置。
-translate(x, y)
-`translate(x,y)` 方法接受两个参数。x 是左右偏移量，y 是上下偏移量
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210090824175.png)
+`translate `方法，它用来移动 canvas 和它的原点到一个不同的位置。
+`translate(x, y)`
+
+- `x: `x 是左右偏移量
+- `y:`y 是上下偏移量
+
+![image-20231024234819066](images/image-20231024234819066.png) 
+
 在每次做变形之前，应保存之前的状态
+
 例如：绘制9个方块
 
 ```javascript
@@ -327,8 +395,10 @@ function draw() {
 ```
 **旋转：Rotating**
 旋转是以原点为中心进行旋转的，
+
 `gd.rotate(deg)`只接收一个参数，旋转角度，是顺时针方向的，以弧度为单位；如果改变旋转的位置，可以搭配
 `translate`使用
+
 例子：画一个圆环图
 
 ```javascript
@@ -351,6 +421,7 @@ function draw() {
 }
 ```
 **缩放：Scaling**
+
 用来增减图形在canvas中的像素数目，对形状，位图进行缩小或者放大
 `scale(x, y)`可以缩放画布的水平和垂直的单位。两个参数都是实数，可以为负数，x 为水平缩放因子，y 为垂直缩放因子，如果比1小，会缩小图形， 如果比1大会放大图形。默认值为1， 为实际大小。
 
