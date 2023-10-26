@@ -1,4 +1,4 @@
-## 介绍
+## 基本介绍
 
 实际上，`<canvas> `标签只有两个样式属性 —— `width`和`height`。这些都是可选的，并且同样利用 `DOM properties` 来设置。当没有设置宽度和高度的时候，`canvas`会初始化宽度为300像素和高度为150像素。该元素可以使用CSS来定义大小，但在绘制时图像会伸缩以适应它的框架尺寸：如果CSS的尺寸与初始画布的比例不一致，它会出现扭曲。
 
@@ -62,23 +62,24 @@ ctx.fill()
  - `stroke()`通过线条来绘制图形轮廓。
  - `fill()`通过填充路径的内容区域生成实心的图形。
 
-`moveTo(x, y)`一个非常有用的函数，而这个函数实际上并不能画出任何东西，也是上面所描述的路径列表的一部分，这里可以理解为我们写字，笔触到达纸上的那一个点。
+#### moveTo(x, y)
 
-`lineTo(x,y)`用来绘制直线的方法，有两个参数，`x`以及`y `，代表坐标系中直线结束的点。开始点和之前的绘制路径有关，之前路径的结束点就是接下来的开始点，和`moveTo(x, y)`搭配使用。
+一个非常有用的函数，而这个函数实际上并不能画出任何东西，也是上面所描述的路径列表的一部分，这里可以理解为我们写字，笔触到达纸上的那一个点。
+
+#### lineTo(x,y)
+
+用来绘制直线的方法，有两个参数，`x`以及`y `，代表坐标系中直线结束的点。开始点和之前的绘制路径有关，之前路径的结束点就是接下来的开始点，和`moveTo(x, y)`搭配使用。
 
 当`canvas`初始化或者`beginPath()`调用后，通常会使用`moveTo()`函数设置起点。
-HTML:
 
 ```html
 <!--- 绘制固定宽高的画布--->
 <canvas id="c1" width="300" height="200" ></canvas>
 ```
-CSS:
 ```css
 body{text-align:center;}
 canvas{border: 1px solid #000;}
 ```
-JavaScript：
 ```javascript
 // 取到canvas画布元素
 let canvas = document.getElementById('c1');
@@ -109,7 +110,15 @@ gd.stroke();
 
 ![image-20231024105936372](images/image-20231024105936372.png) 
 
-**矩形的绘制**
+#### beginPath()
+
+#### closePath()
+
+#### bezierCurveTo()
+
+#### quadraticCurveTo()
+
+#### rect()
 
 ```javascript
 rect(x, y, width, height)
@@ -183,6 +192,8 @@ gd.stroke();
 
  **清除指定矩形区域，让清除部分完全透明。**
 
+#### clearRect()
+
 ```javascript
 clearRect(x, y, width, height)
 ```
@@ -213,6 +224,8 @@ gd.stroke();
 ![image-20231024112036839](images/image-20231024112036839.png) 
 
 **绘制圆弧：**
+
+#### arc()
 
 ```javascript
 arc(x, y, radius, startAngle, endAngle, anticlockwise)
@@ -275,8 +288,27 @@ function r2a(rad){
 }
 ```
 
-**其他绘制属性**
-`gd.lineCap(x)`的参数可以是` butt 、round 、 square`
+#### arcTo()
+
+#### ellipse()
+
+#### shadowBlur
+
+#### shadowColor
+
+#### shadowOffsetX()
+
+#### createConicGradient()
+
+#### createImageData()
+
+#### createLinearGradient()
+
+其他绘制属性
+
+#### lineCap(x)
+
+x参数可以是` butt 、round 、 square`
 
 ```javascript
 gd.lineCap = 'butt';
@@ -306,6 +338,8 @@ gd.stroke();
 ![image-20231024233957293](images/image-20231024233957293.png) 
 
 **保存与恢复：**
+
+#### save()和restore()
 
 `save()`保存画布(canvas)的所有状态
 `restore()`恢复画布保存之前的状态
@@ -341,6 +375,46 @@ function draw() {
 ```
 ![image-20231024234134719](images/image-20231024234134719.png) 
 
+```javascript
+gd.save();//保存当前画布的坐标系，经过保存后，后面的都是基于保存后操作的坐标系，直到遇到gd.restore()
+gd.fillRect()//恢复上一次保存的画布坐标系,save()之前的画布坐标系
+```
+
+实例：
+
+```javascript
+gd.fillStyle = 'red';
+gd.strokeStyle = 'black';
+gd.lineWidth = 12;
+
+
+gd.save(); // 箱子里面存了红色的画笔(fill)，黄色的画笔(stroke)
+
+gd.rotate(Math.PI / 4);
+
+gd.beginPath();
+gd.fillStyle = 'green';
+gd.strokeStyle = 'orange';
+gd.lineWidth = 30;
+gd.rect( 0, 0, 100, 100 );
+gd.fill();
+gd.stroke();
+
+gd.restore(); // 从箱子里面把上边save()的红色的画笔(fill)，黄色的画笔(stroke)给取出来
+gd.beginPath();
+// gd.fillStyle = 'olive';
+gd.rect(100, 100, 100, 100);
+gd.fill();
+gd.stroke();
+
+```
+
+绘制后的结果：
+
+![image-20231026101110580](images/image-20231026101110580.png) 
+
+#### globalAlpha
+
 `globalAlpha`的使用
 
  `lineWidth`, `strokeStyle`,` fillStyle` 只能当前路径上有效，`globalAlpha `能对它以后的所有路径都会产生效果
@@ -364,9 +438,9 @@ gd.fill();
 
 ![image-20231024234508269](images/image-20231024234508269.png) 
 
-### 动画初级
+### 变形
 
-**移动：Translate**
+####  移动：Translate
 `translate `方法，它用来移动 canvas 和它的原点到一个不同的位置。
 `translate(x, y)`
 
@@ -393,7 +467,7 @@ function draw() {
   }
 }
 ```
-**旋转：Rotating**
+#### 旋转：Rotate
 旋转是以原点为中心进行旋转的，
 
 `gd.rotate(deg)`只接收一个参数，旋转角度，是顺时针方向的，以弧度为单位；如果改变旋转的位置，可以搭配
@@ -420,7 +494,7 @@ function draw() {
 
 }
 ```
-**缩放：Scaling**
+#### 缩放：Scale
 
 用来增减图形在canvas中的像素数目，对形状，位图进行缩小或者放大
 `scale(x, y)`可以缩放画布的水平和垂直的单位。两个参数都是实数，可以为负数，x 为水平缩放因子，y 为垂直缩放因子，如果比1小，会缩小图形， 如果比1大会放大图形。默认值为1， 为实际大小。
@@ -438,7 +512,8 @@ function draw() {
   ctx.fillText('H_ungery', 100, 120);// ctx.fillText(text,x,y) 在(x, y)位置填充文本的方法
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210095424157.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231026100739061](images/image-20231026100739061.png) 
+
 缩放后：
 
 ```javascript
@@ -455,32 +530,34 @@ function draw() {
 }
 
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210095734748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
-**canvas动画**
+![image-20231026100719994](images/image-20231026100719994.png) 
+
+###  canvas动画
+
 绘制动画有一套基本的步骤
 
- 1. 清空canvas（在接下来要画的内容不填充整个canvas的话，就必须清空整个画布，一般使用clearRect方法）
- 2. 保存canvas状态（如果要改变canvas状态的设置（样式，变形等），接下来的绘画需要原始状态的话，应该需要保存）
+ 1. 清空`canvas`（在接下来要画的内容不填充整个canvas的话，就必须清空整个画布，一般使用`clearRect`方法）
+ 2. 保存`canvas`状态（如果要改变`canvas`状态的设置（样式，变形等），接下来的绘画需要原始状态的话，应该需要保存）
  3. 绘制动画图形（重绘动画帧）
- 4. 恢复canvas状态（如果已经保存，就需要恢复，进行下一帧的绘画）
+ 4. 恢复`canvas`状态（如果已经保存，就需要恢复，进行下一帧的绘画）
 
 为了实现动画，我们需要一些可以定时执行重绘的方法。有两种方法可以实现这样的动画操控。
-首先可以通过 setInterval 和 setTimeout 方法来控制在设定的时间点上执行重绘。
+首先可以通过 `setInterval `和 `setTimeout `方法来控制在设定的时间点上执行重绘。
 
 更新画布：
-首先，可以用window.setInterval()，window.setTimeout()，和window.requestAnimationFrame()来设定定期执行一个指定函数。
+首先，可以用`window.setInterval()`，`window.setTimeout()`，和`window.requestAnimationFrame()`来设定定期执行一个指定函数。
 
-setInterval(function, delay)
+`setInterval(function, delay)`
 当设定好间隔时间后，function会定期执行。
 
-setTimeout(function, delay)
+`setTimeout(function, delay)`
 在设定好的时间之后执行函数
 
-requestAnimationFrame(callback)
+`requestAnimationFrame(callback)`
 告诉浏览器你希望执行一个动画，并在重绘之前，请求浏览器执行一个特定的函数来更新动画。
 
-采用 window.requestAnimationFrame()实现动画效果。这个方法提供了更加平缓并更加有效率的方式来执行动画，当系统准备好了重绘条件的时候，才调用绘制动画帧。一般每秒钟回调函数执行60次，也有可能会被降低。
-使用window.setInterval()进行绘制:
+采用 `window.requestAnimationFrame()`实现动画效果。这个方法提供了更加平缓并更加有效率的方式来执行动画，当系统准备好了重绘条件的时候，才调用绘制动画帧。一般每秒钟回调函数执行60次，也有可能会被降低。
+使用`window.setInterval()`进行绘制:
 
 ```html
 <!-- 准备好画布,以后的画布都是基于这个进行绘制 -->
@@ -535,9 +612,9 @@ function drawCircle(){
 	ctx.fill();
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210112938834.png)
+![image-20231026100914672](images/image-20231026100914672.png) 
 
-window.requestAnimationFrame()的使用：
+#### requestAnimationFrame()：
 
 ```javascript
 //删除setInterval()那块代码，添加下列代码
@@ -608,7 +685,8 @@ function loop(){
 	
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210152835192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231026100954569](images/image-20231026100954569.png) 
+
 案例2：逐渐缓慢移动：
 
 ```javascript
@@ -663,7 +741,8 @@ function loop(){
 	
 }
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210210154017957.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+![image-20231026101013241](images/image-20231026101013241.png) 
+
 案例3：弹性运动；
 
 ```javascript
@@ -746,43 +825,10 @@ y=  Math.sin(ang) * len ;
 gd.translate( 100, 0 );
 gd.scale(2, 2);
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210201235507552.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
-变换与绘制样式的保存：
+![image-20231026101049967](images/image-20231026101049967.png) 
 
-```javascript
-gd.save();//保存当前画布的坐标系，经过保存后，后面的都是基于保存后操作的坐标系，直到遇到gd.restore()
-gd.fillRect()//恢复上一次保存的画布坐标系,save()之前的画布坐标系
-```
-实例：
-```javascript
+ 
 
-gd.fillStyle = 'red';
-gd.strokeStyle = 'black';
-gd.lineWidth = 12;
-
-
-gd.save(); // 箱子里面存了红色的画笔(fill)，黄色的画笔(stroke)
-
-gd.rotate(Math.PI / 4);
-
-gd.beginPath();
-gd.fillStyle = 'green';
-gd.strokeStyle = 'orange';
-gd.lineWidth = 30;
-gd.rect( 0, 0, 100, 100 );
-gd.fill();
-gd.stroke();
-
-gd.restore(); // 从箱子里面把上边save()的红色的画笔(fill)，黄色的画笔(stroke)给取出来
-gd.beginPath();
-// gd.fillStyle = 'olive';
-gd.rect(100, 100, 100, 100);
-gd.fill();
-gd.stroke();
-
-```
-绘制后的结果：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210202000529967.png)
 五角星的绘制：
 
 ```html
@@ -833,23 +879,19 @@ let canvas = document.getElementById('C1');
 	}
 ```
 五星红旗的绘制：
-HTML
+
 ```html
 <canvas id="c1" width="900" height="500" ></canvas>
-
 ```
-CSS
 ```css
 body{text-align:center;}
 canvas{border: 1px solid #000;}
 ```
-JavaScript
 ```javascript
 // 取到canvas画布元素
 let canvas = document.getElementById('c1');
 // 取到canvas画布上的画笔
 let gd = canvas.getContext('2d');
-
 
 drawStarFlag();
 
@@ -938,32 +980,39 @@ function drawStar(R, r, posX, posY){
 	
 }
 ```
-drawImage() 方法：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210218225135111.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+### 图像
+
+#### drawImage() 
+
+![image-20231026101315956](images/image-20231026101315956.png) 
 
 ```javascript
 gd.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 ```
-`sx`可选
+`sx`（可选）
 需要绘制到目标上下文中的，image的矩形（裁剪）选择框的左上角 X 轴坐标。
-`sy`可选
-需要绘制到目标上下文中的，image的矩形（裁剪）选择框的左上角 Y 轴坐标。
-`sWidth`可选
-需要绘制到目标上下文中的，image的矩形（裁剪）选择框的宽度。如果不说明，整个矩形（裁剪）从坐标的sx和sy开始，到image的右下角结束。
-`sHeight`可选
-需要绘制到目标上下文中的，image的矩形（裁剪）选择框的高度。
-`dx`
-image的左上角在目标canvas上 X 轴坐标。
-`dy`
-image的左上角在目标canvas上 Y 轴坐标。
-`dWidth`可选
-image在目标canvas上绘制的宽度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image宽度不会缩放。
-`dHeigh`t可选
-image在目标canvas上绘制的高度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image高度不会缩放。
 
-绘制行走中的英雄：
+`sy`（可选）
+需要绘制到目标上下文中的，image的矩形（裁剪）选择框的左上角 Y 轴坐标。
+
+`sWidth`（可选）
+需要绘制到目标上下文中的，image的矩形（裁剪）选择框的宽度。如果不说明，整个矩形（裁剪）从坐标的sx和sy开始，到image的右下角结束。
+
+`sHeight`（可选）需要绘制到目标上下文中的，image的矩形（裁剪）选择框的高度。
+
+`dx:`image的左上角在目标canvas上 X 轴坐标。
+`dy:` image的左上角在目标canvas上 Y 轴坐标。
+
+`dWidth`（可选）image在目标canvas上绘制的宽度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image宽度不会缩放。
+
+`dHeigh`（可选）image在目标canvas上绘制的高度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image高度不会缩放。
+
+### 案例1：绘制行走中的英雄
+
 通过不断的进行刷新，让英雄进行变换；
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210218224006761.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70#pic_center)
+
+![image-20231026101830724](images/image-20231026101830724.png) 
+
 每一行代表英雄不同方向的行走，通过获取每一个大小一样的英雄，使得让英雄进行行走
 将每一个英雄的位置通过数组存储：
 
@@ -976,13 +1025,9 @@ let dataArr = [
 ];
 ```
 比如[22,   0]代表第一行第一列英雄距离左边为22，上边为0；依次类推
-HTML
 ```html
 <canvas id="c1" width="900" height="500" ></canvas>
-
 ```
-CSS
-
 ```css
 body{text-align:center;}
 canvas{border: 1px solid #000;}
@@ -1117,10 +1162,9 @@ function draw(){
 }
 
 ```
-子弹装上飞机爆炸的效果；
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210219222707338.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210219222715975.png)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210219222724138.png)
+### 案例2： 子弹装上飞机爆炸的效果
+
+![image-20231026102027007](images/image-20231026102027007.png) 
 
 ```html
 <canvas id="c1" width="900" height="500" ></canvas>
@@ -1128,15 +1172,12 @@ function draw(){
 <img src="plane.png" alt="" id="plane" />
 <img src="bomb.png" alt="" id="bomb" />
 ```
-CSS
 ```css
 body{text-align:center;}
 canvas{border: 1px solid #000;background:black;}
 img{display:none;}
 
 ```
-JavaScript
-
 ```javascript
 let canvas = document.getElementById('c1');
 let gd = canvas.getContext('2d');
@@ -1288,19 +1329,18 @@ function getRowCol( index, C ){
 }
 
 ```
-图像的合成：
-最终效果：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210221215933749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
-几张需要合成的图片
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210221220234820.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+### 案例3： 图像的合成
 
-HTML
+最终效果：
+
+![image-20231026102214367](images/image-20231026102214367.png) 
+几张需要合成的图片
+
+![image-20231026102203026](images/image-20231026102203026.png) 
 
 ```html
 <canvas id="c1" width="900" height="500" ></canvas>
 ```
-
-CSS
 
 ```css
 body{text-align:center;}
@@ -1372,7 +1412,11 @@ loadImg( arrImg, function(arr){
 	}
 ```
 
-资料参考：
+## 图像处理
+
+## 处理视频
+
+资料参考
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API
 https://www.51zxw.net/list.aspx?cid=668
