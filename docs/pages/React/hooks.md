@@ -45,28 +45,7 @@ ReactDOM.render(VDOM, document.getElementById('test'))
     (2).若大写字母开头，react就去渲染对应的组件，若组件没有定义，则报错。
 ```
 
-### 类组件
 
-自定义类组件是继承React的Component或PureComponent
-
-通过类组件调用一个render函数，返回自定义标签
-
-```jsx
-class Parent extends React.Component {
-    render() {
-        return <div>我是类组件</div>
-    }
-}
-ReactDOM.render(<Parent />, document.getElementById('root'))
-```
-
-这里面用到了`this`，这里的`this`是`Parent`上的实例对象
-
-而`render`是`Parent`原型对象上的
-
-这里在执行`ReactDOM.render`后会去判断是否存在`isCureComponent`参数，存在就是类组件
-
-在类组件中，渲染到页面上的变量，通过`state`对象来定义，修改时使用`setState()`来修改
 
 **state**
 
@@ -92,332 +71,216 @@ ReactDOM.render(<Function/>, document.getElementById('root'))
 
 类组件中，构造器是否接收`props`，是否传递给`super`，取决于：是否希望在构造器中通过`this`访问`props`，可以通过`super(props)`来接收
 
-### 组件的实例
 
-1. 字符串形式
+
+使用state的原因：
+
+为什么不用变量：
+
+在react中，变量不会触发页面重新渲染；
+
+在函数组件内外定义变量的区别：
+
+在下一次更新重新渲染子组件的时候，变量会被置为原来初始化的值；
+
+在函数内定义的变量，修改后，由于其他原因，重新渲染后，修改后的变量会会到初始值；
+
+在函数内定义的变量，修改后，由于其他原因，重新渲染，修改后的变量不会变为初始值
+
+
+相同点： 
+但两者都不会引发页面重新渲染；
+函数内定义的变量在重新触发渲染后，会回到初始值
+函数外定义的变量在重新触发渲染后，不会会到初始值
+
+
+结论：
+
+我们不能通过定义变量使页面重新渲染；
+
+在Hooks里面存在一个API，useRef();
+
+useRef()是定义在函数内的，useRef()定义的变量，在组件渲染后不会回到初始值，那这个和函数外定义的变量有什么区别？；
+
+每当组件重新渲染时（例如当你设置 state 时），所有局部变量都会从头开始初始化
+
+### 看看useRef的使用；
+
+希望记住组件的某些信息，但不想触发组件的重新渲染，可以使用useRef();
+
+用法；
 
 ```jsx
-class Demo extends React.Component{
-    //展示左侧输入框的数据
-    showData = ()=>{
-        const {input1} = this.refs
-        alert(input1.value)
-    }
-    //展示右侧输入框的数据
-    showData2 = ()=>{
-        const {input2} = this.refs
-        alert(input2.value)
-    }
-    render(){
-        return(
-            <div>
-                <input ref="input1" type="text" placeholder="点击按钮提示数据"/>&nbsp;
-                <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
-                <input ref="input2" onBlur={this.showData2} type="text" placeholder="失去焦点提示数据"/>
-            </div>
-        )
-    }
+
+const ref = useRef(0)
+
+```
+
+useRef()函数返回的是一个对象；供ref使用；
+
+```json
+{
+    current: 0 
 }
 ```
 
-2. 回调函数
+对象中属性current的值为定义useRef时传递的参数，current可被读、写
+
+现在，上面的例子ref指向的是一个数字，但我们可以指向任何值，包括组件，
+
+
+> 当一条信息用于渲染时，将它保存在 state 中。当一条信息仅被事件处理器需要，并且更改它不需要重新渲染时，使用 ref 可能会更高效。
+
+
+** 在渲染期间读取ref是不可靠的； **
+
+
+
+使用场景：
+
+1. 定义一个在渲染期间保留信息的情况(定时器、不需要渲染的某个标志、记录操作对象等)；
+2. 获取DOM对象，用于操作DOM
+
+
+react所遵循的原则：
+
+不要在渲染过程中读取或写入 ref.current
+
+这句话说明了，我们不要将ref用于渲染的数据，react不会监听ref变化处理，即React 不会关心你对 ref 或其内容做了什么。
+
+
+（1）在使用到定时器时
 
 ```jsx
-class Demo extends React.Component{
-    //展示左侧输入框的数据
-    showData = ()=>{
-        const {input1} = this
-        alert(input1.value)
-    }
-    //展示右侧输入框的数据
-    showData2 = ()=>{
-        const {input2} = this
-        alert(input2.value)
-    }
-    render(){
-        return(
-            <div>
-                <input ref={c => this.input1 = c } type="text" placeholder="点击按钮提示数据"/>&nbsp;
-                <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
-                <input onBlur={this.showData2} ref={c => this.input2 = c } type="text" placeholder="失去焦点提示数据"/>&nbsp;
-            </div>
-        )
-    }
+import { useState, useRef } from 'react';
+
+export default function Stopwatch() {
+  const [startTime, setStartTime] = useState(null);
+  const [now, setNow] = useState(null);
+  const intervalRef = useRef(null);
+
+  function handleStart() {
+    setStartTime(Date.now());
+    setNow(Date.now());
+
+    clearInterval(intervalRef.current);
+
+    // 保存当前定时器实例
+    intervalRef.current = setInterval(() => {
+      setNow(Date.now());
+    }, 10);
+  }
+
+  function handleStop() {
+    clearInterval(intervalRef.current);
+  }
+
+  let secondsPassed = 0;
+  if (startTime != null && now != null) {
+    secondsPassed = (now - startTime) / 1000;
+  }
+
+  return (
+    <>
+      <h1>时间过去了： {secondsPassed.toFixed(3)}</h1>
+      <button onClick={handleStart}>
+        开始
+      </button>
+      <button onClick={handleStop}>
+        停止
+      </button>
+    </>
+  );
 }
+
 ```
 
-3. ref中回调执行次数的问题
+（2）来看看在操作DOM使用，我们指向一个标签，用于获取标签的DOM对象
+
+再React中，我们要操作DOM，之前可以使用 `document.xxx`;
+
+现在我们只需要`useRef()`指向dom元素,页面渲染的时候，
+
+`props.onClick()` 是在父元素用于修改子元素dom设置的方法；
 
 ```jsx
-class Demo extends React.Component{
+import React from"react";
 
-    state = {isHot:false}
-
-    showInfo = ()=>{
-        const {input1} = this
-        alert(input1.value)
-    }
-
-    changeWeather = ()=>{
-        //获取原来的状态
-        const {isHot} = this.state
-        //更新状态
-        this.setState({isHot:!isHot})
-    }
-
-    saveInput = (c)=>{
-        this.input1 = c;
-        console.log('@',c);
-    }
-
-	render(){
-        const {isHot} = this.state
-        return(
-            <div>
-                <h2>今天天气很{isHot ? '炎热':'凉爽'}</h2>
-                {/*<input ref={(c)=>{this.input1 = c;console.log('@',c);}} type="text"/><br/><br/>*/}
-                <input ref={this.saveInput} type="text"/><br/><br/>
-                <button onClick={this.showInfo}>点我提示输入的数据</button>
-                <button onClick={this.changeWeather}>点我切换天气</button>
-            </div>
-        )
-	}
-}
-```
-
-4. createRef的使用
-
-```jsx
-class Demo extends React.Component{
-    /* 
-				React.createRef调用后可以返回一个容器，该容器可以存储被ref所标识的节点,该容器是“专人专用”的
-			 */
-myRef = React.createRef()
-myRef2 = React.createRef()
-//展示左侧输入框的数据
-showData = ()=>{
-    alert(this.myRef.current.value);
-}
-//展示右侧输入框的数据
-showData2 = ()=>{
-    // alert();\this.myRef2.current.value
-    this.myRef2.current.value = ''
-}
-render(){
-    return(
-        <div>
-            <input ref={this.myRef} type="text" placeholder="点击按钮提示数据"/>&nbsp;
-            <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
-            <input onBlur={this.showData2} ref={this.myRef2} type="text" placeholder="失去焦点提示数据"/>&nbsp;
-        </div>
-    )
-}
-}
-```
-
-### React的事件处理
-
-```jsx
-//创建组件
-class Demo extends React.Component{
-/* 
-(1).通过onXxx属性指定事件处理函数(注意大小写)
-	a.React使用的是自定义(合成)事件, 而不是使用的原生DOM事件 —————— 为了更好的兼容性
-	b.React中的事件是通过事件委托方式处理的(委托给组件最外层的元素) ————————为了的高效
-(2).通过event.target得到发生事件的DOM元素对象 ——————————不要过度使用ref
-*/
+function Child(props) {
+   const useRefChild = React.useRef('useRef初始值')
     
-    
-//创建ref容器
-myRef = React.createRef()
-myRef2 = React.createRef()
+    const childChange = () => {
+      props.onClick()
+      useRefChild.current.style = 'color: red;'
+    }
+    console.log('useRefChild.current', useRefChild.current);
 
-//展示左侧输入框的数据
-showData = (event)=>{
-    console.log(event.target);
-    alert(this.myRef.current.value);
-}
-
-//展示右侧输入框的数据
-showData2 = (event)=>{
-    alert(event.target.value);
+    return (
+      <>
+        <button onClick={childChange}>改标题</button>
+        <h1 ref={useRefChild}>{props.name}</h1>
+      </>
+    );
 }
 
-render(){
-    return(
-        <div>
-            <input ref={this.myRef} type="text" placeholder="点击按钮提示数据"/>&nbsp;
-            <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
-            <input onBlur={this.showData2} type="text" placeholder="失去焦点提示数据"/>&nbsp;
-        </div>
-    )
-}
-}
+
+export default React.memo(Child)
+
 ```
 
-## React表单中的受控和非受控
+上面的方法能正常返回dom元素；
 
-在React官网：
 
-如果一个 `input` 表单元素的值是由 `React `控制，就其称为*受控组件*。当用户将数据输入到受控组件时，会触发修改状态的事件处理器，这时由你的代码来决定此输入是否有效（如果有效就使用更新后的值重新渲染）。如果不重新渲染，则表单元素将保持不变。
-
-一个*非受控组件*，就像是运行在 `React` 体系之外的表单元素。当用户将数据输入到表单字段（例如 input，dropdown 等）时，`React `不需要做任何事情就可以映射更新后的信息。然而，这也意味着，你无法强制给这个表单字段设置一个特定值。
-
-在大多数情况下，你应该使用受控组件。
-
-**非受控组件**
+下面使用函数之外的常量来代替ref的使用；
 
 ```jsx
-//创建组件
-class Login extends React.Component{
-    handleSubmit = (event)=>{
-        event.preventDefault() //阻止表单提交
-        const {username,password} = this
-        alert(`你输入的用户名是：${username.value},你输入的密码是：${password.value}`)
+import React from"react";
+
+let outerVar = {current: null};
+function Child(props) {
+  let innerVar = 40;
+
+    const childChange = () => {
+      innerVar = 200
+      props.onClick()
+      outerVar.current.style = 'color: red;'
     }
-    render(){
-        return(
-            <form onSubmit={this.handleSubmit}>
-                用户名：<input ref={c => this.username = c} type="text" name="username"/>
-                密码：<input ref={c => this.password = c} type="password" name="password"/>
-                <button>登录</button>
-            </form>
-        )
-    }
+
+    console.log('outerVar: ',outerVar, 'innerVar:', innerVar);
+    return (
+      <>
+        <button onClick={childChange}>改标题</button>
+        <h1 ref={outerVar}>{props.name}</h1>
+      </>
+    );
 }
+
+export default Child;
 ```
+可以看到，函数外的常量无论是基本数据，还是指向了dom，都可在组件重新渲染的时候保留信息
 
-**受控组件**
+那么使用ref还说使用常量呢，经过测试；
+两者在使用时没有太大的区别，但是我们应该使用useRef(),这事React官方提供的，在组件重新渲染期间保留数据的方式；
 
-```jsx
-class Login extends React.Component{
+结论：
 
-    //初始化状态
-    state = {
-        username:'', //用户名
-        password:'' //密码
-    }
+函数外的常量和ref  在定义变量时未发现不同的地方；
 
-    //保存用户名到状态中
-    saveUsername = (event)=>{
-        this.setState({username:event.target.value})
-    }
+函数内定义常量是错误的，因为每次渲染后都会重置回去；
 
-    //保存密码到状态中
-    savePassword = (event)=>{
-        this.setState({password:event.target.value})
-    }
+ref官方说是一种应急方案；
 
-    //表单提交的回调
-    handleSubmit = (event)=>{
-        event.preventDefault() //阻止表单提交
-        const {username,password} = this.state
-        alert(`你输入的用户名是：${username},你输入的密码是：${password}`)
-    }
+可以像使用state一样来使用ref
 
-    render(){
-        return(
-            <form onSubmit={this.handleSubmit}>
-                用户名：<input onChange={this.saveUsername} type="text" name="username"/>
-                密码：<input onChange={this.savePassword} type="password" name="password"/>
-                <button>登录</button>
-            </form>
-        )
-    }
-}
-```
+主要用于不触发渲染的场景
 
-### 高阶函数
+上面说了变量和useRef()的使用与区别；下面说说useState()及内部的原理；
 
-高阶函数：如果一个函数符合下面2个规范中的任何一个，那该函数就是高阶函数。
 
-​         1.若A函数，接收的参数是一个函数，那么A就可以称之为高阶函数。
+### useState()
 
-​         2.若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数。
 
-​         常见的高阶函数有：Promise、setTimeout、arr.map()等等
 
-### 函数柯里化
 
-函数的柯里化：通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式。 
 
-```javascript
-function sum(a){
-    return(b)=>{
-        return (c)=>{
-            return a+b+c
-        }
-    }
-}
-```
-使用高阶函数-函数柯里化
-
-```jsx
-class Login extends React.Component{
-    //初始化状态
-    state = {
-        username:'', //用户名
-        password:'' //密码
-    }
-
-//保存表单数据到状态中
-saveFormData = (dataType)=>{
-    return (event)=>{
-        this.setState({[dataType]:event.target.value})
-    }
-}
-
-//表单提交的回调
-handleSubmit = (event)=>{
-    event.preventDefault() //阻止表单提交
-    const {username,password} = this.state
-    alert(`你输入的用户名是：${username},你输入的密码是：${password}`)
-}
-render(){
-    return(
-        <form onSubmit={this.handleSubmit}>
-            用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
-            密码：<input onChange={this.saveFormData('password')} type="password" name="password"/>
-            <button>登录</button>
-        </form>
-    )
-}
-}
-```
-
-不使用高阶函数实现方式
-
-```jsx
-//创建组件
-class Login extends React.Component{
-    //初始化状态
-    state = {
-        username:'', //用户名
-        password:'' //密码
-    }
-
-//保存表单数据到状态中
-saveFormData = (dataType,event)=>{
-    this.setState({[dataType]:event.target.value})
-}
-
-//表单提交的回调
-handleSubmit = (event)=>{
-    event.preventDefault() //阻止表单提交
-    const {username,password} = this.state
-    alert(`你输入的用户名是：${username},你输入的密码是：${password}`)
-}
-render(){
-    return(
-        <form onSubmit={this.handleSubmit}>
-            用户名：<input onChange={event => this.saveFormData('username',event) } type="text" name="username"/>
-            密码：<input onChange={event => this.saveFormData('password',event) } type="password" name="password"/>
-            <button>登录</button>
-        </form>
-    )
-}
-}
-```
-
-React生命周期
 
