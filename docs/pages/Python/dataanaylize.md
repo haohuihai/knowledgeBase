@@ -132,11 +132,18 @@ np.array([1,2,3,4]).dtype
 np.array([1,2,3,4.0]).dtype
 # dtype('float64')
 
+# 不会修改原来的形状
 a = np.arange(1,10).reshape(3,3)
 # array([[1, 2, 3],
 #        [4, 5, 6],
 #        [7, 8, 9]])
+
+# 将数组转换为一维数组
+
+
 ```
+
+
 
 访问数组
 
@@ -157,6 +164,48 @@ b[1:,1:]
 # array([[5, 6],
 #        [8, 9]])
 ```
+
+**numpy中常见的更多数据类型**
+
+类型代码，i1表示1个字节，默认情况是根据电脑的位数来指定的
+
+![image-20231105213046865](images/image-20231105213046865.png) 
+
+**数据类型的操作**
+
+```python
+t4 = np.array(range(1,4),dtype=float)
+print(t4.dtype)
+#float64
+# 在新建数据的时候就指定数据类型
+t5 = np.array([1,1,0,1,0,0],dtype=bool)
+print(t5)
+print(t5.dtype)
+# [ True  True False  True False False]
+# bool
+
+# 修改已有数据的类型
+t6 = t5.astype("int8")
+print(t6)
+print(t6.dtype)
+# [1 1 0 1 0 0]
+# int8
+
+#打印0-1之间的10个数
+t7 = np.array([random.random() for i in range(10)])
+print(t7)
+print(t7.dtype)
+# [0.41579772 0.11266452 0.67006631 0.67915803 0.89036798 0.33833446
+#  0.3464001  0.28810146 0.9869591  0.67043506]
+# float64
+
+#取小数点后两位
+t8 = np.round(t7,2)
+print(t8)
+# [0.68 0.24 0.3  0.54 0.54 0.27 0.22 0.75 0.81 0.57]
+```
+
+
 
 ### 基本操作
 

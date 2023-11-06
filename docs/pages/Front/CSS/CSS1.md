@@ -2318,7 +2318,7 @@ img {
 
 在上面的示例中，`<div>` 元素被设置为块级元素，宽度为200像素，高度为100像素，具有红色背景，并且在下方有10像素的边距。`<span>` 元素被设置为行内元素，文本颜色为蓝色。`<img>` 元素被设置为行内块级元素，宽度和高度都是100像素。这些都是元素的默认行为，但我们可以对这默认行为进行修改。
 
-### 弹性盒子
+### flex布局
 
 在理解`flex`弹性布局时，需要先理解下面的术语：
 
@@ -2332,9 +2332,48 @@ img {
 
 **方向**：默认主轴从左向右，交叉轴默认从上到下
 
-flex容器他也是一个盒子，因此它们的外部显示类型取决于它们是 flex 格式上下文的一部分。然而，他们有一种内在的流动显示类型，这意味着他们的孩子参与正常的流动。嵌套在 flex 项中的项将自己设置为块和内联元素，除非有什么改变了它们的显示类型。如果我们的flex容器为`div`元素，flex子项目为`span`元素，子项目会默认被修改为`display: block;`
+`flex`容器他也是一个盒子，因此它们的外部显示类型取决于它们是 `flex`格式上下文的一部分。然而，他们有一种内在的流动显示类型，这意味着他们的孩子参与正常的流动。嵌套在 flex 项中的项将自己设置为块活着内联元素，除非有什么改变了它们的显示类型。如果我们的flex容器为`div`元素，`flex`子项目为`span`元素，子项目会默认被修改为`display: block;`
 
 主轴和侧轴并不是固定不变的，可通过`flex-direction`进行修改。
+
+`flex` 容器的属性
+
+- flex-direction
+- flex-wrap
+- flex-flow
+- justify-content
+- align-items
+- align-content
+
+`flex` 项目的属性
+
+- order
+- flex-grow  
+- flex-shrink 
+- flex-basis 
+- flex
+- align-self
+
+现在来看看flex容器上的一些flex布局的属性
+
+1. 我们使用flex布局时，如果flex容器设置了高度，flex项目未设置高度，因为`display: flex` 属性会将 flex 项目的高定义成容器的高度，即`align-items: stretch;`
+2. 
+
+**flex容器属性介绍：**
+
+- `flex-direction`：指定主轴的方向，可以是`row`（水平方向）、`column`（垂直方向）、`row-reverse`（反向水平方向）、`column-reverse`（反向垂直方向）。
+- `justify-content`：指定项目在**主轴上**的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`space-between`（两端对齐，项目之间间距相等）、`space-around`（每个项目两侧间距相等）等。
+- `align-items`：指定项目在交叉轴上的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`baseline`（基线对齐，以项目的第一行文字的基线对齐）、`stretch`（拉伸填满整个容器高度）等。
+- `flex-wrap`：指定项目是否换行，可以是`nowrap`（不换行，所有项目在一行上，会挤压）、`wrap`（默认值，换行，后续项目从下一行开始）、`wrap-reverse`（反向换行）。
+- `align-content`：
+
+**项目属性：**
+
+- `flex-grow`：指定项目的放大比例，默认为0，即不放大。如果某个项目设置为非零值，它将占据剩余空间的比例。
+- `flex-shrink`：指定项目的缩小比例，默认为1。如果空间不足，项目将按照该比例缩小。
+- `flex-basis`：指定项目在分配多余空间之前的基准大小。可以是像素值或百分比。
+- `flex`：`flex-grow`, `flex-shrink`, 和 `flex-basis` 的简写形式。
+- `align-self`：覆盖容器的`align-items`属性，单独设置某个项目在交叉轴上的对
 
 #### **flex-direction**
 
@@ -2358,26 +2397,6 @@ flex容器他也是一个盒子，因此它们的外部显示类型取决于它�
 ![image-20230603105512820](./images/image-20230603105512820.png) 
 
 确定了轴的方向，并知道轴的方向是可更改的，我们就知道了对于多个项目整体的排列布局方式；
-
-现在来看看flex容器上的一些flex布局的属性
-
-1. 我们使用flex布局时，如果flex容器设置了高度，flex项目未设置高度，因为`display: flex` 属性会将 flex 项目的高定义成容器的高度，即`align-items: stretch;`
-2. 
-
-**flex容器属性：**
-
-- `flex-direction`：指定主轴的方向，可以是`row`（水平方向）、`column`（垂直方向）、`row-reverse`（反向水平方向）、`column-reverse`（反向垂直方向）。
-- `justify-content`：指定项目在**主轴上**的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`space-between`（两端对齐，项目之间间距相等）、`space-around`（每个项目两侧间距相等）等。
-- `align-items`：指定项目在交叉轴上的对齐方式，可以是`flex-start`（起始位置对齐）、`flex-end`（结束位置对齐）、`center`（居中对齐）、`baseline`（基线对齐，以项目的第一行文字的基线对齐）、`stretch`（拉伸填满整个容器高度）等。
-- `flex-wrap`：指定项目是否换行，可以是`nowrap`（不换行，所有项目在一行上）、`wrap`（换行，后续项目从下一行开始）、`wrap-reverse`（反向换行）。
-
-**项目属性：**
-
-- `flex-grow`：指定项目的放大比例，默认为0，即不放大。如果某个项目设置为非零值，它将占据剩余空间的比例。
-- `flex-shrink`：指定项目的缩小比例，默认为1。如果空间不足，项目将按照该比例缩小。
-- `flex-basis`：指定项目在分配多余空间之前的基准大小。可以是像素值或百分比。
-- `flex`：`flex-grow`, `flex-shrink`, 和 `flex-basis` 的简写形式。
-- `align-self`：覆盖容器的`align-items`属性，单独设置某个项目在交叉轴上的对
 
 #### **justify-content**
 
