@@ -413,7 +413,7 @@ docker exec -it containerId /bin/bash
 mysql -h localhost -u root -p
 ```
 
-推出mysql
+退出mysql
 
 ```shell
 mysql > quit
@@ -1059,3 +1059,6 @@ systemctl status firewalld
 
 
 # [Linux 指令篇](https://blog.csdn.net/hu1656/article/details/106086041)
+
+
+
