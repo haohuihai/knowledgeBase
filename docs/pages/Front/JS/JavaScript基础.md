@@ -21,7 +21,7 @@
 
 ## 判断
 
-**typeof**
+**1、typeof**
 
 typeof返回的是一个小写字母的字符串
 
@@ -43,11 +43,11 @@ typeof console // 'object'
 typeof console.log // 'function'
 ```
 
-在使用typeof操作时，得到的结果并不是该遍历的类型，而是该变量持有值的类型
+在使用typeof操作时，得到的结果并不是该变量的类型，而是该变量持有值的类型
 
-> JavaScript中的变量没有类型
+> JavaScript中的变量没有类型，值才有类型，因为变量可以在任何时候具有任何类型的值
 
-**instanceof**
+**2、instanceof**
 
 * 专门用来判断对象数据的类型： Object, Array与Function
 * 不能正确判断基础数据类型
@@ -61,6 +61,8 @@ car instanceof String // true
 let str = 'Covid-19'
 str instanceof String // false
 ```
+
+`new String('1')` 和`1` 是有区别的；
 
 手写instanceof
 
@@ -83,9 +85,9 @@ console.log(myInstanceof(123, Number));                // false
 
 相关知识
 
-**`instanceof`** **运算符**用于检测构造函数的 `prototype` 属性是否出现在某个实例对象的原型链上。
+**`instanceof`** **运算符**用于检测构造函数的 `prototype` 属性是否出现在某个实例对象的原型链上。 具体看下面的原型和原型链
 
-**===**
+**3、===**
 
 检查两个操作数是否相等，不会对左右两边的值进行转换，属于严格相等
 
@@ -93,14 +95,31 @@ console.log(myInstanceof(123, Number));                // false
 
 ```js
 undefined === undefined // true
-null === null
+null === null  // true
+
+null === undefined  // false
+null == undefined // true
+
 ```
 
-**Object.prototype.toString**
+**4、Object.prototype.toString**
 
 toString() 是 Object 的原型上的方法，调用该方法，可以统一返回格式为` [object Xxx]`的字符串
 
-对于 Object 对象，直接调用 toString() 就能返回 `[object Object]`而对于其他对象，则需要通过 call 来调用，才能返回正确的类型信息
+```js
+
+Object.prototype.toString()  // '[object Object]'
+
+```
+
+对于 Object 对象，直接调用`toString()`就能返回 `[object Object]`，而对于其他对象，则需要通过 call 来调用，才能返回正确的类型信息
+
+这里为什么用call, call可以改变函数的执行环境。我们知道，`toSting()`存在于`Object.prototype`上，当直接调用`toString()`时，调用的`Object.prototype`上的`toString()`，因此我们要检测谁，就需要将toString的执行上下文修改为谁;
+
+`Object.prototype.toString.call(1)` : 我们都知道，call()第一个参数传的为执行上下文环境，但这里设置的1，1是如何代表执行上下文环境的；
+
+这里的1是不存在`toString()`方法，但是js会自动封装为Number对象，Number对象可以作为call的执行上下文。而Number对象是从`Number.prototype`继承了`toString()`方法，因此会返回"[object Number]"
+
 
 ```js
 Object.prototype.toString({})       // "[object Object]"
@@ -144,15 +163,110 @@ getType(/123/g)      //"RegExp" toString返回
 
 语法 `str.replace(regexp|substr, newSubStr|function)`
 
-第一个参数为正则或一个字符串
+参数一：为正则或一个字符串
 正则匹配到的内容会被第二个参数的返回值替换掉，字符串匹配到的内容会被第二个参数替换掉
 
-第二个参数为要替换的字符串或一个函数
+参数二：为要替换的字符串或一个函数
 将第一个匹配到的内容替换为newSubstr， 函数的返回值替换第一个参数匹配到的结果，
 
 返回部分或全部有替代模式所取代的新的字符串
 
 上面正则的`(\S+)`代表将`[object Window]`的第二个参数通过$1返回
+
+**5、constructor**
+
+每个对象都有一个特殊的属性`constructor`，这个属性引用了创建该对象的构造函数，可以通过检测对象的`constructor`来判断对象是由哪个构造函数创建的，从而可以判断数据类型；
+
+看看对象上存在的`constructor`  归属与谁；
+
+```js
+[].__proto__
+// constructor: f Array()
+
+let func = function() {};
+func.constructor
+// f Function() {}
+
+
+```
+
+判断其他类型：
+
+```js
+
+// 创建不同类型的对象
+let num = 5;
+let str = "hello";
+let bool = true;
+let arr = [];
+let obj = {};
+let func = function() {};
+
+// 使用 constructor 属性来判断数据类型
+console.log(num.constructor === Number); // true
+console.log(str.constructor === String); // true
+console.log(bool.constructor === Boolean); // true
+console.log(arr.constructor === Array); // true
+console.log(obj.constructor === Object); // true
+console.log(func.constructor === Function); // true
+
+```
+
+> 当我们在处理自定义对象时，如果修改了constructor属性，上面的判断会失效；
+
+
+这里有个小插曲：
+
+为什么是：
+
+```js
+let num = 5;
+num.constructor
+```
+
+而不是：
+
+```js
+5.constructor
+```
+在数字里面的`.`，被JS将点符号解析为是小数点，`5.constructor` 就会解析错误；
+
+那num.constructor又是为什么可以；
+
+这里在《你不知道的JavaScript》里面有解释过；
+
+我们通过`.`来访问一个对象的属性或方法，但我们使用`.`来访问基本类型的属性或方法时，JavaScript会自动将基本类型的值转换为对应的包装对象，因此，在访问`num.constructor`时，其实时在访问`new Number(5).constructor()`
+
+比如：
+```js
+let num = 5;
+num.toFixed(2); // 输出 "5.00"
+'5.00'
+
+
+let num = 5;
+new Number(num).toFixed(2); // 输出 "5.00"
+'5.00'
+
+// 上面两个时等价的。
+```
+
+这里要提一下比较运算符：
+```js
+ 5 === new Number(5)  // false
+ 5 == new Number(5) // true
+```
+
+对于 `5 === new Number(5) `这个比较，左边的值是一个基本数据类型的数字 5，右边的值是一个通过 new 关键字创建的 Number 对象。
+尽管它们的值是相等的，但它们的类型不同，这里不会存在值的转换，故不会相等；
+
+而`==` 比较时返回true，是因为在比较时会进行类型转换，将对象转换为相应的值。所以会返回true;
+
+
+**6、其他比较**
+
+
+
 
 ## 类型转换
 
