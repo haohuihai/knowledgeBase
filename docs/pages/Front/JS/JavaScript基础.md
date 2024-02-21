@@ -265,7 +265,9 @@ new Number(num).toFixed(2); // 输出 "5.00"
 
 **6、其他比较**
 
-
+1. 判断是否是数字     isNaN(value),          如果value是数字，则返回false，否则返回true
+2. 判断是否是数组     Array.isArray(value)   如果value是数组，则返回true，否则返回false
+3. 判断是否是有效数字 isFinite(value)        如果value是有效数字，则返回true，否则返回false
 
 
 ## 类型转换
@@ -298,21 +300,69 @@ let obj = {
 console.log(obj + 200); // 这里打印出来是多少？
 ```
 
-强制类型转换
+答案：
+
+```js
+1: '123' == 123  // true  
+2: '' == null     // true
+3: '' == 0        // true
+4: [] == 0        // true
+5: [] == ''      // true
+6: [] == ![]      // 
+7: null == undefined // true
+8: Number(null)      // 0
+9: Number('')      // 0
+10: parseInt('');   // NaN
+11: {}+10  // 10
+12: let obj = {
+    [Symbol.toPrimitive]() {
+        return 200;
+    },
+    valueOf() {
+        return 300;
+    },
+    toString() {
+        return 'Hello';
+    }
+}
+console.log(obj + 200); // 
+```
+
+JavaScript存在隐式类型转换和显示类型转换
+
+一、强制类型转换
+
 强制类型转换方式包括 Number()、parseInt()、parseFloat()、toString()、String()、Boolean()，这几种方法都比较类似，通过字面意思可以很容易理解，都是通过自身的方法来进行数据类型的强制转换
 
-上面代码中，第 8 行的结果是 0，第 9 行的结果同样是 0，第 10 行的结果是 NaN。这些都是很明显的强制类型转换，因为用到了 Number() 和 parseInt()。
+上面代码中，第 8 行的结果是 0，第 9 行的结果同样是 0，第 10 行的结果是 NaN。
+这些都是很明显的强制类型转换，因为用到了 Number() 和 parseInt()。
 
-Number() 方法的强制转换规则
+
+**Number() 方法的强制转换规则**
 
 如果是**布尔值**，true 和 false 分别被转换为 1 和 0；
+
 如果是**数字**，返回自身；
+
 如果是 **null**，返回 0；
+
 如果是 **undefined**，返回 NaN；
+
 如果是**字符串**，遵循以下规则：
-		如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；如果字符串中包含有效的浮点格式，将其转换为浮点数值；如果是空字符串，将其转换为 0；如果不是以上格式的字符串，均返回 NaN；
+
+		如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；
+
+    如果字符串中包含有效的浮点格式，将其转换为浮点数值；
+    
+    如果是空字符串，将其转换为 0；
+    
+    如果不是以上格式的字符串，均返回 NaN；
+
 如果是 **Symbol**，抛出错误；
-如果是**对象**，并且部署了 [Symbol.toPrimitive] ，那么调用此方法，否则调用对象的 valueOf() 方法，然后依据前面的规则转换返回的值；如果转换的结果是 NaN ，则调用对象的 toString() 方法，再次依照前面的顺序转换返回对应的值
+
+如果是**对象**，并且部署了 [Symbol.toPrimitive] ，那么调用此方法，否则调用对象的 valueOf() 方法，然后依据前面的规则转换返回的值；
+
+如果转换的结果是 NaN ，则调用对象的 toString() 方法，再次依照前面的顺序转换返回对应的值
 
 例如：
 
@@ -327,7 +377,7 @@ Number(-0X11);       //-17
 Number('0X11')       //17
 ```
 
-Boolean() 方法的强制转换规则
+**Boolean() 方法的强制转换规则**
 
 这个方法的规则是：除了 undefined、 null、 false、 ''、 0（包括 +0，-0）、 NaN 转换出来是 false，其他都是 true。
 
@@ -343,7 +393,8 @@ Boolean(13)         //true
 Boolean('12')       //true
 ```
 
-隐式类型转换
+二、隐式类型转换
+
 凡是通过逻辑运算符 (&&、 ||、 !)、运算符 (+、-、*、/)、关系操作符 (>、 <、 <= 、>=)、相等运算符 (==) 或者 if/while 条件的操作，如果遇到两个数据类型不一样的情况，都会出现隐式类型转换。
 
 **'==' 的隐式类型转换规则**
@@ -377,7 +428,9 @@ var a = {
 };
 // 注意这里a又可以等于1、2、3
 console.log(a == 1 && a == 2 && a ==3);  //true Object隐式转换
+
 // 注：但是执行过3遍之后，再重新执行a==3或之前的数字就是false，因为value已经加上去了
+// 这里用到了《你不知道的JavaScript》中介绍的 引擎为变量a进行了RHS查询，需要找到a并取a的值，在取的时候会触发valueOf方法，就会走++操作
 ```
 
 **'+' 的隐式类型转换规则**
@@ -386,11 +439,11 @@ console.log(a == 1 && a == 2 && a ==3);  //true Object隐式转换
 
 除了上述比较常规的情况外，还有一些特殊的规则，如下所示。
 
-如果其中有一个是字符串，另外一个是 undefined、null 或布尔型，则调用 toString() 方法进行字符串拼接；如果是纯对象、数组、正则等，则默认调用对象的转换方法会存在优先级，然后再进行拼接。
+规则1：如果其中有一个是字符串，另外一个是 undefined、null 或布尔型，则调用 toString() 方法进行字符串拼接；如果是纯对象、数组、正则等，则默认调用对象的转换方法会存在优先级，然后再进行拼接。
 
-如果其中有一个是数字，另外一个是 undefined、null、布尔型或数字，则会将其转换成数字进行加法运算
+规则2：如果其中有一个是数字，另外一个是 undefined、null、布尔型或数字，则会将其转换成数字进行加法运算
 
-如果其中一个是字符串、一个是数字，则按照字符串规则进行拼接。
+规则3：如果其中一个是字符串、一个是数字，则按照字符串规则进行拼接。
 
 下面还是结合代码来理解上述规则，如下所示。
 
@@ -447,6 +500,14 @@ console.log(obj + 1); // 输出5
 // "1,2,,4,510"，注意[1,2,undefined,4,5]会默认先调用valueOf结果还是这个数组，不是基础数据类型继续转换，也还是调用toString，返回"1,2,,4,5"，然后再和10进行运算，还是按照字符串拼接规则
 ```
 
+
+上面案例中出现 `{} + 10` 和 `10 + {}`的情况，但这俩的结果不一致，这是为什么？
+
+在 JavaScript 中，{} 被解释为一个空的代码块，而不是一个对象字面量。当 {} 出现在表达式的开头时，JavaScript 解释器会将其解释为一个代码块，而不是一个对象。因此，{} 后面的 + 10 被解释为一元正号操作符与数字 10 相加。但是，一元正号操作符对于代码块来说没有实际意义，因此 JavaScript 解释器会忽略它，最终将表达式简化为 10。
+
+因此，{} + 10 最终会被解释为 10，而不是一个对象与数字相加。
+
+在 10 + {} 的表达式中，JavaScript 解释器将 10 视为一个数字，而 {} 被解释为一个空的对象字面量。在这种情况下，JavaScript 解释器会尝试将对象转换为数字，但由于对象不能直接转换为数字，因此会将对象调用其 valueOf() 方法，如果返回的值不是一个原始值（例如数字、字符串、布尔值），则再尝试调用其 toString() 方法。而空对象 {} 的 valueOf() 方法返回的是对象本身，所以 JavaScript 解释器会继续调用其 toString() 方法。空对象的 toString() 方法会返回 "[object Object]"，然后 JavaScript 解释器会尝试将这个字符串转换为数字。由于不能直接转换为数字，所以最终结果是对两者进行了拼接："10[object Object]"
 
 
 # 深浅拷贝
@@ -766,7 +827,7 @@ console.log('cloneObj', cloneObj)
 
 从这张截图的结果可以看出，改进版的 deepClone 函数已经对基础版的那几个问题进行了改进，也验证了我上面提到的那四点理论。
 
-# 数据，变量，内存
+## 数据，变量，内存
 
 * 什么是数据?
 
@@ -853,37 +914,92 @@ JS引擎如何管理内存?
     * 存储对象的堆空间内存: 当内存没有引用指向时, 对象成为垃圾对象, 垃圾回收器后面就会回收释放此内存
 
 ```js
-var obj = {}
-  obj = null // ?
+  var obj = {};
+  obj = null; // ?
 
   function fn () {
-    var a = 3
+    var a = 3;
     var b = {}
   }
-  fn()
+  fn();
 ```
 
 ## 对象的理解和使用
 
 * 什么是对象?
+  
+  无序属性的集合，其属性值可以包含基本类型值、对象或者函数等,是由一组键值对的集合组成；
 
-  * 多个数据(属性)的集合
-  * 用来保存多个数据(属性)的容器
 
-* 属性组成:
+**属性的分类**:
 
-  * 属性名 : 字符串(标识)
-  * 属性值 : 任意类型
+一. 数据属性
 
-* 属性的分类:
+数据属性又4个描述对象属性的特性：这些特性属于内部属值，一般不进行改动
 
-  * 一般 : 属性值不是function  描述对象的状态
-  * 方法 : 属性值为function的属性  描述对象的行为
+1. [[Configurable]]：表示属性能否删除而重新定义，或者是否可以修改为访问器属性，默认值为true。
+2. [[Enumerable]]：表示属性是否可枚举，可枚举的属性能够通过for...in循环返回，默认值为true。
+3. [[Writable]]：表示属性值能否被修改，默认值为true。
+4. [[Value]]：表示属性的真实值，属性的读取和写入均通过此属性完成，默认值为undefined。
 
-* 特别的对象
+```js
 
-  * 数组: 属性名是0,1,2,3之类的索引
-  * 函数: 可以执行的
+let person = {
+  name: 'zhangsan',
+  age: 20
+}
+
+Object.defineProperty(person, "name", {
+   conﬁgurable: true,
+   enumerable: false,
+   writable: false,
+   value: 'kingx'
+});
+
+console.log(person.name) // 'kingx'
+
+person.name = 'lisi'
+
+console.log(person.name) // 'kingx'
+
+for(let key in person) {
+  console.log('key', key) 
+}
+// key age
+
+
+```
+二、访问器属性
+
+1. [[Configurable]]：表示属性能否删除而重新定义，或者是否可以修改为访问器属性，默认值为true。
+2. [[Enumerable]]：表示属性是否可枚举，可枚举的属性能够通过for...in循环返回，默认值为true。· 
+3. [[Get]]：在读取属性值时调用的函数（一般称为getter()函数），负责返回有效的值，默认值为undefined。
+4. [[Set]]：在写入属性值时调用的函数（一般称为setter()函数），负责处理数据，默认值为undefined。
+
+```js
+
+ var person = {
+    _age: 10
+ };
+ Object.defineProperty(person, "age", {
+     get: function(){
+         return this._age;
+     },
+     set: function(newValue) {
+         if (newValue > 10) {
+             this._age = newValue;
+             console.log('设置成功');
+     }
+ }
+ });
+ console.log(person.age); // 10
+ person.age = 9; 
+ console.log(person.age); // 10
+ person.age = 19; // “设置成功”
+ console.log(person.age); // 19
+
+```
+> Vue中的数据响应式就是使用的Object的defineProperty属性，当修改对象属性是进行操作渲染
 
 * 如何操作内部属性(方法)
 
@@ -907,31 +1023,32 @@ var obj = {}
   // 访问对象内部数据
   console.log(p.name, p['age'])
   p.setName('Jack')
-  p['age'](23)
+  p['age'] = 23
   console.log(p['name'], p.age)
   ```
 
   什么时候必须使用['属性名']的方式?
 
-  * 属性名不是合法的标识名
-  * 属性名不确定
+  * 属性名不是合法的标识名，p['a b']、p['2a']等
+  * 属性名不确定，p[foo]
 
 ```js
 // 创建对象
   var p = {}
 
-/*一: 属性名不是合法的标识名*/
-  /*需求: 添加一个属性: content-type: text/json */
+// 一: 属性名不是合法的标识名
+// 添加一个属性: content-type: text/json
   //  p.content-type = 'text/json' //不正确
   p['content-type'] = 'text/json'
 
-/*二: 属性名不确定*/
+// 二: 属性名不确定
   var prop = 'xxx'
   var value = 123
-  // p.prop = value  //不正确
+// p.prop = value  //不正确
   p[prop] = value
   console.log(p['content-type'], p[prop])
 ```
+
 
 ## 函数的理解和使用
 
