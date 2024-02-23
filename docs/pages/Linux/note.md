@@ -58,7 +58,21 @@ timedatectl
 
 
 
-## linux暴露端口和防火墙
+## 防火墙
+
+我们部署在服务器上的应用后，linux防火墙未向外界暴露端口，外界是无法访问的，只能在服务器内部访问
+
+防火墙的基本操作
+
+```shell
+
+systemctl status firewalld  # 查看防火墙状态 
+
+systemctl start firewalld   # 开启防火墙 
+
+systemctl stop firewalld  # 关闭防火墙 
+
+```
 
 查询指定端口是否已经开启
 
@@ -74,10 +88,7 @@ firewall-cmd --list-ports
 
 2、查看防火墙状态
 
-查看防火墙状态 systemctl status firewalld
-开启防火墙 systemctl start firewalld
-关闭防火墙 systemctl stop firewalld
-开启防火墙 service firewalld start
+
 若遇到无法开启
 先用：systemctl unmask firewalld.service
 然后：systemctl start firewalld.service
