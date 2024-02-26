@@ -1,6 +1,6 @@
 ## 对象
 
-在JS对象中，几乎所有的对象在创建时[[Prototype]]属性都会被赋予一个非空的值，对于下面的代码：
+在JS对象中，几乎所有的对象在创建时`[[Prototype]]`属性都会被赋予一个非空的值，对于下面的代码：
 
 ```js
 var myObject = {
@@ -9,11 +9,11 @@ var myObject = {
 myObject.a  // 2
 ```
 
-当你试图引用对象的属性时会触发[[Get]]操作，比如`myObject.a`。对于默认的[[Get]]操作来说，第一步是检查对象本身是否有这个属性，如果有的话就使用它。
+当你试图引用对象的属性时会触发`[[Get]]`操作，比如`myObject.a`。对于默认的`[[Get]]`操作来说，第一步是检查对象本身是否有这个属性，如果有的话就使用它。
 
-如果a不在myObject中，就需要使用对象的[[Prototype]]链了
+如果a不在myObject中，就需要使用对象的`[[Prototype]]`链了
 
-对于默认的[[Get]]操作来说，如果无法在对象本身找到需要的属性，就会继续访问对象的[[Prototype]]链：
+对于默认的`[[Get]]`操作来说，如果无法在对象本身找到需要的属性，就会继续访问对象的`[[Prototype]]`链：
 
 ```js
 var anotherObject = {
@@ -24,13 +24,13 @@ var myObject = Object.create(anotherObject)
 myObject.a  // 2
 ```
 
-myObject对象的[[Prototype]]关联到了anotherObject。显然myObject.a并不存在，但是尽管如此，属性访问仍然成功地（在anotherObject中）找到了值2
+myObject对象的`[[Prototype]]`关联到了anotherObject。显然myObject.a并不存在，但是尽管如此，属性访问仍然成功地（在anotherObject中）找到了值2
 
 
 
-如果anotherObject中也找不到a并且[[Prototype]]链不为空的话，就会继续查找下去。这个过程会持续到找到匹配的属性名或者查找完整条[[Prototype]]链。如果是后者的话，[[Get]]操作的返回值是undefined。
+如果anotherObject中也找不到a并且`[[Prototype]]`链不为空的话，就会继续查找下去。这个过程会持续到找到匹配的属性名或者查找完整条`[[Prototype]]`链。如果是后者的话，`[[Get]]`操作的返回值是undefined。
 
-**使用for..in遍历对象时原理和查找[[Prototype]]链类似**，任何可以通过原型链访问到（并且是enumerable）的属性都会被枚举。使用in操作符来检查属性在对象中是否存在时，同样会查找对象的整条原型链（无论属性是否可枚举）
+**使用for..in遍历对象时原理和查找[[Prototype]]链类似**，任何可以通过原型链访问到（并且是enumerable）的属性都会被枚举。使用`in`操作符来检查属性在对象中是否存在时，同样会查找对象的整条原型链（无论属性是否可枚举）
 
 ```js
 var anotherObject = {
@@ -48,7 +48,7 @@ for(var k in myObject) {
 
 **Object.prototype**
 
-所有普通的[[Prototype]]链最终都会指向内置的Object.prototype。由于所有的“普通”（内置，不是特定主机的扩展）对象都“源于”（或者说把[[Prototype]]链的顶端设置为）这个Object.prototype对象，所以它包含JavaScript中许多通用的功能
+所有普通的`[[Prototype]]`链最终都会指向内置的`Object.prototype`。由于所有的“普通”（内置，不是特定主机的扩展）对象都“源于”（或者说把[[Prototype]]链的顶端设置为）这个`Object.prototype`对象，所以它包含JavaScript中许多通用的功能
 
 ### 一、创建对象的两种方式
 
@@ -60,6 +60,7 @@ console.log(person);
 ```
 通过上面创建的对象打印出的结果：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130100307431.png)
+
 在使用构造函数创建的时候，Object后面的括号可以省略，但不提倡；
 这样通过new操作符后跟Object构造函数创建的对象就出来了；
 此时给他一个name属性：
@@ -69,7 +70,9 @@ person.name='zhangsan';
 console.log(person);
 ```
 得到的结果如下：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130100808910.png)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130100808910.png) 
+
 **关于对象**
 对象是一个无序的键值对组合的集合：
 这里name 就是一个键，"zhangsan"就是一个这个name的值
@@ -117,6 +120,7 @@ console.log(person1);
 ```
 打印结果如下：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130102626905.png)
+
 对于使用对象字面量创建对象的键值集合跟使用构造函数创建的对象是一样的；
 
 ### 二、使用对象
@@ -167,6 +171,7 @@ console.log(person["frist name"]);
 ```
 结果从上到下分别是；
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210130110022299.png)
+
 所以在设置属性的时候尽量使用点表示法设置，属性的命名也尽量符合规范来命名，访问的时候也尽量使用点号来访问
 当属性为数字的时候，必须使用方括号来访问，否则会被当成小数点
 给对象设置一个属性，并赋予某一个数据类型的值，就创建了对象的某一个属性；
@@ -257,7 +262,7 @@ console.log(book.edition);//2
 前面说了使用构造函数来创建对象，这里就说说构造函数模式：
 前面创建对象是这样创建的：`var person = new Object()`
 
-我们直到创建对象是通过Object这样的原生构造函数来创建，比如Array等，在运行时会自动出现在执行环境中，我们也可以创建自定义的构造函数，从而可以定义自定义对象的属性和方法，比如new 一个Person实例，也可以象下面那样；
+我们直到创建对象是通过`Object`这样的原生构造函数来创建，比如`Array`等，在运行时会自动出现在执行环境中，我们也可以创建自定义的构造函数，从而可以定义自定义对象的属性和方法，比如new 一个Person实例，也可以象下面那样；
 
 ```javascript
 function Person(name,age){
@@ -303,7 +308,7 @@ Person.call(o,"Nichols", 29,"software Engineer");
 o.sayName();//"Nichols";
 ```
 
-不使用new 操作符调用Person时，属性和方法被添加进了window对象了（在全局作用域中调用一个函数时，this总是指向Global对象，浏览器中就是window对象，）
+不使用new 操作符调用Person时，属性和方法被添加进了window对象了（在全局作用域中调用一个函数时，`this`总是指向`Global`对象，浏览器中就是`window`对象，）
 
 ## 原型模式
 
@@ -371,6 +376,7 @@ prototype: {
 当调用构造函数创建一个新实例之后   `var person1 = new Person()`
 该实例的内部将包含一个指针 (内部属性)，指向构造函数的原型对象，这个指针就是   `__proto__` 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210215120147452.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hfdW5ncnk=,size_16,color_FFFFFF,t_70)
+
 这个展示了Person构造函数、Person的原型以及Person现有的两个实例之间的关系，Person.prototype指向了原型对象，`Person.prototype.constructor`指回了Person，原型对象中包含了`constructor`之外还添加了其他的属性(name,age,sayName())，
 
 Person的每个实例都包含了一个内部属性(`__proto__`)，该属性仅仅指向`Person.prototype`
@@ -385,7 +391,7 @@ console.log(Person.prototype.isPrototypeOf(person2));//true
 这里返回true是因为，person1和person2他们内部都有一个指向Person.prototype的指针。
 
 **getPrototypeOf()**
-通过getPrototypeOf()返回实例对象的原型
+通过`getPrototypeOf()`返回实例对象的原型
 
 ```javascript
 console.log(Object.getPrototypeOf(person1).name)//"张三"；
@@ -460,7 +466,7 @@ myObject.foo = "bar"
 
 myObject对象中包含名为foo的普通数据访问属性，这条赋值语句只会修改已有的属性值
 
-foo不是直接存在于myObject中，[[Prototype]]链就会被遍历，类似[[Get]]操作。如果原型链上找不到foo, foo就会被直接添加到myObject上
+foo不是直接存在于myObject中，`[[Prototype]]`链就会被遍历，类似`[[Get]]`操作。如果原型链上找不到foo, foo就会被直接添加到myObject上
 
 如果foo存在于原型链上层，赋值语句myObject.foo ="bar"的行为就会有些不同
 
@@ -468,15 +474,15 @@ foo不是直接存在于myObject中，[[Prototype]]链就会被遍历，类似[[
 
 下面我们分析一下如果foo不直接存在于myObject中而是存在于原型链上层时myObject.foo ="bar"会出现的三种情况
 
-1。如果在[[Prototype]]链上层存在名为foo的普通数据访问属性（参见第3章）并且没有被标记为只读（writable:false），那就会直接在myObject中添加一个名为foo的新属性，它是屏蔽属性。
+1。如果在`[[Prototype]]`链上层存在名为foo的普通数据访问属性（参见第3章）并且没有被标记为只读（writable:false），那就会直接在myObject中添加一个名为foo的新属性，它是屏蔽属性。
 
-2．如果在[[Prototype]]链上层存在foo，但是它被标记为只读（writable:false），那么无法修改已有属性或者在myObject上创建屏蔽属性。如果运行在严格模式下，代码会抛出一个错误。否则，这条赋值语句会被忽略。总之，不会发生屏蔽。
+2．如果在`[[Prototype]]`链上层存在foo，但是它被标记为只读（writable:false），那么无法修改已有属性或者在myObject上创建屏蔽属性。如果运行在严格模式下，代码会抛出一个错误。否则，这条赋值语句会被忽略。总之，不会发生屏蔽。
 
-3．如果在[[Prototype]]链上层存在foo并且它是一个setter（参见第3章），那就一定会调用这个setter。foo不会被添加到（或者说屏蔽于）myObject，也不会重新定义foo这个setter。
+3．如果在`[[Prototype]]`链上层存在foo并且它是一个setter（参见第3章），那就一定会调用这个setter。foo不会被添加到（或者说屏蔽于）myObject，也不会重新定义foo这个setter。
 
 大多数开发者都认为如果向[[Prototype]]链上层已经存在的属性（[[Put]]）赋值，就一定会触发屏蔽，但是如你所见，三种情况中只有一种（第一种）是这样的
 
-如果你希望在第二种和第三种情况下也屏蔽foo，那就不能使用=操作符来赋值，而是使用Object.defineProperty(..)
+如果你希望在第二种和第三种情况下也屏蔽foo，那就不能使用=操作符来赋值，而是使用`Object.defineProperty(..)`
 
 第二种情况可能是最令人意外的，只读属性会阻止[[Prototype]]链下层隐式创建（屏蔽）同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的foo看作是父类中的属性，它会被myObject继承（复制），这样一来myObject中的foo属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制
 
@@ -497,4 +503,6 @@ myObject.hasOwnProperty("a") // true
 
 ```
 
-尽管myObject.a++看起来应该（通过委托）查找并增加anotherObject.a属性，但是别忘了++操作相当于myObject.a = myObject.a + 1。因此++操作首先会通过[[Prototype]]查找属性a并从anotherObject.a获取当前属性值2，然后给这个值加1，接着用[[Put]]将值3赋给myObject中新建的屏蔽属性a，天呐！修改委托属性时一定要小心。如果想让anotherObject.a的值增加，唯一的办法是anotherObject.a++
+尽管myObject.a++看起来应该（通过委托）查找并增加anotherObject.a属性，但是别忘了++操作相当于myObject.a = myObject.a + 1。因此++操作首先会通过`[[Prototype]]`查找属性a并从anotherObject.a获取当前属性值2，然后给这个值加1，接着用`[[Put]]`将值3赋给myObject中新建的屏蔽属性a，
+
+天呐！修改委托属性时一定要小心。如果想让anotherObject.a的值增加，唯一的办法是anotherObject.a++

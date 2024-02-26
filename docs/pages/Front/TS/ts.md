@@ -1,8 +1,3 @@
-
-::: slot doclist
-[[toc]]
-:::
-
 ## TS 介绍
 
 1. 是js的超集（JS有的TS都有）

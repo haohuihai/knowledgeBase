@@ -1,6 +1,4 @@
-# 数据类型的分类、判断、类型转换
-
-## 分类
+## 数据类型分类
 
 | 类型                | 范围                | 判断方式 |
 | ------------------- | ------------------- | -------- |
@@ -21,10 +19,35 @@
 
 **数字：**
 
+JavaScript 采用“遵循 IEEE 754 标准的双精度 64 位格式”表示数字，有些整数在看上去是数字，其实都是浮点数；
+
+比如 `0.1 + 0.3 = 0.30000000000000004`
+
+在具体使用的时候，可以转换为整数；
+
+关于`parseInt() `和`parseFloat()`
+
+`parseInt()`支持传递两个数字，第一个是要转换的数字，第二个是要转换的基数，默认为2；`parseInt('')`解析的结果为`NaN`
+
+`parseFloat()` 用于解析浮点字符串，
+
+上述两个在转换过程中，如果转换失败会返回`NaN`，而`NaN`在进行任何数学运算的时候也返回`NaN`;我们可以使用`isNaN()`来判断是否是数字;
+
+上述两个函数会尝试逐个解析字符串中的字符，直到遇上一个无法被解析成数字的字符，然后返回该字符前所有数字字符组成的数
+
+但是运算符 "+"对字符串的转换方式与之不同，只要字符串含有无法被解析成数字的字符，该字符串就将被转换成 `NaN`
+
+**可以存储的最大数字和最大安全数字：**
+
+JavaScript 中可以存储的最大数字是 `Number.MAX_VALUE`，其值约为 1.79 × 10^308。最大安全数字是 `Number.MAX_SAFE_INTEGER`，其值为 2^53 - 1，即9007199254740991。
+
+**处理大数字的方法：**
+
+1. **使用库**: 可以使用支持大数字运算的第三方库，例如 BigNumber.js 或者 Math.js。
+2. **字符串处理**: 将大数字作为字符串进行处理，利用字符串的拼接和分割操作来进行计算。
 
 
-
-## 判断
+## 数据类型判断
 
 **1、typeof**
 
@@ -275,7 +298,7 @@ new Number(num).toFixed(2); // 输出 "5.00"
 3. 判断是否是有效数字 isFinite(value)        如果value是有效数字，则返回true，否则返回false
 
 
-## 类型转换
+## 数据类型转换
 
 先测试下面的代码
 
@@ -356,12 +379,12 @@ JavaScript存在隐式类型转换和显示类型转换
 如果是**字符串**，遵循以下规则：
 
 		如果字符串中只包含数字（或者是 0X / 0x 开头的十六进制数字字符串，允许包含正负号），则将其转换为十进制；
-
-    如果字符串中包含有效的浮点格式，将其转换为浮点数值；
-    
-    如果是空字符串，将其转换为 0；
-    
-    如果不是以上格式的字符串，均返回 NaN；
+	
+	如果字符串中包含有效的浮点格式，将其转换为浮点数值；
+	
+	如果是空字符串，将其转换为 0；
+	
+	如果不是以上格式的字符串，均返回 NaN；
 
 如果是 **Symbol**，抛出错误；
 
@@ -515,7 +538,6 @@ console.log(obj + 1); // 输出5
 在 10 + {} 的表达式中，JavaScript 解释器将 10 视为一个数字，而 {} 被解释为一个空的对象字面量。在这种情况下，JavaScript 解释器会尝试将对象转换为数字，但由于对象不能直接转换为数字，因此会将对象调用其 valueOf() 方法，如果返回的值不是一个原始值（例如数字、字符串、布尔值），则再尝试调用其 toString() 方法。而空对象 {} 的 valueOf() 方法返回的是对象本身，所以 JavaScript 解释器会继续调用其 toString() 方法。空对象的 toString() 方法会返回 "[object Object]"，然后 JavaScript 解释器会尝试将这个字符串转换为数字。由于不能直接转换为数字，所以最终结果是对两者进行了拼接："10[object Object]"
 
 
-# 深浅拷贝
 
 ## 浅拷贝
 
@@ -879,7 +901,7 @@ console.log('cloneObj', cloneObj)
   
   ```
 
-  在js调用函数时传递变量参数时, 是值传递还是引用传递
+  在JS调用函数时传递变量参数时, 是值传递还是引用传递
 
   函数传递的是参数值副本，而不是原始变量的引用；
   引用类型在传递过程中，传递的是原始变量的引用，
@@ -1047,6 +1069,160 @@ for(let key in person) {
   p[prop] = value
   console.log(p['content-type'], p[prop])
 ```
+
+**对象创建模式**
+
+方式一: `Object`构造函数模式
+
+ \* 套路: 先创建空`Object`对象, 再动态添加属性/方法
+
+ \* 适用场景: 起始时不确定对象内部数据
+
+ \* 问题: 语句太多
+
+  ```js
+  // 一个人: name:"Tom", age: 12
+  // 先创建空Object对象
+  var p = new Object()
+  p = {} //此时内部数据是不确定的
+  // 再动态添加属性/方法
+  p.name = 'Tom'
+  p.age = 12
+  p.setName = function (name) {
+    this.name = name
+  }
+
+  //测试
+  console.log(p.name, p.age)
+  p.setName('Bob')
+  console.log(p.name, p.age)
+  ```
+
+方式二: 对象字面量模式
+
+ \* 套路: 使用{}创建对象, 同时指定属性/方法
+
+ \* 适用场景: 起始时对象内部数据是确定的
+
+ \* 问题: 如果创建多个对象, 有重复代码
+
+```js
+var p = {
+    name: 'Tom',
+    age: 12,
+    setName: function (name) {
+        this.name = name
+    }
+}
+
+//测试
+console.log(p.name, p.age)
+p.setName('JACK')
+console.log(p.name, p.age)
+
+var p2 = {  //如果创建多个对象代码很重复
+    name: 'Bob',
+    age: 13,
+    setName: function (name) {
+        this.name = name
+    }
+}
+```
+
+方式三: 工厂模式
+
+套路: 通过工厂函数动态创建对象并返回
+
+适用场景: 需要创建多个对象
+
+问题: 对象没有一个具体的类型, 都是Object类型
+
+```js
+function createPerson(name, age) { //返回一个对象的函数===>工厂函数
+    var obj = {
+        name: name,
+        age: age,
+        setName: function (name) {
+            this.name = name
+        }
+    }
+
+    return obj
+}
+
+
+// 创建2个人
+var p1 = createPerson('Tom', 12)
+var p2 = createPerson('Bob', 13)
+console.log(p1);
+// p1/p2是Object类型
+
+function createStudent(name, price) {
+    var obj = {
+        name: name,
+        price: price
+    }
+    return obj
+}
+var s = createStudent('张三', 12000)
+// s也是Object
+```
+
+方式四: 自定义构造函数模式
+
+套路: 自定义构造函数, 通过new创建对象
+
+适用场景: 需要创建多个类型确定的对象
+
+问题: 每个对象都有相同的数据, 浪费内存
+
+```js
+//定义类型
+function Person(name, age) {
+    this.name = name
+    this.age = age
+    this.setName = function (name) {
+        this.name = name
+    }
+}
+var p1 = new Person('Tom', 12)
+p1.setName('Jack')
+console.log(p1.name, p1.age)
+console.log(p1 instanceof Person)
+
+function Student (name, price) {
+    this.name = name
+    this.price = price
+}
+var s = new Student('Bob', 13000)
+console.log(s instanceof Student)
+
+var p2 = new Person('JACK', 23)
+console.log(p1, p2)
+
+```
+
+方式六: 构造函数+原型的组合模式
+
+套路: 自定义构造函数, 属性在函数中初始化, 方法添加到原型上
+
+适用场景: 需要创建多个类型确定的对象
+
+```js
+function Person(name, age) { //在构造函数中只初始化一般函数
+    this.name = name
+    this.age = age
+}
+Person.prototype.setName = function (name) {
+    this.name = name
+}
+
+var p1 = new Person('Tom', 23)
+var p2 = new Person('Jack', 24)
+console.log(p1, p2)
+
+```
+
 
 
 ## 函数的理解和使用
@@ -1221,11 +1397,26 @@ for(let key in person) {
 
 ```js
 console.log(Date.prototype, typeof Date.prototype)
-// {constructor: ƒ, toString: ƒ, toDateString: ƒ, toTimeString: ƒ, toISOString: ƒ, …} 'object'
+/* 
+{
+	constructor: ƒ, 
+	toString: ƒ, 
+	toDateString: ƒ, 
+	toTimeString: ƒ, 
+	toISOString: ƒ, 
+…} 
+'object'
+*/
 function fn() {
 
 }
-console.log(fn.prototype, typeof fn.prototype) // {constructor: ƒ} 'object'
+console.log(fn.prototype, typeof fn.prototype) 
+/* 
+{
+	constructor: ƒ
+} 
+'object' 
+*/
 
 // 原型对象中有一个属性constructor, 它指向函数对象
 console.log(Date.prototype.constructor===Date)  // true
@@ -1249,17 +1440,18 @@ console.log(f.age) // 23
 
  显式原型与隐式原型的关系
 
-  函数的prototype: 定义函数时被自动赋值, 值默认为{}, 即用为原型对象
+函数的`prototype` 定义函数时被自动赋值, 值默认为{}, 即用为原型对象
 
-  实例对象的`__proto__`: 在创建实例对象时被自动添加, 并赋值为构造函数的prototype值
+实例对象的`__proto__`: 在创建实例对象时被自动添加, 并赋值为构造函数的prototype值
 
-  原型对象即为当前实例对象的父对象
+原型对象即为当前实例对象的父对象
 
 ```js
 function Fn() {
 }
 var fn = new Fn()
-console.log(Fn.prototype, fn.__proto__)  // {constructor: ƒ} {constructor: ƒ}
+console.log(Fn.prototype, fn.__proto__) 
+// {constructor: ƒ} {constructor: ƒ}
 console.log(Fn.prototype===fn.__proto__)  // true
 
 Fn.prototype.test = function () {
@@ -1273,13 +1465,11 @@ fn.test()
 
  原型链
 
-  所有的实例对象都有`__proto__`属性, 它指向的就是原型对象
+所有的实例对象都有`__proto__`属性, 它指向的就是原型对象，这样通过`__proto__`属性就形成了一个链的结构---->原型链
 
-  这样通过`__proto__`属性就形成了一个链的结构---->原型链
+当查找对象内部的属性/方法时, js引擎自动沿着这个原型链查找
 
-  当查找对象内部的属性/方法时, js引擎自动沿着这个原型链查找
-
-  当给对象属性赋值时不会使用原型链, 而只是在当前对象中进行操作
+当给对象属性赋值时不会使用原型链, 而只是在当前对象中进行操作
 
 访问一个对象的属性时，
 
@@ -1331,21 +1521,19 @@ var p2 = new Person('Bob', 23)
 console.log(p2.name, p2.age, p2.sex) // Bob 23 男
 ```
 
-如果prototype属性上有属性，在对象上定义相同名字的属性；此时会发生生命；
+如果`prototype`属性上有属性，在对象上定义相同名字的属性；此时会发生声明；
 
 会显示这个对象上最近定义的属性
 
 不同的实例对象去修改同一个属性；最后以自己属性上的为准；其他修改了无用
 
-
-
 instanceof是如何判断的?
 
-表达式: A instanceof B
+表达式: `A instanceof B`
 
 如果B函数的显式原型对象在A对象的原型链上, 返回true, 否则返回false
 
-Function是通过new自己产生的实例
+`Function`是通过`new`自己产生的实例
 
 ```js
 function Foo() {  }
@@ -1396,11 +1584,9 @@ F.a() // a()
 F.b() // b()
 ```
 
-原型链继承
+**原型链继承**
 
 方式1: 原型链继承
-
-1. 套路
 
 1. 定义父类型构造函数
 
@@ -1456,8 +1642,6 @@ console.log(sub)  // Sub
 
 方式2: 借用构造函数继承(假的)
 
-1. 套路:
-
 1. 定义父类型构造函数
 
 2. 定义子类型构造函数
@@ -1466,7 +1650,7 @@ console.log(sub)  // Sub
 
 2. 关键:
 
-1. 在子类型构造函数中通用call()调用父类型构造函数
+1. 在子类型构造函数中通用`call()`调用父类型构造函数
 
 ```js
 function Person(name, age) {
@@ -1489,7 +1673,7 @@ console.log(s.name, s.age, s.price)
 
 1. 利用原型链实现对父类型对象的方法继承
 
-2. 利用super()借用父类型构建函数初始化相同属性
+2. 利用`super()`借用父类型构建函数初始化相同属性
 
 ```js
 function Person(name, age) {
@@ -1549,19 +1733,11 @@ function a2() {
 }
 ```
 
-
-
- 理解
-
   执行上下文: 由js引擎自动创建的对象, 包含对应作用域中的所有变量属性
 
   执行上下文栈: 用来管理产生的多个执行上下文
 
- 分类:
-
-  全局: window
-
-  函数: 对程序员来说是透明的
+ 
 
  生命周期
 
@@ -1571,7 +1747,7 @@ function a2() {
 
  包含哪些属性:
 
-  全局 : 
+1. 全局 : 
 
    用var定义的全局变量  ==>undefined
 
@@ -1579,7 +1755,7 @@ function a2() {
 
    this  ===>window
 
-  函数
+2. 函数
 
    用var定义的局部变量  ==>undefined
 
@@ -1591,9 +1767,9 @@ function a2() {
 
    arguments ===>实参列表的伪数组
 
- 执行上下文创建和初始化的过程
+ **执行上下文创建和初始化的过程**
 
-  全局:
+1. 全局:
 
    在全局代码执行前最先创建一个全局执行上下文(window)
 
@@ -1601,7 +1777,7 @@ function a2() {
 
    将这些变量设置为window的属性
 
-  函数:
+2. 函数:
 
    在调用函数时, 在执行函数体之前先创建一个函数执行上下文
 
@@ -1728,7 +1904,7 @@ console.log(c) // undefined
 
   作用域链: 多个嵌套的作用域形成的由内向外的结构, 用于查找变量
 
- 分类: 全局、  函数；  js没有块作用域(在ES6之前)
+分为全局作用域、函数作用域、块作用域；他可以解决变量冲突的问题，对变量进行隔离
 
 ```js
 var a = 10,
@@ -1748,14 +1924,6 @@ var a = 10,
   }
   fn(10)
 ```
-
-
-
- 作用
-
-  作用域: 隔离变量, 可以在不同作用域定义同名的变量不冲突
-
-  作用域链: 查找变量
 
  区别作用域与执行上下文
 
@@ -1887,7 +2055,6 @@ f();
  ```
 
 ```html
-
 <button>测试1</button>
 <button>测试2</button>
 <button>测试3</button>
@@ -1954,18 +2121,18 @@ function showDelay(msg, time) {
         alert(msg)
     }, time)
 }
-showDelay('atguigu', 2000)
+showDelay('hello', 2000)
 ```
 
 1. 使用函数内部的变量在函数执行完后, 仍然存活在内存中(延长了局部变量的生命周期)
 
 2. 让函数外部可以操作(读写)到函数内部的数据(变量/函数)
 
-问题:
+   
 
-1. 函数执行完后, 函数内部声明的局部变量是否还存在?  一般是不存在, 存在于闭中的变量才可能存在
-
-2. 在函数外部能直接访问函数内部的局部变量吗? 不能, 但我们可以通过闭包让外部操作它
+> 函数执行完后, 函数内部声明的局部变量一般是不存在, 存在于闭中的变量才可能存在
+>
+> 在函数外部不能直接访问函数内部的局部变量吗
 
 ```js
  function fn1() {
@@ -2026,7 +2193,7 @@ myModule.js
 ```js
 function myModule() {
     //私有数据
-    var msg = 'My atguigu'
+    var msg = 'hello'
     //操作数据的函数
     function doSomething() {
         console.log('doSomething() '+msg.toUpperCase())
@@ -2046,7 +2213,7 @@ function myModule() {
 
 闭包的应用2 : 定义JS模块
 
- \* 具有特定功能的js文件
+ \* 具有特定功能的JS文件
 
  \* 将所有的数据和功能都封装在一个函数内部(私有的)
 
@@ -2067,7 +2234,7 @@ myModule2.js
 ```js
 (function () {
     //私有数据
-    var msg = 'My atguigu'
+    var msg = '	hello2'
     //操作数据的函数
     function doSomething() {
         console.log('doSomething() '+msg.toUpperCase())
@@ -2105,8 +2272,6 @@ myModule2.js
 
   f = null //让内部函数成为垃圾对象-->回收闭包
 ```
-
-
 
 测试
 
@@ -2159,160 +2324,6 @@ var b = fun(0).fun(1).fun(2).fun(3)//undefined,0,1,2
 var c = fun(0).fun(1)
 c.fun(2)
 c.fun(3)//undefined,0,1,1
-```
-
-对象创建模式
-
-方式一: Object构造函数模式
-
- \* 套路: 先创建空Object对象, 再动态添加属性/方法
-
- \* 适用场景: 起始时不确定对象内部数据
-
- \* 问题: 语句太多
-
-  ```js
-
-  // 一个人: name:"Tom", age: 12
-  // 先创建空Object对象
-  var p = new Object()
-  p = {} //此时内部数据是不确定的
-  // 再动态添加属性/方法
-  p.name = 'Tom'
-  p.age = 12
-  p.setName = function (name) {
-    this.name = name
-  }
-
-  //测试
-  console.log(p.name, p.age)
-  p.setName('Bob')
-  console.log(p.name, p.age)
-  ```
-
-方式二: 对象字面量模式
-
- \* 套路: 使用{}创建对象, 同时指定属性/方法
-
- \* 适用场景: 起始时对象内部数据是确定的
-
- \* 问题: 如果创建多个对象, 有重复代码
-
-```js
-var p = {
-    name: 'Tom',
-    age: 12,
-    setName: function (name) {
-        this.name = name
-    }
-}
-
-//测试
-console.log(p.name, p.age)
-p.setName('JACK')
-console.log(p.name, p.age)
-
-var p2 = {  //如果创建多个对象代码很重复
-    name: 'Bob',
-    age: 13,
-    setName: function (name) {
-        this.name = name
-    }
-}
-```
-
-方式三: 工厂模式
-
-套路: 通过工厂函数动态创建对象并返回
-
-适用场景: 需要创建多个对象
-
-问题: 对象没有一个具体的类型, 都是Object类型
-
-```js
-function createPerson(name, age) { //返回一个对象的函数===>工厂函数
-    var obj = {
-        name: name,
-        age: age,
-        setName: function (name) {
-            this.name = name
-        }
-    }
-
-    return obj
-}
-
-
-// 创建2个人
-var p1 = createPerson('Tom', 12)
-var p2 = createPerson('Bob', 13)
-console.log(p1);
-// p1/p2是Object类型
-
-function createStudent(name, price) {
-    var obj = {
-        name: name,
-        price: price
-    }
-    return obj
-}
-var s = createStudent('张三', 12000)
-// s也是Object
-```
-
-方式四: 自定义构造函数模式
-
-套路: 自定义构造函数, 通过new创建对象
-
-适用场景: 需要创建多个类型确定的对象
-
-问题: 每个对象都有相同的数据, 浪费内存
-
-```js
-//定义类型
-function Person(name, age) {
-    this.name = name
-    this.age = age
-    this.setName = function (name) {
-        this.name = name
-    }
-}
-var p1 = new Person('Tom', 12)
-p1.setName('Jack')
-console.log(p1.name, p1.age)
-console.log(p1 instanceof Person)
-
-function Student (name, price) {
-    this.name = name
-    this.price = price
-}
-var s = new Student('Bob', 13000)
-console.log(s instanceof Student)
-
-var p2 = new Person('JACK', 23)
-console.log(p1, p2)
-
-```
-
-方式六: 构造函数+原型的组合模式
-
-套路: 自定义构造函数, 属性在函数中初始化, 方法添加到原型上
-
-适用场景: 需要创建多个类型确定的对象
-
-```js
-function Person(name, age) { //在构造函数中只初始化一般函数
-    this.name = name
-    this.age = age
-}
-Person.prototype.setName = function (name) {
-    this.name = name
-}
-
-var p1 = new Person('Tom', 23)
-var p2 = new Person('Jack', 24)
-console.log(p1, p2)
-
 ```
 
 线程机制与事件机制
@@ -2368,6 +2379,10 @@ console.log(p1, p2)
    一个进程至少有一个线程(主)
    程序是在某个进程中的某个线程执行的
 
+ js是单线程执行的(回调函数也是在主线程)
+ H5提出了实现多线程的方案: Web Workers
+ 只能是主线程更新界面
+
 ## 浏览器内核模块组成
  主线程
    js引擎模块 : 负责js程序的编译与运行
@@ -2378,11 +2393,6 @@ console.log(p1, p2)
    定时器模块 : 负责定时器的管理
    DOM事件模块 : 负责事件的管理
    网络请求模块 : 负责Ajax请求
-
-## js线程
- js是单线程执行的(回调函数也是在主线程)
- H5提出了实现多线程的方案: Web Workers
- 只能是主线程更新界面
 
 ## 定时器问题:
  定时器并不真正完全定时
@@ -2402,30 +2412,26 @@ console.log(p1, p2)
    当事件发生时, 管理模块会将回调函数及其数据添加到回调列队中
    只有当初始化代码执行完后(可能要一定时间), 才会遍历读取回调队列中的回调函数执行
     
+
 ## H5 Web Workers
- 可以让js在分线程执行
+ 可以让js代码在分线程执行
  Worker
+
+  ```js
+var worker = new Worker('worker.js');
+worker.onMessage = function(event){
+    event.data
+} : 
+// 用来接收另一个线程发送过来的数据的回调
+worker.postMessage(data1) 
+// 向另一个线程发送数据
   ```
-  var worker = new Worker('worker.js');
-  worker.onMessage = function(event){event.data} : 用来接收另一个线程发送过来的数据的回调
-  worker.postMessage(data1) : 向另一个线程发送数据
-  ```
- 问题:
+ 但也会出现一些问题，比如：
    worker内代码不能操作DOM更新UI
    不是每个浏览器都支持这个新特性
    不能跨域加载JS
 
- svn版本控制
- svn server
-1. 定时器真是定时执行的吗?
-
-  定时器并不能保证真正定时执行
-
-  一般会延迟一丁点(可以接受), 也有可能延迟很长时间(不能接受)
-
-2. 定时器回调函数是在分线程执行的吗?
-
-  在主线程执行的, js是单线程的
+  定时器在主线程执行的, js是单线程的
 
 ```js
 
@@ -2444,7 +2450,6 @@ document.getElementById('btn').onclick = function () {
 }
 ```
 
-```
 1. 如何证明js执行是单线程的?
    setTimeout()的回调函数是在主线程执行的
    定时器回调函数只有在运行栈中的代码全部执行完后才有可能执行
@@ -2462,7 +2467,6 @@ document.getElementById('btn').onclick = function () {
      绑定事件监听
      发送ajax请求
    后面在某个时刻才会执行回调代码
-```
 
 ```js
 setTimeout(function () {
@@ -2486,21 +2490,6 @@ alert('------') //暂停当前主线程的执行, 同时暂停计时, 点击确�
 console.log('alert()之后')
 ```
 
-```
-1. 所有代码分类
-   初始化执行代码(同步代码): 包含绑定dom事件监听, 设置定时器, 发送ajax请求的代码
-   回调执行代码(异步代码): 处理回调逻辑
-2. js引擎执行代码的基本流程:
-   初始化代码===>回调代码
-3. 模型的2个重要组成部分:
-   事件(定时器/DOM事件/Ajax)管理模块
-   回调队列
-4. 模型的运转流程
-   执行初始化代码, 将事件回调函数交给对应模块管理
-   当事件发生时, 管理模块会将回调函数及其数据添加到回调列队中
-   只有当初始化代码执行完后(可能要一定时间), 才会遍历读取回调队列中的回调函数执行
-```
-
 ```js
 function fn1() {
     console.log('fn1()')
@@ -2520,24 +2509,10 @@ fn2()
 
 web works
 
-```
-1. H5规范提供了js分线程的实现, 取名为: Web Workers
-2. 相关API
-   Worker: 构造函数, 加载分线程执行的js文件
-   Worker.prototype.onmessage: 用于接收另一个线程的回调函数
-   Worker.prototype.postMessage: 向另一个线程发送消息
-3. 不足
-   worker内代码不能操作DOM(更新UI)
-   不能跨域加载JS
-   不是每个浏览器都支持这个新特性
-```
-
 ```html
 <input type="text" placeholder="数值" id="number">
 <button id="btn">计算</button>
 ```
-
-
 
 ```js
  // 1 1 2 3 5 8    f(n) = f(n-1) + f(n-2)
@@ -2553,8 +2528,6 @@ web works
   }
 
 ```
-
-
 
 测试2
 
@@ -2597,10 +2570,6 @@ this.onmessage = function (event) {
 }
 ```
 
-
-
-
-
 模块化: 封装一些数据以及操作数据的函数, 向外暴露一些行为
 
   循环遍历加监听
@@ -2615,9 +2584,11 @@ this.onmessage = function (event) {
 
   解决:
 
-   及时释放 : f = null; //让内部函数对象成为垃圾对象
+   及时释放 : `f = null`; 
 
-## 内存溢出与内存泄露
+## 内存和垃圾回收
+
+对内存管理，看[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Memory_management)
 
 1. 内存溢出
 
@@ -2631,13 +2602,7 @@ this.onmessage = function (event) {
 
  内存泄露积累多了就容易导致内存溢出
 
- 常见的内存泄露:
-
- 意外的全局变量
-
- 没有及时清理的计时器或回调函数
-
-闭包
+ 常见的内存泄露有意外的全局变量，没有及时清理的计时器或回调函数以及闭包；
 
   ```js
 // 1. 内存溢出
