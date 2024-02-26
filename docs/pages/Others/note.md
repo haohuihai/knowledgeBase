@@ -20,3 +20,57 @@
 VS code
 
 VSCode 同时选中多个相同字符 编辑Ctrl+D,Ctrl+Shift+L
+
+### Windows10 安装Ubuntu子系统，解决从应用商店下载慢的问题。
+
+https://blog.csdn.net/pujiaolin/article/details/73557219
+
+### WIN10 微软商店下载不了ubuntu
+https://github.dev/haohuihai/knowledgebase
+
+### Windows10 启动WSL2 并安装Ubuntu遇到的一系列问题
+
+https://blog.csdn.net/Daizy_Fantasy/article/details/125209422
+
+### 解决新手在安装WSL2的Ubuntu时报错：【WslRegisterDistribution failed with error: 0x800701bc】
+https://blog.csdn.net/x777777x/article/details/135045919
+
+### 安装windows自带WSL虚拟机以及宝塔安装（win10或者10以上的才可以）
+https://blog.csdn.net/qq_44678350/article/details/126365705
+
+### 启动Docker服务后显示Docker Engine stopped
+https://blog.csdn.net/weixin_43576565/article/details/134044435
+
+### 安装错误
+
+https://wenku.csdn.net/answer/4xfmwddhc8
+
+
+### docker下载出现异常Error response from daemon: dial tcp: lookup index.docker.io: no such host
+https://blog.csdn.net/qq_43750656/article/details/109585263
+
+https://blog.csdn.net/qq_42807952/article/details/132339617
+
+https://blog.csdn.net/xiaoyaozizai1/article/details/130949261
+
+## CentOS 7 系统同步时间的2种方法
+
+https://www.wervps1.com/we/21808.html
+https://blog.csdn.net/Da_zhenzai/article/details/130509457
+
+设置时区和时间
+https://cloud.tencent.com/developer/article/1795159?areaSource=102001.14&traceId=UdJpk_pVtnUsfRJrW1G9d
+
+
+### 安装docker和卸载docker
+
+https://blog.csdn.net/FOREVERHOPE_WBZ/article/details/128430127
+笔记 Docker安装(一)
+
+
+### webrtc
+
+https://zego.csdn.net/6425587d2bcaa918ade99a58.html
+
+window安装ubuntn
+s
