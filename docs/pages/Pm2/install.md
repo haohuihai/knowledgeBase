@@ -22,7 +22,7 @@ pm2 -v
 find / -name pm2
 ```
 
-![image-20230322105450311](./images/image-20230322105450311.png)
+![image-20230322105450311](./images/image-20230322105450311.png) 
 
 选择`/opt/node/node-v16.18.1-linux-x64/lib/node_modules/pm2/bin/pm2`作为软链接的路径
 

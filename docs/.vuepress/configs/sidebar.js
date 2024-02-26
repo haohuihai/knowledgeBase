@@ -6,7 +6,7 @@ exports.sidebar =  [
     children: [
       {
         title: "CSS基础知识",
-        path: "../pages/Front/CSS/CSS1",
+        path: "../pages/Front/CSS/note",
       }
     ],
   },
@@ -25,10 +25,6 @@ exports.sidebar =  [
       {
         title: "JS的继承方式",
         path: "../pages/Front/JS/extend",
-      },
-      {
-        title: "JS核心原理相等",
-        path: "../pages/Front/JS/JavaScript核心原理相等操作",
       },
       {
         title: "JS核心原理原型",
@@ -55,9 +51,13 @@ exports.sidebar =  [
         path: "../pages/Front/JS/JSON",
       },
       {
-        title: "动画",
-        path: "../pages/Front/JS/动画",
+        title: "事件循环",
+        path: "../pages/Front/JS/事件循环",
       },
+      {
+        title: "Canvas",
+        path: "../pages/Front/JS/canvas",
+      }
     ],
   },
   {
@@ -91,7 +91,11 @@ exports.sidebar =  [
         path: '../pages/Webpack/loader'
       },
       {
-        title: 'work',
+        title: '项目实战',
+        path: '../pages/Webpack/project'
+      },
+      {
+        title: '总结',
         path: '../pages/Webpack/work'
       },
     ],

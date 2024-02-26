@@ -65,7 +65,7 @@ exports.navbar =  [
           {
             text: "项目进阶",
             link: "../../pages/Pm2/senior"
-          },
+          }
         ]
       },
       { 
