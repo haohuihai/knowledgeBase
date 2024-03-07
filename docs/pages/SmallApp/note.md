@@ -106,9 +106,9 @@ wx.request({
 
 
 
-## Canvas绘制，保存图片，分享
+## Canvas绘制
 
-### 小程序用Canvas绘制卡片
+### Canvas绘制卡片
 
 ```html
 <canvas 
