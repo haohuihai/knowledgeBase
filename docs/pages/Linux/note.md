@@ -1,3 +1,5 @@
+## 常用命令
+
 **clear** ：清除屏幕
 
 **echo 'test content'**：往控制台输出信息 **echo 'test content' > test.txt**
@@ -14,9 +16,15 @@
 
 **cat** **文件的** **url :** 查看对应文件的内容
 
-删除目录
+**删除目录**
 
-https://baijiahao.baidu.com/s?id=1726925779817385200&wfr=spider&for=pc
+```
+rmdir test*
+```
+
+```
+rm test5
+```
 
 **vim** **文件的** url(在英文模式下)
 
@@ -486,7 +494,8 @@ cd ..
 **将文件 abc 进行压缩时，排除1.txt，压缩后的文件名为 abc.tar**
 tar --exclude=abc/1.txt -zcvf abc.tgz abc
 
-# 解压文件
+## 解压文件
+
 tar -zxvf abc.tgz
 
 **删除压缩文件**
@@ -495,7 +504,7 @@ rm abc.tgz
 **删除解压后的文件，并删除文件夹**
 rm -rf abc
 
-#### gunzip
+gunzip
 
 gunzip 是个使用广泛的解压缩程序，它用于解开被 gzip 压缩过的文件，这些压缩文件预设最后的扩展名为 .gz。事实上 gunzip 就是 gzip 的硬连接，因此不论是压缩或解压缩，都可通过 gzip 指令单独完成
 

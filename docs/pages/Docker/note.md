@@ -6,7 +6,7 @@ https://yeasy.gitbook.io/docker_practice/ci
 
 https://haicoder.net/docker/docker-course.html
 
-**为什么会有docke**
+### 为什么会有docker
 
 
 使用docker之前：前端项目在开发的时候用的node版本，还有其他依赖的版本是一种，而测试和运维使用的这些版本又是另一种，可能的办法是，我们又会将这些配置给测试人员配置一次，但每次测试都需要配置，很麻烦；让测试或运维自己去配，这样可能导致从开发，测试，运维使用的是不同的版本，导致项目出现问题
@@ -17,21 +17,30 @@ https://haicoder.net/docker/docker-course.html
 
 在docker里面，多个docker运行同一个镜像，其结果都是相同的；即一次环境，处处运行
 
+<u>解决了运行环境和配置问题的软件容器，方便做持续集成并有助于整体发布的容器虚拟化技术</u>
 
+### docker与虚拟机的比较
 
-**解决了运行环境和配置问题的软件容器，方便做持续集成并有助于整体发布的容器虚拟化技术**
+- 传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程。
+- Docker 容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。
 
+| 特性       | Docker             | 虚拟机     |
+| ---------- | ------------------ | ---------- |
+| 启动       | 秒级               | 分钟级     |
+| 硬盘使用   | 一般为 MB          | 一般为 GB  |
+| 性能       | 接近原生           | 弱于       |
+| 系统支持量 | 单机支持上千个容器 | 一般几十个 |
 
+### Docker是什么？
 
-**容器与虚拟机的比较**
+Docker 作为一种**新的虚拟化技术**，跟传统的虚拟化技术相比具有众多的优势：
 
-
-
-**Docker是什么？**
-
-
-
-Docker能做什么？
+1. **更高效的利用系统资源**：不需要进行硬件虚拟以及运行完整操作系统等额外开销，Docker 对系统资源的利用率更高。
+2. **更快速的启动时间**：Docker 容器应用直接运行于宿主内核，不需要启动完整的操作系统，所以启动时间可做到秒级的启动时间。
+3. **一致的运行环境**：Docker 镜像提供了除内核外完整的运行时环境，确保开发环境、测试环境、生产环境的一致性。
+4. **持续交付和部署**：开发人员可以通过 Dockerfile 来进行镜像构建，并结合持续集成(Continuous Integration) 系统进行集成测试，而运维人员则可以直接在生产环境中快速部署该镜像，甚至结合持续部署(Continuous Delivery/Deployment) 系统进行自动部署。
+5. **更轻松的迁移**：Docker 可以在很多平台上运行，无论是物理机、虚拟机、公有云、私有云，甚至是笔记本，其运行结果是一致的。
+6. **更轻松的维护和扩展。**
 
 **官网在哪？**
 
@@ -454,7 +463,7 @@ docker run -it --privileged=true -v /mydocker/u:/tmp/u --name u1 ubuntu
 
 **如果u1启动了**
 
-之前u2和主机修改的文件，在u1目录下也照样存在，
+之前u2和主机修改的文件，在u1目录下也照样存在
 
 ## Docker命令
 
@@ -504,7 +513,7 @@ N： 指定只列出多少个
 
 全部删除： `docker rmi -f ${docker images -qa}`
 
-# Docker安装Gitlab
+## Docker安装Gitlab
 
 https://blog.csdn.net/lianxiaohei/article/details/122665812   我是根据这个安装的
 
@@ -512,7 +521,7 @@ https://baijiahao.baidu.com/s?id=1735404739948635473&wfr=spider&for=pc
 
 https://www.cnblogs.com/chenyuanbo/p/12443662.html  docker安装gitlab 和 idea安装gitlab的教材
 
-## Gitlab修改密码
+### Gitlab修改密码
 
 官方文档： **https://docs.gitlab.com/ee/security/reset_user_password.html**
 
@@ -546,7 +555,7 @@ docker exec -it gitlab bash
 
 我们再次进入到自己搭建的gitlab服务器，然后可以使用新密码进行重新登录
 
-# Docker安装gitlab-runner
+## Docker安装gitlab-runner
 
 https://blog.51cto.com/u_15067267/4293270
 
@@ -617,19 +626,13 @@ gitlab-runner 常用命令，需要进入gitlab-runner容器
 gitlab-runner run       		#普通用户模式  配置文件位置 ~/.gitlab-runner/config.toml
 sudo gitlab-runner run  	# 超级用户模式  配置文件位置/etc/gitlab-runner/config.toml 
 
-## 配置gitlab-runner
+### 配置gitlab-runner
 
 可以通过修改 config.toml 文件。文件更改时不需要重启服务，每隔三秒GitLab Runner 会检查配置修改，并重新加载。
 
 进入配置目录： cd /etc/gitlab-runner
 
-
-
-
-
-
-
-# 解决git拉取代码时的问题
+## 解决git拉取代码时的问题
 
 当我们新增了远程地址，可以使用ssh -T git@host来测试连通性
 
@@ -735,7 +738,7 @@ git@xxx.xxx.xxx.xxx:8022/haohuihai/ceshi.git
 
 怎么添加，官网又介绍
 
-# 如何将项目同事提交到gitlab和github
+## 如何将项目同事提交到gitlab和github
 
 https://cloud.tencent.com/developer/article/1781698
 
@@ -743,15 +746,15 @@ gitlab常用命令
 
 http://t.zoukankan.com/inxworld-p-11460991.html
 
-# GitLab-Runner配置参数详解
+## GitLab-Runner配置参数详解
 
 http://events.jianshu.io/p/6decaed7b648
 
-# GitLab-Runner 从安装到配置到入门
+## GitLab-Runner 从安装到配置到入门
 
 https://blog.csdn.net/zyy247796143/article/details/123842374
 
-# gitLab修改通过HTTP拉取代码时的ip地址
+## gitLab修改通过HTTP拉取代码时的ip地址
 
 ![image-20230107190253968](./images/image-20230107190253968.png)
 
@@ -789,15 +792,15 @@ https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-exte
 
 https://docs.gitlab.cn/omnibus/installation/
 
-# gitlab 企业级私有仓库搭建
+## gitlab 企业级私有仓库搭建
 
 https://blog.csdn.net/m0_46090675/article/details/120853935/
 
-# gitlab帮助
+## gitlab帮助
 
 http://xxx.xxx.xxx.xxx:8090/help/gitlab-basics/README.md
 
-# 翻译的gitlab-ci.yml的配置文件
+## 翻译的gitlab-ci.yml的配置文件
 
 ## 使用.gitlab-ci.yml配置你的jobs
 
@@ -879,8 +882,6 @@ pages:
 
 #### stages
 
-
-
 #### image
 
 #### services
@@ -908,8 +909,6 @@ job:
     - execute this after my script
 
 ```
-
-
 
 #### variables
 
@@ -964,7 +963,7 @@ script:
 
 ![image-20230109172040950](./images/image-20230109172040950.png) 
 
-# [Docker：bash: vi: command not found](https://www.cnblogs.com/cristin/p/9167721.html)
+## [Docker：bash: vi: command not found](https://www.cnblogs.com/cristin/p/9167721.html)
 
 在使用docker容器时，有时候里边没有安装vim，敲vim命令时提示说：vim: command not found，这个时候就需要安装vim
 
@@ -974,7 +973,7 @@ script:
 
 2、apt-get install vim
 
-# 2023-1-9  GitLab搜索记录
+## 2023-1-9  GitLab搜索记录
 
 `docker -v`查看安装的docker版本
 
@@ -1172,9 +1171,9 @@ docker ps
 
 gitlab启动成功后，浏览器访问http://ip:8880,即可访问。
 
-# 方法二
+## 方法二
 
-##### docker部署gitlab
+### docker部署gitlab
 
 ```bash
 #1:拉取gitlab镜像
@@ -1197,7 +1196,7 @@ mkdir -p /home/gitlab/var/opt
 
 此时访问`IP`是有界面了，如果网络不可用或者502，就再等个几分钟，此时容器尚未启动完全
 
-#### 调整gitlab配置
+### 调整gitlab配置
 
 **1.配置克隆项目时所需**
 
@@ -1238,7 +1237,7 @@ exit
 
 ## 方法三：
 
-## 1. docker拉取gitlab社区版
+### 1. docker拉取gitlab社区版
 
 
 
@@ -1254,7 +1253,7 @@ REPOSITORY         TAG       IMAGE ID       CREATED      SIZE
 gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 ```
 
-## 2. 使用容器卷将数据映射到本地并运行
+### 2. 使用容器卷将数据映射到本地并运行
 
 | 宿主机位置          | 容器位置        | 作用                     |
 | ------------------- | --------------- | ------------------------ |
@@ -1262,7 +1261,7 @@ gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 | /data/gitlab/logs   | /var/log/gitlab | 用于存储日志             |
 | /data/gitlab/data   | /var/opt/gitlab | 用于存储应用数据         |
 
-### 在宿主机创建映射目录
+### 3. 在宿主机创建映射目录
 
 ```kotlin
 [root@test ~] mkdir -p /data/gitlab/config  #递归创建目录，即使上级目录不存在，会按目录层级自动创建目录
@@ -1273,9 +1272,9 @@ gitlab/gitlab-ce   latest    75d591b81fd7   4 days ago   2.23GB
 config  data  logs
 ```
 
-## 3.1 创建方法一
+#### 3.1 创建方法一
 
-### 创建`gitlab_start.sh`文件
+**创建`gitlab_start.sh`文件**
 
 ```css
 [root@test gitlab] touch gitlab_start.sh
@@ -1318,7 +1317,7 @@ chmod +x gitlab_start.sh
 ./gitlab_start.sh       #执行脚本
 ```
 
-# 方法四
+## 方法四
 
 **下载镜像文件**
 
@@ -1394,27 +1393,27 @@ vi /mnt/gitlab/data/gitlab-rails/etc/gitlab.yml
 
 ![image-20220613072026845](./images/image-20220613072026845-1697010329765.png) 
 
-# 方法五
+## 方法五
 
 https://www.jb51.net/article/223451.htm
 
-# 方法六
+## 方法六
 
 https://www.jb51.net/article/104536.htm
 
-# Linux执行.sh文件时提示No such file or directory该怎么办(三种解决办法)
+## Linux执行.sh文件时提示No such file or directory该怎么办(三种解决办法)
 
 https://www.jb51.net/article/73684.htm
 
-# 操作系统怎么查看docker镜像的版本号
+## 操作系统怎么查看docker镜像的版本号
 
 https://blog.csdn.net/wangxueying5172/article/details/122165237
 
-# Linux下面如何运行.sh文件
+## Linux下面如何运行.sh文件
 
 http://t.zoukankan.com/lcword-p-5334059.html
 
-# 解决#!/bin/bash - no such file or directory
+## 解决#!/bin/bash - no such file or directory
 
 https://www.jianshu.com/p/f2b867a347c9
 

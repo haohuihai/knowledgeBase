@@ -2,15 +2,15 @@
 
 2.MySQL模块
 
- 增  INSERT INTO emp VALUES(NULL,'tom'....);
+ 增  `INSERT INTO emp VALUES(NULL,'tom'....);`
 
- 删  DELETE FROM emp WHERE eid=5;
+ 删  `DELETE FROM emp WHERE eid=5;`
 
- 改  UPDATE emp SET ename='tom',sex='1' WHERE eid=5;
+ 改  `UPDATE emp SET ename='tom',sex='1' WHERE eid=5;`
 
- 查  SELECT * FROM emp;
+ 查  `SELECT * FROM emp;`
 
- mysql.exe -h127.0.0.1 -P3306 -uroot -p
+` mysql.exe -h127.0.0.1 -P3306 -uroot -p`
 
  (1)普通连接
 
