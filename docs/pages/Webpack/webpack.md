@@ -1953,7 +1953,7 @@ merge = require("webpack-merge")
 
 数组进行合并，相同取第二个，没有就会合并进去；
 
-合并配置：module.exports = merge(baseConfig, devConfig);
+合并配置：`module.exports = merge(baseConfig, devConfig);`
 
 #### 构建包功能模块设计和目录结构
 
@@ -1985,29 +1985,29 @@ merge = require("webpack-merge")
 
 **webpack.dev.js** 
 
-合并dev.config和bse.config
+合并`dev.config`和`base.config`
 
-配置sourcemap和代码热更新
+配置`source-map`和代码热更新
 
-设置mode：'production'
+设置`mode：'production'`
 
 
 
 **webpack.prod.js** 
 
-合并prod.config和base.config
+合并`prod.config`和`base.config`
 
 代码压缩，提取公共的资源包，提取包的文件大小--->文件指纹
 
-设置mode：'production'
+设置`mode：'production'`
 
 **webpack.ssr.js** 
 
-合并prod.config和base.config
+合并`prod.config`和`base.config`
 
 代码压缩，提取公共的资源包，提取包的文件大小--->文件指纹
 
-设置mode：'production'
+设置`mode：'production'`
 
 #### 使用exlint规范构建脚本
 
@@ -2040,9 +2040,9 @@ npm run eslint
 
 
 
-将package相关的配置放到新建的package.json里面
+将`package`相关的配置放到新建的`package.json`里面
 
-安装依赖npm install
+安装依赖
 
 执行`npm run eslint`
 
@@ -2080,17 +2080,18 @@ npm run eslint
 
 ![image-20220526082139097](./images/image-20220526082139097.png) 
 
-![image-20220526082154186](./images/image-20220526082154186.png) 
+ 
 
-最流行的CI
+#### 发布到npm 
 
-![image-20220526082226291](./images/image-20220526082226291.png) 
+添加用户：`npm adduser`
 
-![image-20220526082244675](./images/image-20220526082244675.png) 
+升级补丁版本号：`npm version patch`
+升级小版本号：`npm version minor`
+升级大版本号：`npm version major`
+发布版本：`npm publish`
 
-#### 发布到npm
 
-![image-20220526082314991](./images/image-20220526082314991.png) 
 
 删除dist node_module等
 
@@ -2367,13 +2368,13 @@ vue-cli 3配置：
 
 ##### 并行压缩
 
-方法一：使用 parallel-uglify-plugin插件 （支持ES6）
+方法一：使用 `parallel-uglify-plugin`插件 （支持ES6）
 
 传递参数，可以开启并行压缩
 
-方法二：uglifyjs-webpack-plugin 开启 parallel参数（不支持ES6）
+方法二：`uglifyjs-webpack-plugin` 开启 `parallel`参数（不支持ES6）
 
-方法三：terser-webpack-plugin 开启 paralle参数（推荐）
+方法三：`terser-webpack-plugin `开启 `paralle`参数（推荐）
 
 安装
 
@@ -2435,7 +2436,7 @@ chainWebpack: config => {
 
 ![image-20220528081658792](./images/image-20220528081658792.png) 
 
-##### （error）进一步分包：预编译资源模块
+#### （error）进一步分包：预编译资源模块
 
 思路：将 react、react-dom、redux、react-redux 基础包和业务基础包打包成一个文件，生成包的文件和manifest.json 文件，manifest.json对分离出来包的描述，
 
@@ -2632,12 +2633,10 @@ plugins: [
 
 > 有时候构建不成功，可能是因为版本问题，可以使用下面的版本
 
-```
+```json
 "mini-css-extract-plugin": "^0.6.0",
 "purgecss-webpack-plugin": "^1.5.0",
 ```
-
-
 
 <span style="color: red">优化阶段，一般都是在已经构建完成，生成构建文件之后去优化的</span>
 
@@ -2765,45 +2764,43 @@ Tree-shaking
 
 动态Polyfill
 
+## webpack源码
 
-
-# webpack源码
-
-平时我们运行了npm run dev或者 npm run build或者webpack entry.js bundle.js，这时webpack都做了什么呢？
+平时我们运行了`npm run dev`或者` npm run build`或者`webpack entry.js bundle.js`，这时webpack都做了什么呢？
 
 webpack在整个过程中，必须要实现四件事情；
 
 - 基于acorn搜集模块依赖；
 
-- 将所有文件基于loader转成浏览器可以运行的js
+- 将所有文件基于`loader`转成浏览器可以运行的`js`
 
-- 在打包整个声明周期过长中做了很多事情（基于plugin）
+- 在打包整个声明周期过长中做了很多事情（基于`plugin`）
 
-- 最后打包（tree-shaking等）成多个bundle.js
+- 最后打包（`tree-shaking`等）成多个`bundle.js`
 
-## Webpack的启动
+## `Webpack`的启动
 
-### 查找webpack入口文件
+### 查找`Webpack`入口文件
 
-在运行以上命令后，npm会让命令行工具进入`node_modules\.bin`目录查找是否存在webpack.sh或者webpack.md文件，如果存在就执行，不存在就抛出错误
+在运行以上命令后，npm会让命令行工具进入`node_modules\.bin`目录查找是否存在`webpack.sh`或者`webpack.md`文件，如果存在就执行，不存在就抛出错误
 
-实际的入口文件是：node_modules\webpack\bin\webpack.js
+实际的入口文件是：`node_modules\webpack\bin\webpack.js`
 
 查找机制是全局安装或者局部安装，然后就去局部找或者全局找
 
 ![image-20220521161417613](./images/image-20220521161417613.png) 
 
-进入webpack安装包的package.json 找到bin命令 ， 能够看到执行文件
+进入`Webpack`安装包的`package.json `找到`bin`命令 ， 能够看到执行文件
 
 ![image-20220521161605489](./images/image-20220521161605489.png) 
 
-所以webpack的入口文件，就是webpack.js
+所以`Webpack`的入口文件，就是`webpack.js`
 
-webpack-cli也是一样
+`webpack-cli`也是一样
 
-**为什么是bin呢？**
+**为什么是`bin`呢？**
 
-运行webpack过程中需要提前知道的；
+运行`webpack`过程中需要提前知道的；
 
 ```js
 process.exitCode = 0  //正常执行返回 ，1表示报错
@@ -2827,21 +2824,21 @@ if(installedClis.length === 1) {} else if(installedClis.length === 1) {} else {}
 
 **启动后的结果**
 
-webpack最终找到webpack-cli这个npm包，并且执行CLI
+`Webpack`最终找到`webpack-cli`这个npm包，并且执行CLI
 
 **webpack-cli所做的事情**
 
-引入yargs，对命令行进行定制
+引入`yargs`，对命令行进行定制
 
 分析命令行参数，对各个参数进行转换，组成编译配置项
 
-引用webpack，根据配置项进行编译和 构建 
+引用`Webpack`，根据配置项进行编译和 构建 
 
 ![image-20220521160639504](./images/image-20220521160639504.png)  
 
 **webpack-cli提供不需要编译的命令：**
 
-文件位于webpack-cli/utils/constants.js
+文件位于`webpack-cli/utils/constants.js`
 
 ```js
 const NON_COMPILATION_ARGS = [
@@ -2856,7 +2853,7 @@ const NON_COMPILATION_ARGS = [
 ];
 ```
 
-运行命令 ./node_modules/.bin/webpack help，会看到webpack的很多信息
+运行命令` ./node_modules/.bin/webpack help`，会看到webpack的很多信息
 
 ![image-20220521160702229](./images/image-20220521160702229.png) 
 
@@ -2864,9 +2861,9 @@ const NON_COMPILATION_ARGS = [
 
 ![image-20220521160718677](./images/image-20220521160718677.png) 
 
-Webpack 的本质
+`Webpack `的本质
 
-Webpack可以将其理解是一种基于事件流的编程范例，一系列的插件运行。
+`Webpack`可以将其理解是一种基于事件流的编程范例，一系列的插件运行。
 
 处理完options后，开始执行下面代码：
 
@@ -2876,10 +2873,10 @@ const webpack = require("webpack");
 compiler = webpack(options); // 返回compiler
 ```
 
-去找到webpack的位置，
-node_modules\webpack\lib\webpack.js
+去找到`Webpack`的位置，
+`node_modules\webpack\lib\webpack.js`
 
-在这个文件里面，引入了Compiler，在Compiler这个文件里面，又引入了Compilation，他们都继承了Tapable
+在这个文件里面，引入了`Compiler`，在`Compiler`这个文件里面，又引入了`Compilation`，他们都继承了`Tapable`
 
 ```js
 // 核心对象Compiler继承Tapable
@@ -2891,22 +2888,21 @@ class Compilation extends Tapable {
 ```
 
 ## 手写webpack
-webpack允许了一个run函数，开始执行构建，
+`Webpack`允许了一个`run`函数，开始执行构建，
 
+### Tapable是什么？
 
-## Tapable是什么？
+`Tapable`是一个类似`Node.js`的`EventEmitter`的库，主要是控制钩子函数的发布与订阅，控制着`Webpack`的插件系统。监听`compiler`和`Compilation`的一些事件节点
 
-Tapable是一个类似Node.js的EventEmitter的库，主要是控制钩子函数的发布与订阅，控制着webpack的插件系统。监听compiler和Compilation的一些事件节点
-
-Tapable库暴露了很多Hooks类，为插件提供挂载的钩子
+`Tapable`库暴露了很多`Hooks`类，为插件提供挂载的钩子
 
 ```js
 const {
     // 同步钩子
-	SyncHook,
+	SyncHook, 
 	SyncBailHook,// 可以通过return 终止
 	SyncWaterfallHook, //  执行的结果可以传递给下一个插件
-	SyncLoopHook,// 同步循环的钩子
+	SyncLoopHook, // 同步循环的钩子
     // 异步并行钩子
 	AsyncParallelHook,
 	AsyncParallelBailHook,
@@ -2929,29 +2925,29 @@ const {
 | AsyncSeries   | 异步串行钩子                                                 |
 | AsyncParallel | 异步并行执行钩子                                             |
 
-### Tapable 的使用  
+###  Tapable 的使用  
 
-**使用new Hook新建钩子**
+**使用`new Hook`新建钩子**
 
-Tapable 暴露出来的都是类方法，new一个类方法获得我们需要的钩子
+`Tapable` 暴露出来的都是类方法，`new`一个类方法获得我们需要的钩子
 
-class接受数组参数options，非必传，类方法会根据传参，接受同样数量的参数
+`class`接受数组参数`options`，非必传，类方法会根据传参，接受同样数量的参数
 
-```
+```js
 // 比如新建一个同步方法的钩子
 const hook = new SyncHook(["arg1","arg2","arg3"])
 ```
 
 **钩子的绑定与执行**
 
-Tabpack提供了同步&异步绑定钩子的方法，并且他们都有绑定事件和执行事件对应的方法
+`Tabpack`提供了同步&异步绑定钩子的方法，并且他们都有绑定事件和执行事件对应的方法
 
 | Async                         | Sync        |
 | ----------------------------- | ----------- |
 | 绑定：tapAsync/tapPromise/tap | 绑定：tap   |
 | 执行：callAsync/promise/call  | 执行： call |
 
-Tapable的基本用法：
+`Tapable`的基本用法：
 
 ```js
 // 引用
@@ -2970,85 +2966,208 @@ hook.call(1,2,3)
 
 ## acorn
 
-acorn是一个库，实现对js的解析，将其转换成ast, 转换后实现对依赖搜集
+`acorn`是一个库，实现对`js`的解析，将其转换成`AST`，转换后实现对依赖搜集
 
 ```
 const ast = acorn.parse(code,options)
 ```
 
+`Tapable` 是如何和 `Webpack` 联系起来的?
+
+```js
+
+if (Array.isArray(options)) {
+  compiler = new MultiCompiler(options.map(options => webpack(options)));
+} else if (typeof options === "object") {
+  options = new WebpackOptionsDefaulter().process(options);
+  compiler = new Compiler(options.context);
+  compiler.options = options;
+  new NodeEnvironmentPlugin().apply(compiler);
+  if (options.plugins && Array.isArray(options.plugins)) {
+    for (const plugin of options.plugins) {
+      if (typeof plugin === "function") {
+        plugin.call(compiler, compiler);
+      } else {
+        plugin.apply(compiler);
+        compiler.hooks.environment.call(); 
+        compiler.hooks.afterEnvironment.call(); 
+        compiler.options = new WebpackOptionsApply0.process(options, compiler);
+      }
+    }
+  }
+}
+```
+
+模拟`Compiler`
+
+```js
+module.exports = class Compiler {
+  constructor() {
+    this.hooks = {
+      accelerate: new SyncHook(['newspeed']),
+      brake: new SyncHook(),
+      calculateRoutes: new AsyncSeriesHook(["source", "target", "routesList"])
+    }
+  }
+  run() {
+    this.accelerate(10)
+    this.break()
+    this.calculateRoutes('Async', 'hook', 'demo')
+  }
+  accelerate(speed) {
+    this.hooks.accelerate.call(speed);
+    break() {
+      this.hooks.brake.call();
+    }
+  }
+  calculateRoutes() {
+    this.hooks.calculateRoutes.promise(...arguments).then(() => { }, err => { console.eror(err) })
+  };
+}
+```
+
+**插件 my-plugin.js** 
+
+```js
+const Compiler = require('./Compiler')
+class MyPlugin {
+  constructor() { }
+  apply(compiler) {
+    compiler.hooks.brake.tap("WamingLampPlugin", () => console.log('WarningLampPlugin'));
+    compiler.hooks.accelerate.tap("LoggerPlugin", newSpeed => console.log(`Accelerating to ${newSpeed}`));
+    compiler.hooks.calculateRoutes.tapPromise("calculateRoutes tapAsync", (source, target, routesList) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log(`tapPromise to ${source} ${target} ${routesList}`)
+          resolve();
+        }, 1000);
+      })
+    })
+  }
+}
+```
 
 
-![image-20220521160844758](./images/image-20220521160844758.png) 
+
+**模拟插件执行** 
+
+```js
+
+const myPlugin = new MyPlugin();
+const options = {
+  plugins: [myPlugin]
+}
+const compiler = new Compiler();
+for (const plugin of options.plugins) {
+  if (typeof plugin === "function") {
+    plugin.call(compiler, compiler);
+  }
+  else {
+    plugin.apply(compiler);
+  }
+}
+compiler.run();
+```
 
 
 
+**webpack流程**  
 
+![image-20240316201345789](./images/image-20240316201345789.png) 
 
+**Compiler hooks**
 
+```
+流程相关:
+(before-)run
+(before-/after-)compile
+make
+(after-)emit
+done
+监听相关:
+watch-run
+watch-close
+```
 
-![image-20220521160856476](./images/image-20220521160856476.png) 
+**Compilation**
+Compiler 调用 Compilation 生命周期方法
+addEntry-> addModuleChain
+inish(上报模块错误)
+seal 
 
+**ModuleFactory** 
 
+![image-20240316201431954](images/image-20240316201431954.png) 
 
-
-
-![image-20220521160906819](./images/image-20220521160906819.png) 
-
-![image-20220521160915637](./images/image-20220521160915637.png) 
-
-![image-20220521160922097](./images/image-20220521160922097.png) 
-
-
-
-
-
-![image-20220521160930798](./images/image-20220521160930798.png) 
-
-
-
-
-
-
-
-![image-20220521160937940](./images/image-20220521160937940.png) 
-
-![image-20220521160944879](./images/image-20220521160944879.png) 
-
-![image-20220521160951635](./images/image-20220521160951635.png) 
-
-![image-20220521160958120](./images/image-20220521160958120.png) 
-
-普通模块通过import或require
+普通模块通过`import`或`require`
 
 加路径的导入
 
+![image-20240316195553163](images/image-20240316195553163.png)
 
+都继承`Module`
 
-![image-20220521161006134](./images/image-20220521161006134.png) 
-
-都继承Module
-
-![image-20220521161011970](./images/image-20220521161011970.png) 
+**NormalModule**
+Build
+使用 `loader-runner` 运行 loaders 通过 Parser 解析(内部是 acron)
+`ParserPlugins` 添加依赖
 
 依赖添加完则执行完make阶段了
 
 make到seal
 
+模块相关:
 
+```
+build-module
+failed-module
+succeed-module
+```
 
-![image-20220521161020993](./images/image-20220521161020993.png) 
+优化和 seal相关
 
-![image-20220521161027900](./images/image-20220521161027900.png) 
+```
+(after-)seal
+optimize
+optimize-modules(-basic/advanced)
+after-optimize-modules
+after-optimize-chunk-modules
+optimize-module/chunk-order
+after-optimize-chunks
+after-optimize-tree
+before/after-hash
+before-module/chunk-ids
+(after-)optimize-module/chunk-ids
+optimize-chunk-modules(-basic/advanced)
+```
 
-![image-20220521161034299](./images/image-20220521161034299.png) 
+资源生成相关:
 
-![image-20220521161041247](./images/image-20220521161041247.png) 
+```
+module-asset
+chunk-asset
+```
 
-![image-20220521161049581](./images/image-20220521161049581.png) 
+**Chunk 生成算法**
 
-![image-20220521161057534](./images/image-20220521161057534.png) 
+1. `webpack` 先将 `entry `中对应的 `module `都生成一个新的 chunk
+2. 遍历 `module` 的依赖列表，将依赖的` module `也加入到 chunk 中
+3. 如果一个依赖 module 是动态引入的模块，那么就会根据这个 module 创建一个新的 chunk，继续遍历依赖
+4. 重复上面的过程，直至得到所有的 chunks
 
-![image-20220521161104859](./images/image-20220521161104859.png) 
+## webpack 的模块机制
+
+打包出来的是一个 IIFE(匿名闭包)
+modules 是一个数组，每一项是一个模块初始化函数
+`_webpack_require` 用来加载模块，返回` module.exports`
+通过` WEBPACK_REQUIRE_METHOD(0)`启动程序
+
+ ES6转换为ES5的过程
+
+- `babylon`生产AST
+- `babel-core`将AST重新生产源码
+
+通过`babel-traverse`的`ImportDeclaration`方法获取依赖熟悉
 
 **webpack执行时，命令行交互案例：**
 
@@ -3058,7 +3177,7 @@ const questionInterface = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-let question = "请问要按照install 吗?"
+let question = "请问要安装install 吗?"
 questionInterface.question(question, answer => {
     questionInterface.close();
     switch (answer.toLowerCase()) {
@@ -3081,7 +3200,7 @@ function runCommand(text) {
 }
 ```
 
-**node yargs**
+##  **node yargs**
 
 yargs模块能够解决如何处理命令行参数。
 
@@ -3119,11 +3238,11 @@ let argv = yargs
 console.log(argv);
 ```
 
-.demandOption(key, msg) 是否必须填写
+`.demandOption(key, msg) `是否必须填写
 
-.default(key, value, [description]) 设置默认值
+`.default(key, value, [description]) `设置默认值
 
-.describe(key, desc) 命令描述信息
+`.describe(key, desc) `命令描述信息
 
 ```js
 const yargs = require('yargs');
@@ -3139,7 +3258,7 @@ let argv = yargs
 console.log(argv);
 ```
 
-我们可以通过 .option(key, [opt]) 配置所有设置
+我们可以通过 `.option(key, [opt])` 配置所有设置
 
 ```js
 const yargs = require('yargs');
@@ -3164,7 +3283,7 @@ console.log(argv);
 
 有些时候我们只想知道某些参数有没有设置，是 true 或是 false。
 
-通过 .boolean(key) 解析参数为布尔值。
+通过` .boolean(key) `解析参数为布尔值。
 
 ```js
 const yargs = require('yargs');
@@ -3176,13 +3295,13 @@ console.log(argv);
 
 ```
 
-.usage() 用法格式
+`.usage() `用法格式
 
-.example(cmd, desc) 提供例子
+`.example(cmd, desc) `提供例子
 
-.help() 帮助信息
+`.help() `帮助信息
 
-.epilog(str) 在帮助信息尾部显示
+`.epilog(str) `在帮助信息尾部显示
 
 ```js
 const yargs = require('yargs');
