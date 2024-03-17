@@ -90,10 +90,10 @@ exports.sidebar =  [
         title: '自定义插件(loader)',
         path: '../pages/Webpack/loader'
       },
-      {
-        title: '项目实战',
-        path: '../pages/Webpack/project'
-      },
+      // {
+      //   title: '项目实战',
+      //   path: '../pages/Webpack/project'
+      // },
       {
         title: '总结',
         path: '../pages/Webpack/work'

@@ -73,9 +73,8 @@
         一个请求路径只对应一个操作
         一般只有GET/POST
 
-## 9. json-server是什么?
-
-    用来快速搭建REST API的工具包
+## 9. 用json-server来快速搭建REST API的工具包
+    
 
 ## 10. 使用json-server
 

@@ -22,6 +22,17 @@ server.listen(3000);
 
 ### 路由
 
+有一种特殊的路由方法，用于**在所有 HTTP 请求**方法的路径上加载中间件函数。例如，无论使用 GET、POST、PUT、DELETE 还是 [http 模块](https://nodejs.org/api/http.html#http_http_methods)中支持的任何其他 HTTP 请求方法，都会对路由“/secret”的请求执行以下处理程序。app.all()
+
+```javascript
+app.all('/secret', function (req, res, next) {
+  console.log('Accessing the secret section ...')
+  next() // pass control to the next handler
+})
+```
+
+`router`
+
   浏览器向web服务器发送请求，web服务器会根据请求的URL和请求的方法来做出响应
 
 `  res.send() `
@@ -50,23 +61,29 @@ app.get('/login',(req,res)=>{
 
  (1)响应对象——res
 
-` res.send()` 发送文本，只能响应一次；如果是数字会认为是状态码
+下表中响应对象  上的方法可以向客户端发送响应，并终止请求-响应周期。如果这些方法都不是从路由处理程序调用的，则客户端请求将保持挂起状态。
 
-` res.sendFile()` 发送文件到浏览器，必须使用绝对路径`(__dirname) `
-
-` res.redirect()`  响应的重定向(跳转)
+| 方法                                                         | 描述                                                   |
+| ------------------------------------------------------------ | ------------------------------------------------------ |
+| [res.download（）](https://www.expressjs.com.cn/en/4x/api.html#res.download) | 提示要下载的文件。                                     |
+| [res.end（）](https://www.expressjs.com.cn/en/4x/api.html#res.end) | 结束响应过程。只能响应一次；如果是数字会认为是状态码   |
+| [res.json（）](https://www.expressjs.com.cn/en/4x/api.html#res.json) | 发送 JSON 响应。                                       |
+| [res.jsonp（）](https://www.expressjs.com.cn/en/4x/api.html#res.jsonp) | 发送支持 JSONP 的 JSON 响应。                          |
+| [res.redirect（）](https://www.expressjs.com.cn/en/4x/api.html#res.redirect) | 重定向请求。                                           |
+| [res.render（）](https://www.expressjs.com.cn/en/4x/api.html#res.render) | 呈现视图模板。                                         |
+| [res.send（）](https://www.expressjs.com.cn/en/4x/api.html#res.send) | 发送各种类型的响应。必须使用绝对路径`(__dirname) `     |
+| [res.sendFile（）](https://www.expressjs.com.cn/en/4x/api.html#res.sendFile) | 将文件作为八位字节流发送。                             |
+| [res.sendStatus（）](https://www.expressjs.com.cn/en/4x/api.html#res.sendStatus) | 设置响应状态代码并将其字符串表示形式作为响应正文发送。 |
 
  (2)请求对象(req)
 
-`  req.method ` 获取请求的方法
-
-` req.url`  获取请求的url
-
- `req.headers`获取请求的头信息
-
-`req.query` 获取请求时，以查询字符串传递数据，返回对象
-
- `req.params`获取路由传递的数据，返回对象
+| 方法            | 描述                                       |
+| --------------- | ------------------------------------------ |
+| `  req.method ` | 获取请求的方法                             |
+| ` req.url`      | 获取请求的url                              |
+| `req.headers`   | 获取请求的头信息                           |
+| `req.query`     | 获取请求时，以查询字符串传递数据，返回对象 |
+| `req.params`    | 获取路由传递的数据，返回对象               |
 
 (3)post和get请求
 
@@ -140,6 +157,70 @@ server.get('/detail/:lid', (req,res)=>{
 
 ### 路由器
 
+您可以提供多个行为类似于[中间件](https://www.expressjs.com.cn/en/guide/using-middleware.html)的回调函数来处理请求。唯一的例外是，这些回调可能会调用以绕过剩余的路由回调。您可以使用此机制对路由施加前提条件，然后在没有理由继续当前路由时将控制权传递给后续路由。next('route')
+
+路由处理程序可以采用函数、函数数组或两者的组合形式，如以下示例所示。
+
+单个回调函数可以处理路由。例如：
+
+```javascript
+app.get('/example/a', function (req, res) {
+  res.send('Hello from A!')
+})
+```
+
+多个回调函数可以处理一个路由（请确保指定对象）。例如：next
+
+```javascript
+app.get('/example/b', function (req, res, next) {
+  console.log('the response will be sent by the next function ...')
+  next()
+}, function (req, res) {
+  res.send('Hello from B!')
+})
+```
+
+回调函数数组可以处理路由。例如：
+
+```javascript
+var cb0 = function (req, res, next) {
+  console.log('CB0')
+  next()
+}
+
+var cb1 = function (req, res, next) {
+  console.log('CB1')
+  next()
+}
+
+var cb2 = function (req, res) {
+  res.send('Hello from C!')
+}
+
+app.get('/example/c', [cb0, cb1, cb2])
+```
+
+独立函数和函数数组的组合可以处理路由。例如：
+
+```javascript
+var cb0 = function (req, res, next) {
+  console.log('CB0')
+  next()
+}
+
+var cb1 = function (req, res, next) {
+  console.log('CB1')
+  next()
+}
+
+app.get('/example/d', [cb0, cb1], function (req, res, next) {
+  console.log('the response will be sent by the next function ...')
+  next()
+}, function (req, res) {
+  res.send('Hello from D!')
+})
+```
+
  路由在使用过程中，不同的模块可能出现相同的URL，把同一个模块下的所有路由挂载到特定的前缀。
 
  例如：商品模块下的路由挂载到product，访问形式/product/list，用户模块下的路由挂载到user，访问形式/user/list
@@ -162,11 +243,122 @@ server.use('/product', productRouter);
 //把路由器挂载到 /product下，访问形式 /product/list
 ```
 
+### 路由路径
+
+此路由路径将匹配对根路由 ./
+
+```javascript
+app.get('/', function (req, res) {
+  res.send('root')
+})
+```
+
+此路由路径将匹配 的请求。/about
+
+```javascript
+app.get('/about', function (req, res) {
+  res.send('about')
+})
+```
+
+此路由路径将匹配 的请求。/random.text
+
+```javascript
+app.get('/random.text', function (req, res) {
+  res.send('random.text')
+})
+```
+
+以下是一些基于字符串模式的路由路径示例。
+
+此路由路径将与 和 匹配。acdabcd
+
+```javascript
+app.get('/ab?cd', function (req, res) {
+  res.send('ab?cd')
+})
+```
+
+此路由路径将匹配 、 、 等。abcdabbcdabbbcd
+
+```javascript
+app.get('/ab+cd', function (req, res) {
+  res.send('ab+cd')
+})
+```
+
+此路由路径将匹配 、 、 、 等。abcdabxcdabRANDOMcdab123cd
+
+```javascript
+app.get('/ab*cd', function (req, res) {
+  res.send('ab*cd')
+})
+```
+
+此路由路径将与 和 匹配。/abe/abcde
+
+```javascript
+app.get('/ab(cd)?e', function (req, res) {
+  res.send('ab(cd)?e')
+})
+```
+
+基于正则表达式的路由路径示例：
+
+此路由路径将与任何包含“a”的内容匹配。
+
+```javascript
+app.get(/a/, function (req, res) {
+  res.send('/a/')
+})
+```
+
+此路由路径将匹配 和 ，但不匹配 、 ，依此类推。butterflydragonflybutterflymandragonflyman
+
+```javascript
+app.get(/.*fly$/, function (req, res) {
+  res.send('/.*fly$/')
+})
+```
+
+### 路由参数
+
+要使用路由参数定义路由，只需在路由路径中指定路由参数，如下所示。
+
+```javascript
+app.get('/users/:userId/books/:bookId', function (req, res) {
+  res.send(req.params)
+})
+```
+
+路由参数的名称必须由“单词字符”（[A-Za-z0-9_]）组成。
+
+```plain
+Route path: /flights/:from-:to
+Request URL: http://localhost:3000/flights/LAX-SFO
+req.params: { "from": "LAX", "to": "SFO" }
+Route path: /plantae/:genus.:species
+Request URL: http://localhost:3000/plantae/Prunus.persica
+req.params: { "genus": "Prunus", "species": "persica" }
+```
+
+要更好地控制路由参数可以匹配的确切字符串，可以在括号 （） 中附加正则表达式：()
+
+```plain
+Route path: /user/:userId(\d+)
+Request URL: http://localhost:3000/user/42
+req.params: {"userId": "42"}
+```
+
 ### 中间件
 
  中间件的作用为主要的业务逻辑所服务
 
  分为应用级中间件、路由级中间件、内置中间件、第三方中间件、错误级中间件
+
+中间件不能当路由来使用。all函数可以接收所有的请求
+
+get， post ，use都是中间件
 
  (1)应用级中间件
 
