@@ -108,7 +108,7 @@ b>mapper接口中方法的方法名和映射文件中编写SQL的标签的id属�
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.atguigu.mybatis.mapper.UserMapper">
+<mapper namespace="com.hhh.mybatis.mapper.UserMapper">
     <!--int insertUser();-->
     <insert id="insertUser">
         insert into t_user values(null,'admin','123456',23,'男','12345@qq.com')
@@ -121,7 +121,7 @@ b>mapper接口中方法的方法名和映射文件中编写SQL的标签的id属�
 ```xml
 <!--引入mybatis的映射文件-->
 <mappers>
-    <package name="com.atguigu.mybatis.mapper"/>
+    <package name="com.hhh.mybatis.mapper"/>
 </mappers>
 ```
 
@@ -147,7 +147,7 @@ public void testInsert() throws IOException {
     //调用mapper接口中的方法，实现添加用户信息的功能
     int result = mapper.insertUser();
     //提供sql以及的唯一标识找到sql并执行，唯一标识是namespace.sqlId
-    /*int result = sqlSession.insert("com.atguigu.mybatis.mapper.UserMapper.insertUser");*/
+    /*int result = sqlSession.insert("com.hhh.mybatis.mapper.UserMapper.insertUser");*/
     System.out.println("结果："+result);
     //提交事务
     //sqlSession.commit();

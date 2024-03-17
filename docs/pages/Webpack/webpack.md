@@ -2770,7 +2770,7 @@ Tree-shaking
 
 webpack在整个过程中，必须要实现四件事情；
 
-- 基于acorn搜集模块依赖；
+- 基于`acorn`搜集模块依赖；
 
 - 将所有文件基于`loader`转成浏览器可以运行的`js`
 
@@ -2778,9 +2778,9 @@ webpack在整个过程中，必须要实现四件事情；
 
 - 最后打包（`tree-shaking`等）成多个`bundle.js`
 
-## `Webpack`的启动
+### `Webpack`的启动
 
-### 查找`Webpack`入口文件
+**查找`Webpack`入口文件**
 
 在运行以上命令后，npm会让命令行工具进入`node_modules\.bin`目录查找是否存在`webpack.sh`或者`webpack.md`文件，如果存在就执行，不存在就抛出错误
 
@@ -2803,7 +2803,7 @@ webpack在整个过程中，必须要实现四件事情；
 运行`webpack`过程中需要提前知道的；
 
 ```js
-process.exitCode = 0  //正常执行返回 ，1表示报错
+process.exitCode = 0  //正常执行返回0 ，1表示报错
 const runCommand = (command,args) => {}  //运行某个命令
 const executedCommand = cp.spawn(command, args, {
 			stdio: "inherit",
@@ -2832,11 +2832,7 @@ if(installedClis.length === 1) {} else if(installedClis.length === 1) {} else {}
 
 分析命令行参数，对各个参数进行转换，组成编译配置项
 
-引用`Webpack`，根据配置项进行编译和 构建 
-
-![image-20220521160639504](./images/image-20220521160639504.png)  
-
-**webpack-cli提供不需要编译的命令：**
+引用`Webpack`，根据配置项进行编译和 构建   
 
 文件位于`webpack-cli/utils/constants.js`
 
@@ -2855,17 +2851,29 @@ const NON_COMPILATION_ARGS = [
 
 运行命令` ./node_modules/.bin/webpack help`，会看到webpack的很多信息
 
-![image-20220521160702229](./images/image-20220521160702229.png) 
+![image-20220521160702229](./images/image-20220521160702229.png)  
 
-![image-20220521160711432](./images/image-20220521160711432.png) 
+**webpack-cli 使用args分析**
 
-![image-20220521160718677](./images/image-20220521160718677.png) 
+参数分组(config/config-args.js)，将命令划分为9类:
+
+- Config options: 配置相关参数(文件名称、运行环境等)
+- Basic options: 基础参数(entry设置、debug模式设置、watch监听设置、devtool设置)
+- Module options: 模块参数，给 loader 设置扩展·Output options: 输出参数(输出路径、输出文件名称)
+- Advanced options: 高级用法(记录设置、缓存设置、监听频率、bail等)
+- Resolving options: 解析参数(alias 和 解析的文件后缀设置)
+- Optimizing options: 优化参数
+- Stats options: 统计参数
+- options: 通用参数(帮助命令、版本信息等) 
+
+**webpack-cli 执行的结果**
+webpack-cli对配置文件和命令行参数进行转换最终生成配置选项参数 options，最终会根据配置参数实例化 webpack 对象，然后执行构建流程
 
 `Webpack `的本质
 
 `Webpack`可以将其理解是一种基于事件流的编程范例，一系列的插件运行。
 
-处理完options后，开始执行下面代码：
+处理完`options`后，开始执行下面代码：
 
 ```js
 // 引入webpack
@@ -2881,13 +2889,237 @@ compiler = webpack(options); // 返回compiler
 ```js
 // 核心对象Compiler继承Tapable
 class Compiler extends Tapable {
+    constructor(context) {
+        super();
+        this.hooks = {
+           
+            beforeRun: new AsyncSeriesHook(["compiler"]),
+            run: new AsyncSeriesHook(["compiler"]),
+            beforeCompile: new AsyncSeriesHook(["params"]),
+            compile: new SyncHook(["params"]),
+            afterCompile: new AsyncSeriesHook(["compilation"]),
+            make: new AsyncParallelHook(["compilation"]),
+            entryOption: new SyncBailHook(["context", "entry"])
+            // 定义了很多不同类型的钩子
+        };
+        // ...
+    }
 }
 // 核心对象Compilation继承Tapable
 class Compilation extends Tapable {
 }
 ```
 
+### 开始编译构建
+
+做完上面的初始化工作后，webpack开始执行run方法，进行编译；先找到`entry`指定的入口文件；
+
+主要的流程如下：
+
+![image-20240316201345789](./images/image-20240316201345789.png)
+
+
+
+执行`run`方法，调用`beforeRun`钩子，在执调用`hooks`里面注册的`run`的钩子，开始进行编译；
+
+```js
+const run = () => {
+    this.hooks.beforeRun.callAsync(this, err => {
+        if (err) return finalCallback(err);
+
+        this.hooks.run.callAsync(this, err => {
+            if (err) return finalCallback(err);
+
+            this.readRecords(err => {
+                if (err) return finalCallback(err);
+
+                this.compile(onCompiled);
+            });
+        });
+    });
+};
+```
+
+编译会按串行的流程执行以下一些钩子，主要是构建一个Compilation对象。该对象是编译阶段的主要执行者，主要会依次下述流程：执行模块创建、依赖收集、分块、打包等主要任务的对象。
+
+```js
+compile(callback) {
+		const params = this.newCompilationParams();
+		this.hooks.beforeCompile.callAsync(params, err => {
+			if (err) return callback(err);
+
+			this.hooks.compile.call(params);
+
+			const compilation = this.newCompilation(params);
+
+			const logger = compilation.getLogger("webpack.Compiler");
+
+			logger.time("make hook");
+			this.hooks.make.callAsync(compilation, err => {
+				logger.timeEnd("make hook");
+
+				logger.time("finish make hook");
+				this.hooks.finishMake.callAsync(compilation, err => {
+					logger.timeEnd("finish make hook");
+					
+
+					process.nextTick(() => {
+						
+						compilation.finish(err => {
+							logger.timeEnd("finish compilation");
+							
+
+							logger.time("seal compilation");
+							compilation.seal(err => {
+								logger.timeEnd("seal compilation");
+								if (err) return callback(err);
+
+								logger.time("afterCompile hook");
+								this.hooks.afterCompile.callAsync(compilation, err => {
+									logger.timeEnd("afterCompile hook");
+									if (err) return callback(err);
+
+									return callback(null, compilation);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	}
+```
+
+**Compilation**
+`Compiler `调用 `Compilation `生命周期方法
+`addEntry ->  addModuleChain`
+finish(上报模块错误)
+seal 
+
+**make 编译模块**
+
+当完成了上述的compilation对象后，就开始从Entry入口文件开始读取，主要执行_addModuleChain()函数，源码如下：
+
+```js
+_addModuleChain(context, dependency, onModule, callback) {
+   ...
+   // 根据依赖查找对应的工厂函数
+   const Dep = /** @type {DepConstructor} */ (dependency.constructor);
+   const moduleFactory = this.dependencyFactories.get(Dep);
+
+   // 调用工厂函数NormalModuleFactory的create来生成一个空的NormalModule对象
+   moduleFactory.create({
+       dependencies: [dependency]
+       ...
+   }, (err, module) => {
+       ...
+       const afterBuild = () => {
+        this.processModuleDependencies(module, err => {
+         if (err) return callback(err);
+         callback(null, module);
+           });
+    };
+
+       this.buildModule(module, false, null, null, err => {
+           ...
+           afterBuild();
+       })
+   })
+}
+```
+
+**build module 完成模块编译**
+
+这个过程的主要调用配置的loaders，将我们的模块转成标准的JS模块。在用 Loader 对一个模块转换完后，使用 acorn 解析转换后的内容，输出对应的抽象语法树（AST），以方便 Webpack 后面对代码的分析。
+
+从配置的入口模块开始，分析其 AST，当遇到require等导入其它模块语句时，便将其加入到依赖的模块列表，同时对新找出的依赖模块递归分析，最终搞清所有模块的依赖关系。
+
+
+
+**Compiler hooks**
+
+```
+流程相关:
+(before-)run
+(before-/after-)compile
+make
+(after-)emit
+done
+监听相关:
+watch-run
+watch-close
+```
+
+
+
+**ModuleFactory** 
+
+![image-20240316201431954](images/image-20240316201431954.png) 
+
+普通模块通过`import`或`require`
+
+加路径的导入
+
+![image-20240316195553163](images/image-20240316195553163.png)
+
+都继承`Module`
+
+**NormalModule**
+Build
+使用 `loader-runner` 运行` loaders `通过` Parser` 解析(内部是 acron)
+`ParserPlugins` 添加依赖
+
+依赖添加完则执行完make阶段了
+
+### 优化输出阶段
+
+**make到seal**
+
+seal方法主要是要生成chunks，对chunks进行一系列的优化操作，并生成要输出的代码。Webpack 中的 chunk ，可以理解为配置在 entry 中的模块，或者是动态引入的模块。
+
+根据入口和模块之间的依赖关系，组装成一个个包含多个模块的 Chunk，再把每个 Chunk 转换成一个单独的文件加入到输出列表。在确定好输出内容后，根据配置确定输出的路径和文件名即可
+
+相关模块:
+
+```
+build-module
+failed-module
+succeed-module
+```
+
+优化和 seal相关
+
+```
+(after-)seal
+optimize
+optimize-modules(-basic/advanced)
+after-optimize-modules
+after-optimize-chunk-modules
+optimize-module/chunk-order
+after-optimize-chunks
+after-optimize-tree
+before/after-hash
+before-module/chunk-ids
+(after-)optimize-module/chunk-ids
+optimize-chunk-modules(-basic/advanced)
+```
+
+资源生成相关:
+
+```
+module-asset
+chunk-asset
+```
+
+**Chunk 生成算法**
+
+1. `webpack` 先将 `entry `中对应的 `module `都生成一个新的 chunk
+2. 遍历 `module` 的依赖列表，将依赖的` module `也加入到 chunk 中
+3. 如果一个依赖 module 是动态引入的模块，那么就会根据这个 module 创建一个新的 chunk，继续遍历依赖
+4. 重复上面的过程，直至得到所有的 chunks
+
 ## 手写webpack
+
 `Webpack`允许了一个`run`函数，开始执行构建，
 
 ### Tapable是什么？
@@ -3070,90 +3302,6 @@ compiler.run();
 ```
 
 
-
-**webpack流程**  
-
-![image-20240316201345789](./images/image-20240316201345789.png) 
-
-**Compiler hooks**
-
-```
-流程相关:
-(before-)run
-(before-/after-)compile
-make
-(after-)emit
-done
-监听相关:
-watch-run
-watch-close
-```
-
-**Compilation**
-Compiler 调用 Compilation 生命周期方法
-addEntry-> addModuleChain
-inish(上报模块错误)
-seal 
-
-**ModuleFactory** 
-
-![image-20240316201431954](images/image-20240316201431954.png) 
-
-普通模块通过`import`或`require`
-
-加路径的导入
-
-![image-20240316195553163](images/image-20240316195553163.png)
-
-都继承`Module`
-
-**NormalModule**
-Build
-使用 `loader-runner` 运行 loaders 通过 Parser 解析(内部是 acron)
-`ParserPlugins` 添加依赖
-
-依赖添加完则执行完make阶段了
-
-make到seal
-
-模块相关:
-
-```
-build-module
-failed-module
-succeed-module
-```
-
-优化和 seal相关
-
-```
-(after-)seal
-optimize
-optimize-modules(-basic/advanced)
-after-optimize-modules
-after-optimize-chunk-modules
-optimize-module/chunk-order
-after-optimize-chunks
-after-optimize-tree
-before/after-hash
-before-module/chunk-ids
-(after-)optimize-module/chunk-ids
-optimize-chunk-modules(-basic/advanced)
-```
-
-资源生成相关:
-
-```
-module-asset
-chunk-asset
-```
-
-**Chunk 生成算法**
-
-1. `webpack` 先将 `entry `中对应的 `module `都生成一个新的 chunk
-2. 遍历 `module` 的依赖列表，将依赖的` module `也加入到 chunk 中
-3. 如果一个依赖 module 是动态引入的模块，那么就会根据这个 module 创建一个新的 chunk，继续遍历依赖
-4. 重复上面的过程，直至得到所有的 chunks
 
 ## webpack 的模块机制
 

@@ -15,5 +15,9 @@ new Promise(function executor(resolve) {
 }).then(function () {
   console.log(4);
 });
-
+console.log(5);
 ```
+
+上面执行流程为
+
+2 3 5 4 1
