@@ -44,6 +44,10 @@ exports.navbar =  [
             text: "Linux错误记录",
             link: "../../pages/Linux/error",
           },
+          {
+            text: "Shell脚本",
+            link: "../../pages/Linux/shell",
+          },
         ],
       },
       {
